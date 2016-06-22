@@ -1,18 +1,7 @@
-// Watermark
-#include <math.h> // Conversion equation from resistance to %
-#include <SPI.h>
-
-// RF24
-#include <SPI.h>
-#include <RF24.h>
-#include <RF24Network.h>
-#include <RF24Mesh.h>
-#include <RF24Ethernet.h>
-#include <PubSubClient.h>
-
 // Arquivos do projeto
 #include "Watermark.h"
 #include "RF24module.h"
+//#include "SD_output.h"
 
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
@@ -38,15 +27,32 @@ void setup ()
   } else {
     Serial.println(F("DEBUG: RF24 -> Failed"));
   }
+
+  // see if the card is present and can be initialized:
+  // Serial.print("DEBUG:  SD -> ");
+  //  if (!SD.begin(chipSelect)) {
+  //    Serial.println("Cartao SD falhou ou nao esta presente");
+  //    // don't do anything more:
+  //    return;
+  //  }
+  //  Serial.println("Cartao SD inicializado");
 }
 
 uint32_t mesh_timer = 0;
 
 void loop () 
 {
-  if (millis()-mesh_timer > 60000) {
+  
+  if(millis()-mesh_timer > 60000){ //Every 60 seconds, test mesh connectivity and send data
+    mesh_timer = millis();
+
+    // check connection and renew address (if needed)
+    if( ! mesh.checkConnection() ){
+        mesh.renewAddress();
+    }
+
     // make a string for assembling the data to log
-    String dataString;
+    String sensorData, sensorBias, sensorReading;
   
     // measure: sensor id, phase B pin, phase A pin, analog input pin
     measure(1,6,7,1);
@@ -55,25 +61,31 @@ void loop ()
     long read2= average();
     long sensor1 = (read1 + read2)/2;
     
-    dataString += String(read1-read2); // resistance bias
-    dataString += ",";
-    dataString += String(sensor1); // sensor bias compensated value
+    sensorBias = String(read1-read2); // resistance bias
+    sensorReading += String(sensor1); // sensor bias compensated value
+    sensorData = sensorBias + "," + sensorReading;
+
+    // open the file:
+    // File dataFile = SD.open("SGlog.csv", FILE_WRITE);
+  
+    // if the file is available, write to it:
+    //    if (dataFile) {
+    //      dataFile.println(dataString);
+    //      dataFile.close();
+    //    }
+    //    // if the file isn't open, pop up an error:
+    //    else {
+    //      Serial.println("Erro abrindo SGlog.csv");
+    //    }
     
     // DEBUG: print to the serial port
-    Serial.print(dataString);
+    Serial.print(sensorData);
     Serial.println();
-    if (client.connect("arduinoClient")) {
-      client.publish("outTopic","teste"); 
-    }
-  }
-  
-
-  // RF24
-  if(millis()-mesh_timer > 30000){ //Every 30 seconds, test mesh connectivity
-    mesh_timer = millis();
-    if( ! mesh.checkConnection() ){
-        mesh.renewAddress();
-     }
+    char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+    sensorBias.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+    client.publish("outTopic/bias",outputBuf);
+    sensorReading.toCharArray(outputBuf, 50);
+    client.publish("outTopic/reading",outputBuf);
   } 
   
   if (!client.connected()) {
@@ -81,6 +93,4 @@ void loop ()
   }
 
   client.loop();
-
-  //delay(60000); // sixty seconds
 }

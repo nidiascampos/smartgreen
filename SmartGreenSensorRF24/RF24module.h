@@ -8,6 +8,14 @@
 // nRF24 MISO --> Digital 12
 // nRF24 IRQ  --> -
 
+// RF24
+#include <SPI.h>
+#include <RF24.h>
+#include <RF24Network.h>
+#include <RF24Mesh.h>
+#include <RF24Ethernet.h>
+#include <PubSubClient.h>
+
 RF24 radio(8,9);
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
@@ -16,6 +24,9 @@ RF24EthernetClass RF24Ethernet(radio,network,mesh);
 IPAddress ip(10,10,2,7);
 IPAddress gateway(10,10,2,2); //Specify the gateway in case different from the server
 IPAddress server(10,10,2,2);
+
+EthernetClient ethClient;
+PubSubClient client(ethClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -27,15 +38,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println();
 }
 
-EthernetClient ethClient;
-PubSubClient client(ethClient);
-
 void reconnect() {
   // Loop until we're reconnected
   if (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("arduinoClient")) {
+    if (client.connect("arduinoClient","outTopic/debug",0,false,"falha no sensor")) { // clientID, willTopic, willQoS, willRetain, willMessage
       Serial.println("connected");
       // Once connected, publish an announcement...
       client.publish("outTopic","connected");

@@ -50,6 +50,10 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+// Watermark
+#include <math.h> // Conversion equation from resistance to %
+#include <SPI.h>
+
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
 #define NUM_READS 10    // Number of sensor reads for filtering
 
