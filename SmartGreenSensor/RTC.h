@@ -1,6 +1,6 @@
 // CONNECTIONS:
-// DS3231 SDA --> SDA (A0 no uno)
-// DS3231 SCL --> SCL (A1 no uno)
+// DS3231 SDA --> SDA (A4 no uno)
+// DS3231 SCL --> SCL (A5 no uno)
 // DS3231 VCC --> 3.3v or 5v
 // DS3231 GND --> GND
 
