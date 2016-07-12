@@ -15,7 +15,7 @@ valores_ajustados=(valores-550)/137.5;
 figure;
 plot(valores(2,:)/60,smooth(valores(1,:)));
 xlabel('Tempo (minutos)');
-ylabel('Resistência (Ohms)');
+ylabel('Resistencia (Ohms)');
 annot_start = [0.7, 0.75];
 annot_end = [0.6, 0.6];
 annotation('textarrow',annot_start,annot_end,'String','chuva');
