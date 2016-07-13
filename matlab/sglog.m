@@ -1,40 +1,20 @@
 clear;
 load('sglog-7a13');
 
-% dias = [8:13];
-% ultimo_dia = 13;
-% for i=8:ultimo_dia
-%     filtro = SGLOG.dia == i;
-%     dia(i) = SGLOG(filtro, :);
-% end
-
 figure;
 hold on;
 grid on;
 grid minor;
-filtro = SGLOG.dia == 8;
-teste = SGLOG(filtro, :);
-% plot(SGLOG.sensorValor);
-plot(teste.sensorValor);
+set(gca,'xtick',[0:1:24]);
+xlabel('hora');
+ylabel('valor medido pelo sensor');
 
-filtro = SGLOG.dia == 9;
-teste = SGLOG(filtro, :);
-plot(teste.sensorValor);
+for i=8:13
+    filtro = SGLOG.dia == i;
+    teste = SGLOG(filtro, :);
+    tamanho = size(teste.sensorValor);
+    plot([1:tamanho]/60,teste.sensorValor);
+end
 
-filtro = SGLOG.dia == 10;
-teste = SGLOG(filtro, :);
-plot(teste.sensorValor);
-
-filtro = SGLOG.dia == 11;
-teste = SGLOG(filtro, :);
-plot(teste.sensorValor);
-
-filtro = SGLOG.dia == 12;
-teste = SGLOG(filtro, :);
-plot(teste.sensorValor);
-
-filtro = SGLOG.dia == 13;
-teste = SGLOG(filtro, :);
-plot(teste.sensorValor);
-
-legend('dia 8','dia 9','dia 10','dia 11','dia 12','dia 13');
+legenda = legend('08/06/2016','09/06/2016','10/06/2016','11/06/2016','12/06/2016','13/06/2016','Location','northwest');
+title(legenda,'Dias');
