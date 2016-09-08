@@ -142,5 +142,5 @@ void loop ()
     Serial.println("Erro abrindo SGlog.csv");
   }
 
-  delay(60000); // sixty seconds
+  delay(300000); // 300 seconds (5 min)
 }
