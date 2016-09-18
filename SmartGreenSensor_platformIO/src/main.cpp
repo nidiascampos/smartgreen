@@ -5,7 +5,7 @@
 #include <SPI.h>
 
 // SD output
-#include <SD.h>
+// #include <SD.h> // FIXME: desabilitado temporariamente
 
 // RTC
 #include <avr/pgmspace.h>
@@ -14,8 +14,9 @@
 
 // Arquivos do projeto
 #include "RTC.h"
-#include "SD_output.h"
+// #include "SD_output.h" // FIXME: desabilitado temporariamente
 #include "Watermark.h"
+#include "rain.h"
 
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
@@ -35,6 +36,10 @@ void setup ()
   // Pin 6,7 is for sensor 1
   pinMode(6, OUTPUT); // Pin 6 is sense resistor voltage supply 1
   pinMode(7, OUTPUT); // Pin 7 is sense resistor voltage supply 2
+
+  // pins for rain sensor
+  // pinMode(rain_pin_digital, INPUT); // digital
+  pinMode (rain_pin_analog, INPUT); // analog
 
   //--------RTC SETUP ------------
   Rtc.Begin();
@@ -86,6 +91,7 @@ void setup ()
   Rtc.SetSquareWavePin(DS3231SquareWavePin_ModeNone);
 
   // see if the card is present and can be initialized:
+  /*
   Serial.print("DEBUG:  SD -> ");
   if (!SD.begin(chipSelect)) {
     Serial.println("Cartao SD falhou ou nao esta presente");
@@ -93,6 +99,7 @@ void setup ()
     return;
   }
   Serial.println("Cartao SD inicializado");
+  */
 }
 
 void loop ()
@@ -117,9 +124,14 @@ void loop ()
   long read2= average();
   long sensor1 = (read1 + read2)/2;
 
+  // check rain sensor
+  int rainValue = detectRain();
+
   dataString += printDateTime(now); // current time (YYYY,MM,DD)
   dataString += ",";
   dataString += String(temp.AsFloat()); // temperature
+  dataString += ",";
+  dataString += String(rainValue); // rain sensor value
   dataString += ",";
   dataString += String(read1-read2); // resistance bias
   dataString += ",";
@@ -130,9 +142,11 @@ void loop ()
   Serial.println();
 
   // open the file:
-  File dataFile = SD.open("SGlog.csv", FILE_WRITE);
+  // File dataFile = SD.open("SGlog.csv", FILE_WRITE); // FIXME: desabilitado temporariamente
 
   // if the file is available, write to it:
+  // FIXME: desabilitado temporariamente
+  /*
   if (dataFile) {
     dataFile.println(dataString);
     dataFile.close();
@@ -141,6 +155,8 @@ void loop ()
   else {
     Serial.println("Erro abrindo SGlog.csv");
   }
-
-  delay(300000); // 300 seconds (5 min)
+  */
+  int minutes = 1;
+  int waitTime = minutes * 10 * 1000;
+  delay(waitTime);
 }
