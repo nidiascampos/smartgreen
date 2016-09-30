@@ -4,8 +4,9 @@ int8_t answer;
 // int onModulePin= 2;
 char aux_str[50];
 char ip_data[40]="Test string from GPRS shield\r\n";
-char teste[182]="POST /api/feeds/611544/data HTTP/1.1\nHOST: io.adafruit.com\ncontent-type: application/json\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\ncontent-length: 14\n\r\n{\"value\":\"19\"}";
+char teste[200]="POST /api/feeds/611544/data HTTP/1.1\r\nHOST: io.adafruit.com\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\"26\"}";
 
+int8_t sendATcommand2b(char* ATcommand);
 int8_t sendATcommand2(char* ATcommand, char* expected_answer1,char* expected_answer2, unsigned int timeout);
 
 void setup(){
@@ -59,14 +60,11 @@ void loop(){
                         Serial.println("Connected");
 
                         // Sends some data to the TCP socket
-                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(ip_data));
+                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(teste));
                         if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
                         {
-                            sendATcommand2(ip_data, "SEND OK", "ERROR", 10000);
+                            sendATcommand2b(teste);
                         }
-
-                        // Closes the socket
-                        sendATcommand2("AT+CIPCLOSE", "CLOSE OK", "ERROR", 10000);
                     }
                     else
                     {
@@ -93,9 +91,19 @@ void loop(){
         Serial.println("Error setting the single connection");
     }
 
-    sendATcommand2("AT+CIPSHUT", "OK", "ERROR", 60000);
+    sendATcommand2b("AT+CIPSHUT");
     delay(60000);
 }
+
+int8_t sendATcommand2b(char* ATcommand){
+    // versão modificada da funćão sendATcommand2, não armazena a resposta e nem define timeout
+    delay(100);
+
+    while( Serial.available() > 0) Serial.read();    // Clean the input buffer
+
+    Serial.println(ATcommand);    // Send the AT command
+}
+
 
 int8_t sendATcommand2(char* ATcommand, char* expected_answer1,
         char* expected_answer2, unsigned int timeout){
