@@ -1,4 +1,4 @@
-// ENVIO DE SMS POR COMANDOS SERIAIS DO ARDUINO PARA SHIELD GSM SIM900
+  // ENVIO DE SMS POR COMANDOS SERIAIS DO ARDUINO PARA SHIELD GSM SIM900
 // baseado no código de: http://www.fut-electronics.com/wp-content/plugins/fe_downloads/Uploads/GSM-shield-datasheet-Arduino-tutorial.pdf
 // lembrar de conectar pinos 0 (RX) e 1 (TX) da shield com o arduino
 // e também de setar a shield GSM no modo Xduino (hardware serial)
