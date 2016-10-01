@@ -10,4 +10,4 @@
 // used as the CS pin, the hardware CS pin (10 on most Arduino boards,
 // 53 on the Mega) must be left as an output or the SD library
 // functions will not work.
-const int chipSelect = 4;
+const int chipSelect = 10;
