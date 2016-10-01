@@ -16,12 +16,12 @@ char message_content1[15]="{\"value\":\"";
 char message_content2[5]="\"}";
 char message[200];
 
-int sensor_data=0;
+int sensor_data=7;
 // char teste[200]="POST /api/feeds/"+feed_key+"/data HTTP/1.1\r\nHOST: "+feed_host+"\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\""+feed_value+"\"}";
 
 void sendATcommand2b(const char* ATcommand);
 int8_t sendATcommand2(const char* ATcommand, const char* expected_answer1, const char* expected_answer2, unsigned int timeout);
-void setMessageValue(const char* feed_key, int sensor_value);
+void sendSensorData(const char* feed_key, int sensor_value);
 
 void setup(){
     Serial.begin(19200);
@@ -35,7 +35,7 @@ void setup(){
     while( sendATcommand2("AT+CREG?", "+CREG: 0,1", "+CREG: 0,5", 1000)== 0 );
 }
 
-void setMessageValue(const char* feed_key, int sensor_value) {
+void sendSensorData(const char* feed_key, int sensor_value) {
   message_content[0] = 0;
   message_content_length[0] = 0;
   message_header[0] = 0;
@@ -63,40 +63,17 @@ void setMessageValue(const char* feed_key, int sensor_value) {
   strcat(message, message_header);
   strcat(message, message_content);
 
-  // return message;
+  // send message;
+  sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
+  if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+  {
+      sendATcommand2b(message);
+      // sendATcommand2b(sendFeedValue("615157",sensor_data));
+  }
 }
 
 void loop(){
-    // message[0] = 0;
-    // message_header[0] = 0;
-    // message_content[0] = 0;
-    // message_content_length[0] = 0;
-    // feed_value[0] = 0;
-
     ++sensor_data;
-
-    // sprintf(feed_value,"%d",sensor_data); // convertendo int para char
-
-    // concatenando chars do conteúdo da mensagem
-    // strcat(message_content, message_content1);
-    // strcat(message_content, feed_value);
-    // strcat(message_content, message_content2);
-    // sprintf(message_content_length,"%d",strlen(message_content)); // obtendo o tamanho da mensagem (em bytes), convertendo de int para char e armazenando em uma variavel
-
-    // concatenando chars do header da mensagem
-    // strcat(message_header, message_header1);
-    // strcat(message_header, feed_key);
-    // strcat(message_header, message_header2);
-    // strcat(message_header, feed_host);
-    // strcat(message_header, message_header3);
-    // strcat(message_header, message_content_length);
-    // strcat(message_header, message_header4);
-
-    // concatenando header e conteúdo
-    // strcat(message, message_header);
-    // strcat(message, message_content);
-
-    // Serial.println(sendFeedValue("615157",sensor_data));
 
     // Selects Single-connection mode
     if (sendATcommand2("AT+CIPMUX=0", "OK", "ERROR", 1000) == 1)
@@ -134,36 +111,15 @@ void loop(){
                         Serial.println("Connected");
 
                         // WM_01_15
-                        setMessageValue("615157",sensor_data);
-                        // Sends some data to the TCP socket
-                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
-                        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
-                        {
-                            sendATcommand2b(message);
-                            // sendATcommand2b(sendFeedValue("615157",sensor_data));
-                        }
-
+                        sendSensorData("615157",sensor_data);
                         delay(10000);
+
                         // WM_01_40
-                        setMessageValue("615158",sensor_data+5);
-                        // Sends some data to the TCP socket
-                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
-                        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
-                        {
-                            sendATcommand2b(message);
-                            // sendATcommand2b(sendFeedValue("615157",sensor_data));
-                        }
-
+                        sendSensorData("615158",sensor_data+3);
                         delay(10000);
+
                         // WM_01_75
-                        setMessageValue("615159",sensor_data+10);
-                        // Sends some data to the TCP socket
-                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
-                        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
-                        {
-                            sendATcommand2b(message);
-                            // sendATcommand2b(sendFeedValue("615157",sensor_data));
-                        }
+                        sendSensorData("615159",sensor_data+7);
                     }
                     else
                     {
