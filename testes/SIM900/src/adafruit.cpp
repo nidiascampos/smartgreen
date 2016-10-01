@@ -132,7 +132,31 @@ void loop(){
                             "CONNECT OK", "CONNECT FAIL", 30000) == 1)
                     {
                         Serial.println("Connected");
+
+                        // WM_01_15
                         setMessageValue("615157",sensor_data);
+                        // Sends some data to the TCP socket
+                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
+                        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+                        {
+                            sendATcommand2b(message);
+                            // sendATcommand2b(sendFeedValue("615157",sensor_data));
+                        }
+
+                        delay(10000);
+                        // WM_01_40
+                        setMessageValue("615158",sensor_data+5);
+                        // Sends some data to the TCP socket
+                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
+                        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+                        {
+                            sendATcommand2b(message);
+                            // sendATcommand2b(sendFeedValue("615157",sensor_data));
+                        }
+
+                        delay(10000);
+                        // WM_01_75
+                        setMessageValue("615159",sensor_data+10);
                         // Sends some data to the TCP socket
                         sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
                         if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
