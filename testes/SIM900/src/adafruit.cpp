@@ -4,13 +4,20 @@ int8_t answer;
 char aux_str[50];
 char feed_host[18]="io.adafruit.com";
 char feed_key[8]="611544";
+char feed_message_length[4];
 // int feed_value=0;
-char feed_value[4]="15";
+char feed_value[3]="15";
+char header[170];
 char header1[18]="POST /api/feeds/";
 char header2[25]="/data HTTP/1.1\r\nHOST: ";
-char header3[125]="\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\"";
-char header4[5]="\"}";
+char header3[105]="\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: ";
+char header4[10]="\r\n\r\n";
+char feed_message[25];
+char feed_message1[15]="{\"value\":\"";
+char feed_message2[5]="\"}";
 char message[200];
+
+int sensor_value=0;
 // char teste[200]="POST /api/feeds/"+feed_key+"/data HTTP/1.1\r\nHOST: "+feed_host+"\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\""+feed_value+"\"}";
 
 int8_t sendATcommand2b(char* ATcommand);
@@ -31,15 +38,31 @@ void setup(){
 }
 
 void loop(){
-
     message[0] = 0;
-    strcat(message, header1);
-    strcat(message, feed_key);
-    strcat(message, header2);
-    strcat(message, feed_host);
-    strcat(message, header3);
-    strcat(message, feed_value);
-    strcat(message, header4);
+    feed_message[0] = 0;
+    header[0] = 0;
+
+    ++sensor_value;
+    sprintf(feed_value,"%d",sensor_value); // convertendo int para char
+
+    // concatenando chars do conteúdo da mensagem
+    strcat(feed_message, feed_message1);
+    strcat(feed_message, feed_value);
+    strcat(feed_message, feed_message2);
+    sprintf(feed_message_length,"%d",strlen(feed_message)); // obtendo o tamanho da mensagem (em bytes), convertendo de int para char e armazenando em uma variavel
+
+    // concatenando chars do header da mensagem
+    strcat(header, header1);
+    strcat(header, feed_key);
+    strcat(header, header2);
+    strcat(header, feed_host);
+    strcat(header, header3);
+    strcat(header, feed_message_length);
+    strcat(header, header4);
+
+    // concatenando header e conteúdo
+    strcat(message, header);
+    strcat(message, feed_message);
 
     // Selects Single-connection mode
     if (sendATcommand2("AT+CIPMUX=0", "OK", "ERROR", 1000) == 1)
