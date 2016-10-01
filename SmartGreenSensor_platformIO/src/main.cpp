@@ -34,8 +34,8 @@ void setup ()
 
   // initialize the digital pins as an output.
   // Pin 6,7 is for sensor 1
-  pinMode(6, OUTPUT); // Pin 6 is sense resistor voltage supply 1
-  pinMode(7, OUTPUT); // Pin 7 is sense resistor voltage supply 2
+  pinMode(4, OUTPUT); // Pin 6 is sense resistor voltage supply 1
+  pinMode(5, OUTPUT); // Pin 7 is sense resistor voltage supply 2
 
   // pins for rain sensor
   // pinMode(rain_pin_digital, INPUT); // digital
@@ -118,9 +118,9 @@ void loop ()
   String dataString;
 
   // measure: sensor id, phase B pin, phase A pin, analog input pin
-  measure(1,6,7,1);
+  measure(1,4,5,1);
   long read1 = average();
-  measure(1,7,6,0);
+  measure(1,5,4,0);
   long read2= average();
   long sensor1 = (read1 + read2)/2;
 

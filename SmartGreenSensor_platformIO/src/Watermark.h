@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 /**
  * Modified by Andrei Bosco B. Torres <andreibosco@virtual.ufc.br>
  * Original by Henrik Ekblad <henrik.ekblad@mysensors.org>
@@ -12,24 +14,24 @@
  *
  * Arduino soil moisture based on gypsum sensor/resistive sensor to avoid electric catalyse in soil
  *  Required to interface the sensor: 2 * 4.7kOhm + 2 * 1N4148
- * 
- * Gypsum sensor and calibration: 
+ *
+ * Gypsum sensor and calibration:
  *  DIY: See http://vanderleevineyard.com/1/category/vinduino/1.html
- *  Built: Davis / Watermark 200SS 
+ *  Built: Davis / Watermark 200SS
  *    http://www.cooking-hacks.com/watermark-soil-moisture-sensor?_bksrc=item2item&_bkloc=product
  *    http://www.irrometer.com/pdf/supportmaterial/sensors/voltage-WM-chart.pdf
  *    cb (centibar) http://www.irrometer.com/basics.html
- *      0-10 Saturated Soil. Occurs for a day or two after irrigation 
- *      10-20 Soil is adequately wet (except coarse sands which are drying out at this range) 
- *      30-60 Usual range to irrigate or water (except heavy clay soils). 
- *      60-100 Usual range to irrigate heavy clay soils 
- *      100-200 Soil is becoming dangerously dry for maximum production. Proceed with caution. 
- * 
+ *      0-10 Saturated Soil. Occurs for a day or two after irrigation
+ *      10-20 Soil is adequately wet (except coarse sands which are drying out at this range)
+ *      30-60 Usual range to irrigate or water (except heavy clay soils).
+ *      60-100 Usual range to irrigate heavy clay soils
+ *      100-200 Soil is becoming dangerously dry for maximum production. Proceed with caution.
+ *
  * Connection:
  *  D6, D7: alternative powering to avoid sensor degradation
  *  A0, A1: alternative resistance mesuring
  *
- *  Based on: 
+ *  Based on:
  *  "Vinduino" portable soil moisture sensor code V3.00
  *   Date December 31, 2012
  *   Reinier van der Lee and Theodore Kaskalis
@@ -51,10 +53,7 @@
 // GNU General Public License for more details.
 
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
-#define NUM_READS 10    // Number of sensor reads for filtering
-
-long buffer[NUM_READS];
-int index;
+#define NUM_READS 11    // Number of sensor reads for filtering
 
 typedef struct {        // Structure to be used in percentage and resistance values matrix to be filtered (have to be in pairs)
   int moisture;
@@ -67,6 +66,8 @@ int supplyVoltage;                // Measured supply voltage
 int sensorVoltage;                // Measured sensor voltage
 
 values valueOf[NUM_READS];        // Calculated moisture percentages and resistances to be sorted and filtered
+long buffer[NUM_READS];
+int index;
 
 int i;                            // Simple index variable
 
@@ -113,7 +114,7 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
 
     delay(1);
     addReading(resistance);
-    // Serial.print (resistance);
-    // Serial.print ("\t");
+    Serial.print (resistance);
+    Serial.print ("\t");
   }
 }
