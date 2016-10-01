@@ -1,3 +1,5 @@
+// Fonte: http://forum.arduino.cc/index.php?topic=116867.0
+
 void Send2Pachube()
 {
   mySerial.println("AT+CGATT?");   //Attach or Detach from GPRS Service (Result  1 = Attach , 2 = Detached )
@@ -11,7 +13,7 @@ void Send2Pachube()
   //mySerial.println("AT+CIPMODE=0");
   //delay(300);
   //ShowSerialData();
- 
+
   mySerial.println("AT+CIPSHUT=0");  //Close TCP Connection
   delay(300);
   ShowSerialData();
@@ -24,7 +26,7 @@ void Send2Pachube()
   mySerial.println("AT+SAPBR=3,1,\"APN\",\"internet\"");//setting the APN, the second need you fill in your local apn server
   delay(1000);
   ShowSerialData();
- 
+
   //mySerial.println("AT+CIICR");//bring up wireless connection
   //delay(300);
   //ShowSerialData();
@@ -45,13 +47,13 @@ void Send2Pachube()
   mySerial.println("AT+CIPSEND");//begin send data to remote server
   delay(4500);
   ShowSerialData();
- 
+
 
 
   mySerial.print("PUT /test/gettempdatatime.php?");//here is the feed you apply from pachube
   delay(500);
   ShowSerialData();
- 
+
   mySerial.print("TI=");   //DATA feed name
   mySerial.print(GetAVG_TempOnOnePin( A0 ));   //DATA to send
   delay(10);
@@ -61,20 +63,20 @@ void Send2Pachube()
   mySerial.print(GetAVG_TempOnOnePin( A1 ));   //DATA to send
   delay(10);
   ShowSerialData();
- 
+
   mySerial.print("&TR=");   //DATA feed name
   mySerial.print(GetAVG_TempOnOnePin( A2 ));   //DATA to send
   delay(10);
   ShowSerialData();
- 
+
   mySerial.print(" HTTP/1.1\r\n");
   delay(500);
   ShowSerialData();
- 
+
   mySerial.print("Host: www.mysite.com\r\n");
   delay(500);
   ShowSerialData();
- 
+
 
   //mySerial.print("Connection: keep-alive");  //working
   mySerial.print("Connection: close");         //working as well
@@ -94,7 +96,7 @@ void Send2Pachube()
   mySerial.println("AT+CIPCLOSE");//close the connection
   delay(100);
   ShowSerialData();
- 
+
   mySerial.println("AT+CIPSHUT=0");
   delay(100);
   ShowSerialData();

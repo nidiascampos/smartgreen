@@ -132,7 +132,7 @@ void loop(){
     }
 
     sendATcommand2b("AT+CIPSHUT");
-    delay(60000);
+    delay(600000);
 }
 
 int8_t sendATcommand2b(char* ATcommand){
