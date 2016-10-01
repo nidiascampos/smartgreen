@@ -1,0 +1,102 @@
+void Send2Pachube()
+{
+  mySerial.println("AT+CGATT?");   //Attach or Detach from GPRS Service (Result  1 = Attach , 2 = Detached )
+  delay(300);
+  ShowSerialData();
+
+  //mySerial.println("AT+CIPMUX=0");
+  //delay(300);
+  //ShowSerialData();
+
+  //mySerial.println("AT+CIPMODE=0");
+  //delay(300);
+  //ShowSerialData();
+ 
+  mySerial.println("AT+CIPSHUT=0");  //Close TCP Connection
+  delay(300);
+  ShowSerialData();
+
+
+  //mySerial.println("AT+CSTT=\"internet\"");//start task and setting the APN,
+  //delay(1000);
+  //ShowSerialData();
+
+  mySerial.println("AT+SAPBR=3,1,\"APN\",\"internet\"");//setting the APN, the second need you fill in your local apn server
+  delay(1000);
+  ShowSerialData();
+ 
+  //mySerial.println("AT+CIICR");//bring up wireless connection
+  //delay(300);
+  //ShowSerialData();
+
+  //mySerial.println("AT+CIFSR");//get local IP adress
+  //delay(2000);
+  //ShowSerialData();
+
+  mySerial.println("AT+CIPSPRT=0");
+  delay(3000);
+  ShowSerialData();
+
+  mySerial.println("AT+CIPSTART=\"TCP\",\"www.mysite.com\",\"80\"");//start up the connection
+
+  delay(2000);
+  ShowSerialData();
+  Serial.println();
+  mySerial.println("AT+CIPSEND");//begin send data to remote server
+  delay(4500);
+  ShowSerialData();
+ 
+
+
+  mySerial.print("PUT /test/gettempdatatime.php?");//here is the feed you apply from pachube
+  delay(500);
+  ShowSerialData();
+ 
+  mySerial.print("TI=");   //DATA feed name
+  mySerial.print(GetAVG_TempOnOnePin( A0 ));   //DATA to send
+  delay(10);
+  ShowSerialData();
+
+  mySerial.print("&TO=");   //DATA feed name
+  mySerial.print(GetAVG_TempOnOnePin( A1 ));   //DATA to send
+  delay(10);
+  ShowSerialData();
+ 
+  mySerial.print("&TR=");   //DATA feed name
+  mySerial.print(GetAVG_TempOnOnePin( A2 ));   //DATA to send
+  delay(10);
+  ShowSerialData();
+ 
+  mySerial.print(" HTTP/1.1\r\n");
+  delay(500);
+  ShowSerialData();
+ 
+  mySerial.print("Host: www.mysite.com\r\n");
+  delay(500);
+  ShowSerialData();
+ 
+
+  //mySerial.print("Connection: keep-alive");  //working
+  mySerial.print("Connection: close");         //working as well
+  mySerial.print("\r\n");
+  mySerial.print("\r\n");
+  //mySerial.println();
+  delay(500);
+  ShowSerialData();
+
+
+  //mySerial.println((char)26);//sending
+  mySerial.print(0x1A,BYTE);
+  delay(500);//waitting for reply, important! the time is base on the condition of internet
+  mySerial.println();
+  ShowSerialData();
+
+  mySerial.println("AT+CIPCLOSE");//close the connection
+  delay(100);
+  ShowSerialData();
+ 
+  mySerial.println("AT+CIPSHUT=0");
+  delay(100);
+  ShowSerialData();
+
+}
