@@ -1,10 +1,17 @@
 #include <Arduino.h>
 
 int8_t answer;
-// int onModulePin= 2;
 char aux_str[50];
-char ip_data[40]="Test string from GPRS shield\r\n";
-char teste[200]="POST /api/feeds/611544/data HTTP/1.1\r\nHOST: io.adafruit.com\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\"26\"}";
+char feed_host[18]="io.adafruit.com";
+char feed_key[8]="611544";
+// int feed_value=0;
+char feed_value[4]="15";
+char header1[18]="POST /api/feeds/";
+char header2[25]="/data HTTP/1.1\r\nHOST: ";
+char header3[125]="\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\"";
+char header4[5]="\"}";
+char message[200];
+// char teste[200]="POST /api/feeds/"+feed_key+"/data HTTP/1.1\r\nHOST: "+feed_host+"\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\""+feed_value+"\"}";
 
 int8_t sendATcommand2b(char* ATcommand);
 int8_t sendATcommand2(char* ATcommand, char* expected_answer1,char* expected_answer2, unsigned int timeout);
@@ -24,6 +31,16 @@ void setup(){
 }
 
 void loop(){
+
+    message[0] = 0;
+    strcat(message, header1);
+    strcat(message, feed_key);
+    strcat(message, header2);
+    strcat(message, feed_host);
+    strcat(message, header3);
+    strcat(message, feed_value);
+    strcat(message, header4);
+
     // Selects Single-connection mode
     if (sendATcommand2("AT+CIPMUX=0", "OK", "ERROR", 1000) == 1)
     {
@@ -60,10 +77,10 @@ void loop(){
                         Serial.println("Connected");
 
                         // Sends some data to the TCP socket
-                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(teste));
+                        sprintf(aux_str,"AT+CIPSEND=%d", strlen(message));
                         if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
                         {
-                            sendATcommand2b(teste);
+                            sendATcommand2b(message);
                         }
                     }
                     else
