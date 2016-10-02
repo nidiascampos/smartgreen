@@ -18,7 +18,7 @@ D9 -> A7
 */
 
 // SD output
-// #include <SD.h> // FIXME: desabilitado temporariamente
+#include <SD.h>
 
 // RTC
 #include <avr/pgmspace.h>
@@ -27,7 +27,7 @@ D9 -> A7
 
 // Arquivos do projeto
 #include "RTC.h"
-// #include "SD_output.h" // FIXME: desabilitado temporariamente
+#include "SD_output.h"
 #include "Watermark.h"
 
 // Formato do output (CSV)
@@ -105,7 +105,7 @@ void setup ()
   Rtc.SetSquareWavePin(DS3231SquareWavePin_ModeNone);
 
   // see if the card is present and can be initialized:
-  /*
+
   Serial.print("DEBUG:  SD -> ");
   if (!SD.begin(chipSelect)) {
     Serial.println("Cartao SD falhou ou nao esta presente");
@@ -113,7 +113,7 @@ void setup ()
     return;
   }
   Serial.println("Cartao SD inicializado");
-  */
+
 }
 
 void loop ()
@@ -173,11 +173,10 @@ void loop ()
   Serial.println();
 
   // open the file:
-  // File dataFile = SD.open("SGlog.csv", FILE_WRITE); // FIXME: desabilitado temporariamente
+  File dataFile = SD.open("SGlog.csv", FILE_WRITE);
 
   // if the file is available, write to it:
-  // FIXME: desabilitado temporariamente
-  /*
+
   if (dataFile) {
     dataFile.println(dataString);
     dataFile.close();
@@ -186,8 +185,8 @@ void loop ()
   else {
     Serial.println("Erro abrindo SGlog.csv");
   }
-  */
+
   int minutes = 1;
-  int waitTime = minutes * 10 * 1000;
+  int waitTime = minutes * 30 * 1000;
   delay(waitTime);
 }

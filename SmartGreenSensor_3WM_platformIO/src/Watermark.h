@@ -97,6 +97,8 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
     digitalWrite(phase_a, HIGH);                 // set the voltage supply on
     delayMicroseconds(25);
     supplyVoltage = analogRead(analog_input);   // read the supply voltage
+    // Serial.print("supply voltage:");
+    // Serial.println(supplyVoltage);
     delayMicroseconds(25);
     digitalWrite(phase_a, LOW);                  // set the voltage supply off
     delay(1);
@@ -104,6 +106,8 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
     digitalWrite(phase_b, HIGH);                 // set the voltage supply on
     delayMicroseconds(25);
     sensorVoltage = analogRead(analog_input);   // read the sensor voltage
+    // Serial.print("sensor voltage: ");
+    // Serial.println(sensorVoltage);
     delayMicroseconds(25);
     digitalWrite(phase_b, LOW);                  // set the voltage supply off
 
