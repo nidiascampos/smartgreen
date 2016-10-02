@@ -114,7 +114,7 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
 
     delay(1);
     addReading(resistance);
-    Serial.print (resistance);
-    Serial.print ("\t");
+    // Serial.print (resistance);
+    // Serial.print ("\t");
   }
 }
