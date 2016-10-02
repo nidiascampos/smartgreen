@@ -3,6 +3,19 @@
 // Watermark
 #include <math.h> // Conversion equation from resistance to %
 #include <SPI.h>
+/*
+WM01
+D4 -> A0
+D5 -> A1
+
+WM02
+D6 -> A2
+D7 -> A3
+
+WM03
+D8 -> A6
+D9 -> A7
+*/
 
 // SD output
 // #include <SD.h> // FIXME: desabilitado temporariamente
@@ -32,9 +45,15 @@ void setup ()
   // Serial.println(__TIME__);
 
   // initialize the digital pins as an output.
-  // Pin 6,7 is for sensor 1
-  pinMode(4, OUTPUT); // Pin 6 is sense resistor voltage supply 1
-  pinMode(5, OUTPUT); // Pin 7 is sense resistor voltage supply 2
+  // Pin 4,5 is for sensor 1
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  // Pin 6,7 is for sensor 2
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  // Pin 8,9 is for sensor 3
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
 
   //--------RTC SETUP ------------
   Rtc.Begin();
@@ -119,6 +138,20 @@ void loop ()
   long read2= average();
   long sensor1 = (read1 + read2)/2;
 
+  // measure: sensor id, phase B pin, phase A pin, analog input pin
+  measure(2,6,7,3);
+  long read3 = average();
+  measure(2,7,6,2);
+  long read4= average();
+  long sensor2 = (read3 + read4)/2;
+
+  // measure: sensor id, phase B pin, phase A pin, analog input pin
+  measure(3,8,9,7);
+  long read5 = average();
+  measure(3,9,8,6);
+  long read6= average();
+  long sensor3 = (read5 + read6)/2;
+
   dataString += printDateTime(now); // current time (YYYY,MM,DD)
   dataString += ",";
   dataString += String(temp.AsFloat()); // temperature
@@ -126,6 +159,14 @@ void loop ()
   dataString += String(read1-read2); // resistance bias
   dataString += ",";
   dataString += String(sensor1); // sensor bias compensated value
+  dataString += ",";
+  dataString += String(read3-read4); // resistance bias
+  dataString += ",";
+  dataString += String(sensor2); // sensor bias compensated value
+  dataString += ",";
+  dataString += String(read5-read6); // resistance bias
+  dataString += ",";
+  dataString += String(sensor3); // sensor bias compensated value
 
   // DEBUG: print to the serial port
   Serial.print(dataString);
