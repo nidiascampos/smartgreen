@@ -15,8 +15,8 @@
 // Arquivos do projeto
 #include "RTC.h"
 // #include "SD_output.h" // FIXME: desabilitado temporariamente
-// #include "Watermark.h"
 #include "rain.h"
+#include "temperature.h"
 
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
@@ -26,11 +26,19 @@ void setup ()
 {
   Serial.begin(57600);
   Serial.println("DEBUG: Iniciando...");
+  sensors.begin();
 
-  // DEBUG: para informar quando o sketch foi compilado
-  // Serial.print("compiled: ");
-  // Serial.print(__DATE__);
-  // Serial.println(__TIME__);
+  // Localiza e mostra enderecos dos sensores
+  Serial.println("Localizando sensores DS18B20...");
+  Serial.print("Foram encontrados ");
+  Serial.print(sensors.getDeviceCount(), DEC);
+  Serial.println(" sensores.");
+  if (!sensors.getAddress(sensor1, 0))
+     Serial.println("Sensores nao encontrados !");
+  // Mostra o endereco do sensor encontrado no barramento
+  Serial.print("Endereco sensor: ");
+  mostra_endereco_sensor(sensor1);
+  Serial.println();
 
   // pins for rain sensor
   // pinMode(rain_pin_digital, INPUT); // digital
@@ -107,7 +115,6 @@ void loop ()
   }
 
   RtcDateTime now = Rtc.GetDateTime();
-  RtcTemperature temp = Rtc.GetTemperature();
 
   // make a string for assembling the data to log
   String dataString;
@@ -115,9 +122,14 @@ void loop ()
   // check rain sensor
   int rainValue = detectRain();
 
+  // check temperature sensor
+  sensors.requestTemperatures();
+  float tempC = sensors.getTempC(sensor1);
+
+  // organizing data output
   dataString += printDateTime(now); // current time (YYYY,MM,DD)
   dataString += ",";
-  dataString += String(temp.AsFloat()); // temperature
+  dataString += String(tempC); // temperature
   dataString += ",";
   dataString += String(rainValue); // rain sensor value
 
