@@ -124,16 +124,32 @@ void loop() {
 
   // we only want to show time every 10 seconds
   // but we want to show responce to the interupt firing
-  for (int timeCount = 0; timeCount < 20; timeCount++)
+  // for (int timeCount = 0; timeCount < 20; timeCount++)
+  // {
+  //     if (Alarmed())
+  //     {
+  //         Serial.print(">>Interupt Count: ");
+  //         Serial.print(interuptCount);
+  //         Serial.println("<<");
+  //     }
+  //     delay(500);
+  // }
+
+  if (Alarmed())
   {
-      if (Alarmed())
-      {
-          Serial.print(">>Interupt Count: ");
-          Serial.print(interuptCount);
-          Serial.println("<<");
-      }
-      delay(500);
-    }
+      Serial.print(">>Interupt Count: ");
+      Serial.print(interuptCount);
+      Serial.println("<<");
+  }
+
+  // Enter power down state with ADC and BOD module disabled.
+  // Wake up when wake up pin is low.
+  Serial.println("indo dormir");
+  Serial.println();
+
+  delay(500);
+
+  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
 }
 
 bool Alarmed() {
