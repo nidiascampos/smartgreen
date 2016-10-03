@@ -98,10 +98,10 @@ void setup() {
 
   // Alarm 2 set to trigger at the top of the minute
   DS3231AlarmTwo alarm2(
-    0,
-    0,
-    0,
-    DS3231AlarmTwoControl_OncePerMinute);
+    0, // day
+    0, // hour
+    30, // minute
+    DS3231AlarmTwoControl_MinutesMatch);
   Rtc.SetAlarmTwo(alarm2);
 
   // throw away any old alarm state before we ran
@@ -169,7 +169,7 @@ bool Alarmed() {
     }
     if (flag & DS3231AlarmFlag_Alarm2)
     {
-        Serial.println("alarm two triggered");
+        Serial.println("alarm two triggered !!!!!!!!!!!!!!!");
     }
   }
   return wasAlarmed;
