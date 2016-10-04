@@ -16,6 +16,7 @@ char message_content1[15]="{\"value\":\"";
 char message_content2[5]="\"}";
 char message[200];
 
+int sensor_data=4;
 // char teste[200]="POST /api/feeds/"+feed_key+"/data HTTP/1.1\r\nHOST: "+feed_host+"\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\""+feed_value+"\"}";
 
 void sendATcommand2b(const char* ATcommand);
@@ -23,6 +24,7 @@ int8_t sendATcommand2(const char* ATcommand, const char* expected_answer1, const
 void sendSensorData(const char* feed_key, int sensor_value);
 void powerOnSIM900();
 void powerDownSIM900();
+// void sendDataToCloud();
 void sendDataToCloud(long sensorsData[]);
 
 void powerOnSIM900() {
@@ -116,15 +118,18 @@ void sendDataToCloud(long sensorsData[]) {
                       Serial.println("Connected");
 
                       // WM_01_15
+                      // sendSensorData("615157",sensor_data);
                       sendSensorData("615157",sensorsData[0]);
                       delay(10000);
 
                       // WM_01_40
-                      sendSensorData("615158",sensorsData[1]);
+                      // sendSensorData("615158",sensor_data+2);
+                      sendSensorData("615157",sensorsData[1]);
                       delay(10000);
 
                       // WM_01_75
-                      sendSensorData("615159",sensorsData[2]);
+                      // sendSensorData("615159",sensor_data+3);
+                      sendSensorData("615157",sensorsData[2]);
                   }
                   else
                   {
