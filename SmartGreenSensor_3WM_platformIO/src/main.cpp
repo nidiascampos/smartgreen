@@ -12,28 +12,25 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 // SD output
 #include <SD.h>
 
-// RTC
-#include <avr/pgmspace.h>
-#include <Wire.h> // must be incuded here so that Arduino library object file references work
-#include <RtcDS3231.h>
-
 // Sleep
 #include <Sleep_n0m1.h>
 
 // Arquivos do projeto
-#include "RTC.h"
 #include "SD_output.h"
 #include "Watermark.h"
 #include "Sleep.h"
 
+// SIM900
+// #include "SIM900.h"
+
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
-// variância da leitura da resistência, leitura da resistência
+// variância da leitura da resistência, leitura da resistência * 3
 
 void setup ()
 {
   Serial.begin(57600);
-  Serial.println("DEBUG: Iniciando...");
+  // Serial.println("DEBUG: Iniciando...");
 
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 60000;
@@ -50,55 +47,6 @@ void setup ()
   // Pin 8,9 is for sensor 3
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-
-  //--------RTC SETUP ------------
-  Rtc.Begin();
-
-  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-  // DEBUG: para informar quando o sketch foi compilado e a hora inicial que foi setada no RTC
-  Serial.print("DEBUG: RTC -> Compilado em ");
-  Serial.println(printDateTime(compiled)); // YYYY,MM,DD
-
-  // Verificação se o RTC possui dados válidos
-  Serial.print("DEBUG: RTC -> ");
-  if (!Rtc.IsDateTimeValid())
-  {
-    // Common Causes:
-    // 1) first time you ran and the device wasn't running yet
-    // 2) the battery on the device is low or even missing
-    Serial.println("RTC lost confidence in the DateTime!");
-
-    // following line sets the RTC to the date & time this sketch was compiled
-    // it will also reset the valid flag internally unless the Rtc device is
-    // having an issue
-    Rtc.SetDateTime(compiled);
-  }
-
-  if (!Rtc.GetIsRunning())
-  {
-    Serial.println("RTC was not actively running, starting now");
-    Rtc.SetIsRunning(true);
-  }
-
-  RtcDateTime now = Rtc.GetDateTime();
-  if (now < compiled)
-  {
-    Serial.println("RTC is older than compile time!  (Updating DateTime)");
-    Rtc.SetDateTime(compiled);
-  }
-  else if (now > compiled)
-  {
-    Serial.println("RTC is newer than compile time. (this is expected)");
-  }
-  else if (now == compiled)
-  {
-    Serial.println("RTC is the same as compile time! (not expected but all is fine)");
-  }
-
-  // never assume the Rtc was last configured by you, so
-  // just clear them to your needed state
-  Rtc.Enable32kHzPin(false);
-  Rtc.SetSquareWavePin(DS3231SquareWavePin_ModeNone);
 
   // see if the card is present and can be initialized:
   Serial.print("DEBUG:  SD -> ");
@@ -118,16 +66,6 @@ void setup ()
 void loop ()
 {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
-
-  if (!Rtc.IsDateTimeValid())
-  {
-    // Common Cuases:
-    // 1) the battery on the device is low or even missing and the power line was disconnected
-    Serial.println("RTC lost confidence in the DateTime!");
-  }
-
-  RtcDateTime now = Rtc.GetDateTime();
-  RtcTemperature temp = Rtc.GetTemperature();
 
   // make a string for assembling the data to log
   String dataString;
@@ -151,10 +89,6 @@ void loop ()
   long read6= average();
   long sensor3 = (read5 + read6)/2;
 
-  dataString += printDateTime(now); // current time (YYYY,MM,DD)
-  dataString += ",";
-  dataString += String(temp.AsFloat()); // temperature
-  dataString += ",";
   dataString += String(read1-read2); // resistance bias
   dataString += ",";
   dataString += String(sensor1); // sensor bias compensated value
