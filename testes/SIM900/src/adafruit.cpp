@@ -16,23 +16,33 @@ char message_content1[15]="{\"value\":\"";
 char message_content2[5]="\"}";
 char message[200];
 
-int sensor_data=7;
+int sensor_data=4;
 // char teste[200]="POST /api/feeds/"+feed_key+"/data HTTP/1.1\r\nHOST: "+feed_host+"\r\ncontent-type: application/json\r\nx-aio-key: f38fefdd1fa94e2aaec9fd857b036e19\r\ncontent-length: 14\r\n\r\n{\"value\":\""+feed_value+"\"}";
 
 void sendATcommand2b(const char* ATcommand);
 int8_t sendATcommand2(const char* ATcommand, const char* expected_answer1, const char* expected_answer2, unsigned int timeout);
 void sendSensorData(const char* feed_key, int sensor_value);
+void powerOn();
 
 void setup(){
     Serial.begin(19200);
     Serial.println("Starting...");
-    // power_on();
-    delay(3000);
+    powerOn();
+    // delay(3000);
     // sets the PIN code
-    sendATcommand2("AT+CPIN=1010", "OK", "ERROR", 2000);
+    //sendATcommand2("AT+CPIN=1010", "OK", "ERROR", 2000);
     delay(3000);
     Serial.println("Connecting to the network...");
     while( sendATcommand2("AT+CREG?", "+CREG: 0,1", "+CREG: 0,5", 1000)== 0 );
+}
+
+void powerOn() {
+  // Test to check if shield is awake
+  // if it isn't, the first byte will be ignored
+  sendATcommand2b("AT");
+  sendATcommand2b("AT+CSCLK=0"); // disable sleep mode (avoid losing command bytes)
+  sendATcommand2b("AT+CFUN=1"); // set power mode to 1 (full functionality)
+  delay(3000);
 }
 
 void sendSensorData(const char* feed_key, int sensor_value) {
@@ -74,6 +84,8 @@ void sendSensorData(const char* feed_key, int sensor_value) {
 
 void loop(){
     ++sensor_data;
+
+    powerOn();
 
     // Selects Single-connection mode
     if (sendATcommand2("AT+CIPMUX=0", "OK", "ERROR", 1000) == 1)
@@ -146,7 +158,9 @@ void loop(){
         Serial.println("Error setting the single connection");
     }
 
-    sendATcommand2b("AT+CIPSHUT");
+    sendATcommand2b("AT+CIPSHUT"); // closing data connection
+    sendATcommand2b("AT+CFUN=0"); // set power mode to 0 (minimium functionality)
+    sendATcommand2b("AT+CSCLK=2"); // set sleep mode 2
     delay(60000);
 }
 
