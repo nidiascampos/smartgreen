@@ -17,11 +17,14 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 #include <Wire.h> // must be incuded here so that Arduino library object file references work
 #include <RtcDS3231.h>
 
+// Sleep
+#include <Sleep_n0m1.h>
+
 // Arquivos do projeto
 #include "RTC.h"
 #include "SD_output.h"
 #include "Watermark.h"
-#include "SIM900.h"
+#include "Sleep.h"
 
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
@@ -31,6 +34,11 @@ void setup ()
 {
   Serial.begin(57600);
   Serial.println("DEBUG: Iniciando...");
+
+  // set sleep time in ms, max sleep time is 49.7 days
+  sleepTime = 60000;
+  // int minutes = 1;
+  // sleepTime = minutes * 60 * 1000;
 
   // initialize the digital pins as an output.
   // Pin 4,5 is for sensor 1
@@ -109,6 +117,8 @@ void setup ()
 
 void loop ()
 {
+  delay(100); // (sleep) delays are just for serial print, without serial they can be removed
+
   if (!Rtc.IsDateTimeValid())
   {
     // Common Cuases:
@@ -158,11 +168,11 @@ void loop ()
   dataString += String(sensor3); // sensor bias compensated value
 
   // SIM900
-  long sensorsData[3] = {sensor1, sensor2, sensor3};
-  Serial.print("sensors data: ");
-  Serial.println(sensorsData[0]);
-  Serial.println(sensorsData[1]);
-  Serial.println(sensorsData[2]);
+  // long sensorsData[3] = {sensor1, sensor2, sensor3};
+  // Serial.print("sensors data: ");
+  // Serial.println(sensorsData[0]);
+  // Serial.println(sensorsData[1]);
+  // Serial.println(sensorsData[2]);
   // sendDataToCloud(sensorsData);
   // powerDownSIM900();
 
@@ -183,7 +193,18 @@ void loop ()
     Serial.println("Erro abrindo SGlog.csv");
   }
 
-  int minutes = 1;
-  int waitTime = minutes * 30 * 1000;
-  delay(waitTime);
+  // sleep
+  Serial.print("sleeping for ");
+  Serial.println(sleepTime);
+  delay(100); // delay to allow serial to fully print before sleep
+
+  // **prwDownMode**
+  // The most power saving, all systems are powered down
+  // except the watch dog timer and external reset
+  sleep.pwrDownMode(); // set sleep mode
+  sleep.sleepDelay(sleepTime); // sleep for: sleepTime
+
+  // int minutes = 1;
+  // int waitTime = minutes * 60 * 1000;
+  // delay(waitTime);
 }
