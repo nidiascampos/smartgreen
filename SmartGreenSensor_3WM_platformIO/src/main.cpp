@@ -33,7 +33,7 @@ void setup ()
   // Serial.println("DEBUG: Iniciando...");
 
   // set sleep time in ms, max sleep time is 49.7 days
-  sleepTime = 3600000; // 60 minutos (1000 * 60 * 60)
+  sleepTime = 2700000; // 45 minutos (1000 * 60 * 45)
   // int minutes = 1;
   // sleepTime = minutes * 60 * 1000;
 
