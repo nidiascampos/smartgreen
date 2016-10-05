@@ -33,7 +33,7 @@ void setup ()
   // Serial.println("DEBUG: Iniciando...");
 
   // set sleep time in ms, max sleep time is 49.7 days
-  sleepTime = 60000;
+  sleepTime = 3600000; // 60 minutos (1000 * 60 * 60)
   // int minutes = 1;
   // sleepTime = minutes * 60 * 1000;
 
@@ -127,11 +127,10 @@ void loop ()
     Serial.println("Erro abrindo SGlog.csv");
   }
 
-  // sleep
-  Serial.print("sleeping for ");
-  Serial.println(sleepTime);
-  delay(100); // delay to allow serial to fully print before sleep
-
+  // Sleep
+  // Serial.print("sleeping for ");
+  // Serial.println(sleepTime);
+  // delay(100); // delay to allow serial to fully print before sleep
   // **prwDownMode**
   // The most power saving, all systems are powered down
   // except the watch dog timer and external reset
