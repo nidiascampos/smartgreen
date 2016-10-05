@@ -21,10 +21,11 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 void setup ()
 {
   Serial.begin(57600);
-  Serial.println("DEBUG: iniciando... ");
+  Serial.println("DEBUG: setup -> iniciando");
 
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
+  // sleepTime = 60000; // 1 minuto
 
   // initialize the digital pins as an output.
   // Pin 4,5 is for sensor 1
@@ -43,12 +44,12 @@ void setup ()
   Ethernet.begin(ip);
   Ethernet.set_gateway(gateway);
   if (mesh.begin()) {
-    Serial.println(F("DEBUG: RF24 -> OK"));
+    Serial.println(F("DEBUG: setup -> RF24 -> OK"));
   } else {
-    Serial.println(F("DEBUG: RF24 -> falha"));
+    Serial.println(F("DEBUG: setup -> RF24 -> falha"));
   }
 
-  Serial.println("DEBUG: iniciado OK");
+  Serial.println("DEBUG: setup -> iniciado OK");
 }
 
 void loop ()
@@ -101,21 +102,25 @@ void loop ()
 
   if (!client.connected()) {
     reconnect();
-    char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
-    dataString.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
-    client.publish("outTopic/bias",outputBuf);
   }
 
-  Serial.println("DEBUG: RF24 -> desconectando");
+  Serial.println("DEBUG: RF24 -> MQTT -> enviando dados");
+  char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+  dataString.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+  client.publish("outTopic/bias",outputBuf);
+
+  Serial.print("DEBUG: RF24 -> MQTT -> desconectando... ");
   client.disconnect();
+  Serial.println("OK");
+  delay(500); // delay necessário para o processo de desconexão
 
   // Sleep
-  // Serial.print("sleeping for ");
-  // Serial.println(sleepTime);
-  // delay(100); // delay to allow serial to fully print before sleep
-  // **prwDownMode**
-  // The most power saving, all systems are powered down
+  // prwDownMode: the most power saving, all systems are powered down
   // except the watch dog timer and external reset
+  Serial.print("DEBUG: hibernando por ");
+  Serial.print(sleepTime / 60000);
+  Serial.print(" minuto(s)");
+  delay(100); // delay to allow serial to fully print before sleep
   sleep.pwrDownMode(); // set sleep mode
   sleep.sleepDelay(sleepTime); // sleep for: sleepTime
 }
