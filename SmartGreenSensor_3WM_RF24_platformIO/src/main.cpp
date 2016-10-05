@@ -9,15 +9,11 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 */
 #include <math.h> // Conversion equation from resistance to %
 #include <SPI.h>
-// SD output
-#include <SD.h>
-// Sleep
-#include <Sleep_n0m1.h>
 
 // ** PROJECT FILES **
-#include "SD_output.h"
 #include "Watermark.h"
 #include "Sleep.h"
+#include "RF24module.h"
 
 // Formato do output (CSV)
 // (variância da leitura da resistência, leitura da resistência) * 3
@@ -25,7 +21,7 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 void setup ()
 {
   Serial.begin(57600);
-  // Serial.println("DEBUG: Iniciando...");
+  Serial.println("DEBUG: iniciando... ");
 
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
@@ -41,14 +37,18 @@ void setup ()
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
 
-  // see if the card is present and can be initialized:
-  Serial.print("DEBUG:  SD -> ");
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Cartao SD falhou ou nao esta presente");
-    // don't do anything more:
-    return;
+  // RF24
+  client.setServer(server, 1883);
+  client.setCallback(callback);
+  Ethernet.begin(ip);
+  Ethernet.set_gateway(gateway);
+  if (mesh.begin()) {
+    Serial.println(F("DEBUG: RF24 -> OK"));
+  } else {
+    Serial.println(F("DEBUG: RF24 -> falha"));
   }
-  Serial.println("Cartao SD inicializado");
+
+  Serial.println("DEBUG: iniciado OK");
 }
 
 void loop ()
@@ -92,18 +92,22 @@ void loop ()
   // DEBUG: print to the serial port
   Serial.println(dataString);
 
-  // SD
-  // open the file:
-  File dataFile = SD.open("SGlog.csv", FILE_WRITE);
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
+  // check connection and renew address (if needed)
+  if( ! mesh.checkConnection() ){
+    Serial.print("DEBUG: RF24 -> mesh -> conectando... ");
+    mesh.renewAddress();
+    Serial.println("OK");
   }
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("Erro abrindo SGlog.csv");
+
+  if (!client.connected()) {
+    reconnect();
+    char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+    dataString.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+    client.publish("outTopic/bias",outputBuf);
   }
+
+  Serial.println("DEBUG: RF24 -> desconectando");
+  client.disconnect();
 
   // Sleep
   // Serial.print("sleeping for ");
