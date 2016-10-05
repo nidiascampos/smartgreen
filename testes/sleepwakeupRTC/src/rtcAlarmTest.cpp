@@ -149,6 +149,10 @@ void loop() {
 
   delay(500);
 
+  // setting arduino into sleep/powerdown mode
+  // ADC_OFF = disables ADC module
+  // BOD_OFF = disables Brown Out Detector module
+  // it will only wakeup via an interrupt trigger (even watchdog is disabled)
   LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
 }
 
