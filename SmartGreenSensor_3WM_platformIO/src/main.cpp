@@ -25,7 +25,7 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 
 // Formato do output (CSV)
 // ano, mês, dia, hora, minuto, segundo, temperatura,
-// variância da leitura da resistência, leitura da resistência * 3
+// leitura da resistência, leitura compensada da resistência * 3, variancia da leitura
 
 void setup ()
 {
@@ -33,7 +33,7 @@ void setup ()
   // Serial.println("DEBUG: Iniciando...");
 
   // set sleep time in ms, max sleep time is 49.7 days
-  sleepTime = 2700000; // 45 minutos (1000 * 60 * 45)
+  sleepTime = 1800000; // 45 minutos (1000 * 60 * 30)
   // int minutes = 1;
   // sleepTime = minutes * 60 * 1000;
 
@@ -76,30 +76,45 @@ void loop ()
   measure(1,5,4,0);
   long read2= average();
   long sensor1 = (read1 + read2)/2;
+  long variance1 = variance(sensor1);
 
-  measure(2,6,7,3);
-  long read3 = average();
-  measure(2,7,6,2);
-  long read4= average();
-  long sensor2 = (read3 + read4)/2;
+  // measure(2,6,7,3);
+  // long read3 = average();
+  // measure(2,7,6,2);
+  // long read4= average();
+  // long sensor2 = (read3 + read4)/2;
+  // long variance2 = variance(sensor2);
+  //
+  // measure(3,8,9,7);
+  // long read5 = average();
+  // measure(3,9,8,6);
+  // long read6= average();
+  // long sensor3 = (read5 + read6)/2;
+  // long variance3 = variance(sensor3);
 
-  measure(3,8,9,7);
-  long read5 = average();
-  measure(3,9,8,6);
-  long read6= average();
-  long sensor3 = (read5 + read6)/2;
-
+  dataString += String(read1); // resistance bias
+  dataString += ",";
+  dataString += String(read2); // resistance bias
+  dataString += ",";
   dataString += String(read1-read2); // resistance bias
   dataString += ",";
   dataString += String(sensor1); // sensor bias compensated value
   dataString += ",";
-  dataString += String(read3-read4); // resistance bias
+  dataString += String(variance1); // sensor reading variance
   dataString += ",";
-  dataString += String(sensor2); // sensor bias compensated value
-  dataString += ",";
-  dataString += String(read5-read6); // resistance bias
-  dataString += ",";
-  dataString += String(sensor3); // sensor bias compensated value
+  dataString += String(sqrt(variance1)); // sensor standard deviation
+  // dataString += ",";
+  // dataString += String(read3-read4); // resistance bias
+  // dataString += ",";
+  // dataString += String(sensor2); // sensor bias compensated value
+  // dataString += ",";
+  // dataString += String(variance2); // sensor reading variance
+  // dataString += ",";
+  // dataString += String(read5-read6); // resistance bias
+  // dataString += ",";
+  // dataString += String(sensor3); // sensor bias compensated value
+  // dataString += ",";
+  // dataString += String(variance3); // sensor reading variance
 
   // SIM900
   // long sensorsData[3] = {sensor1, sensor2, sensor3};

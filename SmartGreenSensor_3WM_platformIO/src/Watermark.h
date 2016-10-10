@@ -67,6 +67,7 @@ int sensorVoltage;                // Measured sensor voltage
 
 values valueOf[NUM_READS];        // Calculated moisture percentages and resistances to be sorted and filtered
 long buffer[NUM_READS];
+long sensorVariance;
 int index;
 
 int i;                            // Simple index variable
@@ -84,6 +85,29 @@ long average(){
     sum += buffer[i];
   }
   return (long)(sum / NUM_READS);
+}
+
+long variance(long sensorAverage) {
+  // sample variance
+  // https://www.khanacademy.org/math/statistics-probability/displaying-describing-data/sample-standard-deviation/v/sample-variance
+  // http://www.r-tutor.com/elementary-statistics/numerical-measures/variance
+  // sensorVariance = 0;
+  for (int i = 0; i < NUM_READS; i++) {
+    sensorVariance += sq(buffer[i] - sensorAverage);
+    Serial.print("buffer ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(buffer[i]);
+    Serial.print("variance ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(sensorVariance);
+    Serial.print("average ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(sensorAverage);
+  }
+  return sensorVariance = sensorVariance / (NUM_READS);
 }
 
 void measure (int sensor, int phase_b, int phase_a, int analog_input)
@@ -118,7 +142,8 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
 
     delay(1);
     addReading(resistance);
-    // Serial.print (resistance);
-    // Serial.print ("\t");
+    Serial.print (resistance);
+    Serial.print ("\t");
   }
+  Serial.println();
 }
