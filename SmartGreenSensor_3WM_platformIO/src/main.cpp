@@ -70,13 +70,14 @@ void loop ()
   // make a string for assembling the data to log
   String dataString;
 
-  // measure: sensor id, phase B pin, phase A pin, analog input pin
-  measure(1,4,5,1);
-  long read1 = average();
-  measure(1,5,4,0);
-  long read2= average();
-  long sensor1 = (read1 + read2)/2;
-  long variance1 = variance(sensor1);
+  // measure: sensor id, phase B pin, phase A pin, analog input pin 0, analog input pin 1
+  measureSensor(1,4,5,0,1);
+  // measure(1,4,5,1);
+  // long read1 = average();
+  // measure(1,5,4,0);
+  // long read2= average();
+  // long sensor1 = (read1 + read2)/2;
+  // long variance1 = variance(sensor1);
 
   // measure(2,6,7,3);
   // long read3 = average();
@@ -92,17 +93,22 @@ void loop ()
   // long sensor3 = (read5 + read6)/2;
   // long variance3 = variance(sensor3);
 
-  dataString += String(read1); // resistance bias
-  dataString += ",";
-  dataString += String(read2); // resistance bias
-  dataString += ",";
-  dataString += String(read1-read2); // resistance bias
-  dataString += ",";
-  dataString += String(sensor1); // sensor bias compensated value
-  dataString += ",";
-  dataString += String(variance1); // sensor reading variance
-  dataString += ",";
-  dataString += String(sqrt(variance1)); // sensor standard deviation
+  // dataString += String(read1); // resistance bias
+  // dataString += ",";
+  // dataString += String(read2); // resistance bias
+  // dataString += ",";
+  // dataString += String(read1-read2); // resistance bias
+  // dataString += ",";
+
+  for (size_t i = 1; i < 4; i++) {
+    dataString += String(sensor[i]); // sensor bias compensated value
+    dataString += ",";
+    dataString += String(variance[i]); // sensor reading variance
+    dataString += ",";
+    dataString += String(sqrt(variance[i])); // sensor standard deviation
+  }
+
+
   // dataString += ",";
   // dataString += String(read3-read4); // resistance bias
   // dataString += ",";

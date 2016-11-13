@@ -87,25 +87,13 @@ long average(){
   return (long)(sum / NUM_READS);
 }
 
-long variance(long sensorAverage) {
+long varianceCalc (long sensorAverage) {
   // sample variance
   // https://www.khanacademy.org/math/statistics-probability/displaying-describing-data/sample-standard-deviation/v/sample-variance
   // http://www.r-tutor.com/elementary-statistics/numerical-measures/variance
   // sensorVariance = 0;
   for (int i = 0; i < NUM_READS; i++) {
     sensorVariance += sq(buffer[i] - sensorAverage);
-    Serial.print("buffer ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(buffer[i]);
-    Serial.print("variance ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(sensorVariance);
-    Serial.print("average ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(sensorAverage);
   }
   return sensorVariance = sensorVariance / (NUM_READS);
 }
@@ -142,8 +130,21 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
 
     delay(1);
     addReading(resistance);
-    Serial.print (resistance);
-    Serial.print ("\t");
+    // Serial.print (resistance);
+    // Serial.print ("\t");
   }
-  Serial.println();
+}
+
+long sensor[4];
+long variance[4];
+
+void measureSensor (int sensor_id, int phase_b, int phase_a, int analog_input_b, int analog_input_a) {
+  sensor[0] = 0;
+  variance[0] = 0;
+  measure(sensor_id,phase_b,phase_a,analog_input_b);
+  long read_1 = average();
+  measure(sensor_id,phase_a,phase_b,analog_input_a);
+  long read_2= average();
+  sensor[sensor_id] = (read_1 + read_2)/2;
+  variance[sensor_id] = varianceCalc(sensor[sensor_id]);
 }
