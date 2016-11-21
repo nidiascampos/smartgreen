@@ -21,7 +21,7 @@ RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 RF24EthernetClass RF24Ethernet(radio,network,mesh);
 
-IPAddress ip(10,10,2,7);
+IPAddress ip(10,10,2,8);
 IPAddress gateway(10,10,2,2); //Specify the gateway in case different from the server
 IPAddress server(10,10,2,2);
 
@@ -43,10 +43,10 @@ void reconnect() {
   if (!client.connected()) {
     Serial.print("DEBUG: RF24 -> MQTT -> conectando... ");
     // Attempt to connect
-    if (client.connect("arduinoClient","outTopic/debug",0,false,"falha no sensor")) { // clientID, willTopic, willQoS, willRetain, willMessage
-      Serial.println("OK");;
+    if (client.connect("sensor02")) { // clientID, willTopic, willQoS, willRetain, willMessage
+      Serial.println("OK");
       // Once connected, publish an announcement...
-      client.publish("outTopic","connected");
+      // client.publish("/sensor/02","connected");
       // ... and resubscribe
       // client.subscribe("inTopic");
     } else {

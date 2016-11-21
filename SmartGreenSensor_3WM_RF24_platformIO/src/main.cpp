@@ -107,7 +107,7 @@ void loop ()
   Serial.println("DEBUG: RF24 -> MQTT -> enviando dados");
   char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
   dataString.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
-  client.publish("outTopic/bias",outputBuf);
+  client.publish("/sensor/02",outputBuf);
 
   Serial.print("DEBUG: RF24 -> MQTT -> desconectando... ");
   client.disconnect();
