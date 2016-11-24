@@ -21,9 +21,15 @@ RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 RF24EthernetClass RF24Ethernet(radio,network,mesh);
 
-IPAddress ip(10,10,2,8);
-IPAddress gateway(10,10,2,2); //Specify the gateway in case different from the server
-IPAddress server(10,10,2,2);
+// IPs
+// sensor1: 9 (mini) - ok
+// sensor2: 8 (mini) - ok ()
+// sensor3: 6 (mini) - ok (WM3 estranho)
+// sensor4: 7 (nano) - ok (WMs ok)
+// #define nodeID 9 // FIXME: tentar implementar esse metodo
+IPAddress ip(10,10,2,6);
+IPAddress gateway(10,10,2,0); //Specify the gateway in case different from the server
+IPAddress server(10,10,2,0);
 
 EthernetClient ethClient;
 PubSubClient client(ethClient);
@@ -41,9 +47,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 void reconnect() {
   // Loop until we're reconnected
   if (!client.connected()) {
-    Serial.print("DEBUG: RF24 -> MQTT -> conectando... ");
+    Serial.print("DEBUG: RF24  -> MQTT -> conectando... ");
     // Attempt to connect
-    if (client.connect("sensor02")) { // clientID, willTopic, willQoS, willRetain, willMessage
+    if (client.connect("sensor03")) { // clientID, willTopic, willQoS, willRetain, willMessage
       Serial.println("OK");
       // Once connected, publish an announcement...
       // client.publish("/sensor/02","connected");
