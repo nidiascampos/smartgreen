@@ -17,9 +17,11 @@ def mongo_add_message(msg):
     db.teste03.update_one({
         "_id": msg.topic
     },{
-        "$set": {
-            "value": msg.payload,
-            "when": date
+        "$push": {
+            "events": {
+                "value": msg.payload,
+                "when": date
+            }
         }
     }, upsert= True)
 
