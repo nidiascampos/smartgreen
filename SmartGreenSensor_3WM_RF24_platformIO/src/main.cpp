@@ -14,6 +14,7 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 #include "Watermark.h"
 #include "Sleep.h"
 #include "RF24module.h"
+#include "batteryMonitor.h"
 
 // Formato do output (CSV)
 // (variância da leitura da resistência, leitura da resistência) * 3
@@ -55,6 +56,16 @@ void setup ()
 void loop ()
 {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
+
+  double batteryVoltage = vcc.Read_Volts();
+  Serial.print("DEBUG: VCC   -> ");
+  Serial.print(batteryVoltage);
+  Serial.println(" Volts");
+
+  // float batteryPercent = vcc.Read_Perc(VccMin, VccMax);
+  // Serial.print(" / ");
+  // Serial.print(batteryPercent);
+  // Serial.println(" %");
 
   // make a string for assembling the data to log
   // String dataString;
@@ -138,6 +149,14 @@ void loop ()
   wm03bias.toCharArray(outputBuf, 10);
   client.publish("/sensor/03/wm03bias",outputBuf3);
   // delay(500);
+
+  char outputBuf4[10];
+  char str_voltage[10];
+  /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
+  dtostrf(batteryVoltage, 4, 2, str_voltage);
+  sprintf(outputBuf4,"%s", str_voltage);
+  // Serial.println(outputBuf4);
+  client.publish("/sensor/03/vcc",outputBuf4);
 
   Serial.print("DEBUG: RF24  -> MQTT -> desconectando... ");
   client.disconnect();
