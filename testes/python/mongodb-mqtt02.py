@@ -42,6 +42,7 @@ clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
 
 # MQTT
+# Paho python docs: https://eclipse.org/paho/clients/python/docs/
 client_mqtt = mqtt.Client()
 client_mqtt.on_connect = mqtt_connect
 client_mqtt.on_message = mqtt_message
@@ -51,10 +52,24 @@ client_mqtt.loop_forever()
 # ADAFRUIT
 adafruit_mqtt = mqtt.Client()
 adafruit_mqtt.on_connect = mqtt_connect
-adafruit_mqtt.username_pw_set("andreibosco", "f38fefdd1fa94e2aaec9fd857b036e19")
-adafruit_mqtt.connect("io.adafruit.com", 1883, 60)
+adafruit_username = "andreibosco"
+adafruit_key = "f38fefdd1fa94e2aaec9fd857b036e19"
+# adafruit_mqtt.username_pw_set(adafruit_username, adafruit_key)
+# adafruit_mqtt.connect("io.adafruit.com", 1883, 60)
 
-publish.single("andreibosco/f/WM_01_45", "25",
-               hostname="io.adafruit.com",
-               port=1883,
-               auth={'username': 'andreibosco', 'password':'f38fefdd1fa94e2aaec9fd857b036e19'})
+# publish.single("andreibosco/f/WM_01_45", "25",
+#                hostname="io.adafruit.com",
+#                port=1883,
+#                auth={'username': 'andreibosco', 'password':'f38fefdd1fa94e2aaec9fd857b036e19'})
+
+
+msgs = [(adafruit_username+"/f/WM_01_15", "13", 0, True),
+        (adafruit_username+"/f/WM_01_45", "23", 0, True),
+        (adafruit_username+"/f/WM_01_75", "33", 0, True),
+        (adafruit_username+"/f/WM_01_VCC", "4.7", 0, True)]
+
+publish.multiple(msgs,
+                 hostname="io.adafruit.com",
+                 port=1883,
+                 auth={'username': adafruit_username, 'password': adafruit_key}
+                 )
