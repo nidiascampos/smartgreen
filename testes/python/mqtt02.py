@@ -17,12 +17,17 @@ def mqtt_message(client, userdata, msg):
 
 def mongo_add_message(msg):
     import datetime
+    data_list = msg.payload.split(',')
+    data_std = data_list.pop(21)
+    data_average = data_list.pop(20)
     db.teste03.update_one({
         "_id": msg.topic
     }, {
         "$push": {
             "events": {
-                "value": msg.payload,
+                "average": data_average,
+                "raw": tuple(data_list),
+                "STD": data_std,
                 "when": datetime.datetime.utcnow()
             }
         }
