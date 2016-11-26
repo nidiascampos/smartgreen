@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 from pymongo import MongoClient
 
 
@@ -46,3 +47,14 @@ client_mqtt.on_connect = mqtt_connect
 client_mqtt.on_message = mqtt_message
 client_mqtt.connect("localhost", 1883, 60)
 client_mqtt.loop_forever()
+
+# ADAFRUIT
+adafruit_mqtt = mqtt.Client()
+adafruit_mqtt.on_connect = mqtt_connect
+adafruit_mqtt.username_pw_set("andreibosco", "f38fefdd1fa94e2aaec9fd857b036e19")
+adafruit_mqtt.connect("io.adafruit.com", 1883, 60)
+
+publish.single("andreibosco/f/WM_01_45", "25",
+               hostname="io.adafruit.com",
+               port=1883,
+               auth={'username': 'andreibosco', 'password':'f38fefdd1fa94e2aaec9fd857b036e19'})
