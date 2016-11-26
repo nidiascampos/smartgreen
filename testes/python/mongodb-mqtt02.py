@@ -31,18 +31,6 @@ def mongo_add_message(msg):
         "STD": data_std,
         "when": datetime.datetime.utcnow()
     })
-    # db.teste03.update_one({
-    #     "_id": msg.topic
-    # }, {
-    #     "$push": {
-    #         "events": {
-    #             "average": data_average,
-    #             "raw": tuple(data_list),
-    #             "STD": data_std,
-    #             "when": datetime.datetime.utcnow()
-    #         }
-    #     }
-    # }, upsert=True)
 
 
 # DB
