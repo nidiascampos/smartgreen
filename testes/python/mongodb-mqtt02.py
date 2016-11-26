@@ -8,28 +8,31 @@ def mqtt_connect(client, userdata, rc):
 
 
 def mqtt_message(client, userdata, msg):
-    # print(msg.topic+" "+str(msg.payload))
     print("Received message '" + str(msg.payload) + "' on topic '"
           + msg.topic + "' with QoS " + str(msg.qos))
-    print("User data " + str(userdata))
     mongo_add_message(msg)
 
 
 def mongo_add_message(msg):
     import datetime
+    # splitting sensor data
     data_list = msg.payload.split(',')
+    data_vcc = data_list.pop(22)
     data_std = data_list.pop(21)
     data_average = data_list.pop(20)
+    # splitting topic info
     topic_list = msg.topic.split('/')
     sensor_id = topic_list[1]
     sensor_depth = topic_list[2]
+    # inserting data into mongodb
     db.teste04.insert({
         "sensor": sensor_id,
         "depth": sensor_depth,
+        "when": datetime.datetime.utcnow(),
         "average": data_average,
-        "raw": tuple(data_list),
         "STD": data_std,
-        "when": datetime.datetime.utcnow()
+        "raw": tuple(data_list),
+        "vcc": data_vcc
     })
 
 
