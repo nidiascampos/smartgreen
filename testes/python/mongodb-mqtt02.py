@@ -20,22 +20,27 @@ def mqtt_message(client, userdata, msg):
         data_list = msg.payload.split(',')
         data_std = data_list.pop(21)
         data_average = data_list.pop(20)
+        # setting adafruit data
         adafruit_topic = "WM_" + sensor_id + "_" + sensor_depth
+        adafruit_payload = data_average
         # sending data do mongodb
         mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list)
     else:
         # splitting sensor data
         sensor_vcc = msg.payload
+        # setting adafruit data
         adafruit_topic = "WM_" + sensor_id + "_VCC"
+        adafruit_payload = sensor_vcc
         # sending data do mongodb
         mongo_add_vcc(sensor_id, sensor_vcc)
     print(adafruit_topic)
+    publish_adafruit(adafruit_topic,adafruit_payload)
 
 
 def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
     import datetime
     # inserting data into mongodb
-    db.teste04.insert({
+    db.teste05.insert({
         "sensor": sensor_id,
         "depth": sensor_depth,
         "when": datetime.datetime.utcnow(),
@@ -47,29 +52,37 @@ def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list
 
 def mongo_add_vcc(sensor_id, sensor_vcc):
     import datetime
-    db.teste04.insert({
+    db.teste05.insert({
         "sensor": sensor_id,
         "when": datetime.datetime.utcnow(),
         "vcc": sensor_vcc
     })
 
 
-def publish_adafruit():  # FIXME: continuar...
-    # if(msg.)
+def publish_adafruit(adafruit_topic, adafruit_payload):
 
     adafruit_username = "andreibosco"
     adafruit_key = "f38fefdd1fa94e2aaec9fd857b036e19"
 
-    msgs = [(adafruit_username + "/f/WM_01_15", "13", 0, True),
-            (adafruit_username + "/f/WM_01_45", "23", 0, True),
-            (adafruit_username + "/f/WM_01_75", "33", 0, True),
-            (adafruit_username + "/f/WM_01_VCC", "4.7", 0, True)]
+    # msgs = [(adafruit_username + "/f/WM_01_15", "13", 0, True),
+    #         (adafruit_username + "/f/WM_01_45", "23", 0, True),
+    #         (adafruit_username + "/f/WM_01_75", "33", 0, True),
+    #         (adafruit_username + "/f/WM_01_VCC", "4.7", 0, True)]
+    #
+    # publish.multiple(msgs,
+    #                  hostname="io.adafruit.com",
+    #                  port=1883,
+    #                  auth={'username': adafruit_username, 'password': adafruit_key}
+    #                  )]
+    print("/f/"+adafruit_topic)
 
-    publish.multiple(msgs,
-                     hostname="io.adafruit.com",
-                     port=1883,
-                     auth={'username': adafruit_username, 'password': adafruit_key}
-                     )
+    publish.single(adafruit_username+"/f/"+adafruit_topic, adafruit_payload, qos=0, retain=True,
+                   hostname="io.adafruit.com",
+                   port=1883,
+                   auth={'username': adafruit_username, 'password': adafruit_key}
+                   )
+
+    print("Published to adafruit")
 
 # DB
 clientMongo = MongoClient('localhost:27017')
