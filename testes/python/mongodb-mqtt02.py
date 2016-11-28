@@ -1,5 +1,7 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+import os
+import time
 from pymongo import MongoClient
 
 
@@ -30,6 +32,11 @@ def mqtt_message(client, userdata, msg):
         # sending data do mongodb
         mongo_add_vcc(sensor_id, sensor_vcc)
     print(adafruit_topic)
+    gsm_connect()
+    time.sleep(10)
+    publish_adafruit()
+    time.sleep(10)
+    gsm_disconnect()
 
 
 def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
@@ -60,20 +67,31 @@ def publish_adafruit():  # FIXME: continuar...
     adafruit_username = "andreibosco"
     adafruit_key = "f38fefdd1fa94e2aaec9fd857b036e19"
 
-    msgs = [(adafruit_username + "/f/WM_01_15", "13", 0, True),
-            (adafruit_username + "/f/WM_01_45", "23", 0, True),
-            (adafruit_username + "/f/WM_01_75", "33", 0, True),
-            (adafruit_username + "/f/WM_01_VCC", "4.7", 0, True)]
+    msgs = [(adafruit_username + "/f/WM_01_15", "16", 0, True),
+            (adafruit_username + "/f/WM_01_45", "26", 0, True),
+            (adafruit_username + "/f/WM_01_75", "36", 0, True),
+            (adafruit_username + "/f/WM_01_VCC", "6.9", 0, True)]
 
     publish.multiple(msgs,
                      hostname="io.adafruit.com",
                      port=1883,
                      auth={'username': adafruit_username, 'password': adafruit_key}
                      )
+    print('publicado no adafruit')
+
+
+def gsm_connect():
+    os.system('pon tim')
+
+
+def gsm_disconnect():
+    os.system('poff')
+
 
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
+
 
 # MQTT
 # Paho python docs: https://eclipse.org/paho/clients/python/docs/
