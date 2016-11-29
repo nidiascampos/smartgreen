@@ -1,0 +1,2 @@
+minicom -b 19200 -D /dev/ttyAMA0
+python3 -m serial.tools.miniterm /dev/ttyAMA0
