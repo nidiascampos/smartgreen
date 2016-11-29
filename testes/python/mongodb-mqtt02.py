@@ -4,13 +4,13 @@ from pymongo import MongoClient
 
 
 def mqtt_connect(client, userdata, rc):
-    print("Connected with result: "+str(rc))
+    print("Connected with result: "+str(rc))  # FIXME: Debug
     client.subscribe("/#")
 
 
 def mqtt_message(client, userdata, msg):
     print("Received message '" + str(msg.payload) + "' on topic '"
-          + msg.topic + "' with QoS " + str(msg.qos))
+          + msg.topic + "' with QoS " + str(msg.qos))  # FIXME: Debug
     # splitting topic info
     topic_list = msg.topic.split('/')
     sensor_id = topic_list[1]
@@ -33,8 +33,8 @@ def mqtt_message(client, userdata, msg):
         adafruit_payload = sensor_vcc
         # sending data do mongodb
         mongo_add_vcc(sensor_id, sensor_vcc)
-    print(adafruit_topic)
-    publish_adafruit(adafruit_topic,adafruit_payload)
+    print(adafruit_topic)  # FIXME: Debug
+    publish_adafruit(adafruit_topic, adafruit_payload)
 
 
 def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
@@ -74,7 +74,6 @@ def publish_adafruit(adafruit_topic, adafruit_payload):
     #                  port=1883,
     #                  auth={'username': adafruit_username, 'password': adafruit_key}
     #                  )]
-    print("/f/"+adafruit_topic)
 
     publish.single(adafruit_username+"/f/"+adafruit_topic, adafruit_payload, qos=0, retain=True,
                    hostname="io.adafruit.com",
@@ -82,7 +81,7 @@ def publish_adafruit(adafruit_topic, adafruit_payload):
                    auth={'username': adafruit_username, 'password': adafruit_key}
                    )
 
-    print("Published to adafruit")
+    print("Published to adafruit")  # FIXME: Debug
 
 # DB
 clientMongo = MongoClient('localhost:27017')
