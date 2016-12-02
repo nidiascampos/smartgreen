@@ -5,6 +5,7 @@
       <w>andreibosco</w>
       <w>mongo</w>
       <w>mqtt</w>
+      <w>paho</w>
     </words>
   </dictionary>
 </component>
