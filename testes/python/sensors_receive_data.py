@@ -2,12 +2,12 @@ import paho.mqtt.client as mqtt
 from pymongo import MongoClient
 
 
-def mqtt_connect(client, rc):
+def mqtt_connect(client, userdata, rc):
     print("Connected with result: "+str(rc))  # FIXME: Debug
     client.subscribe("/#")
 
 
-def mqtt_message(msg):
+def mqtt_message(client, userdata, msg):
     print("Received message '" + str(msg.payload) + "' on topic '"
           + msg.topic + "' with QoS " + str(msg.qos))  # FIXME: Debug
     # splitting topic info
