@@ -1,6 +1,6 @@
 import paho.mqtt.publish as publish
 from pymongo import MongoClient
-# from pppd import PPPConnection
+from pppd import PPPConnection
 
 
 def mongo_read():
@@ -61,7 +61,12 @@ collection = db.teste05
 
 
 # Publish data
-publish_adafruit()
 # ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
+#
 # if ppp.connected():
-#     print('connected')
+#     print("Connected")
+#     publish_adafruit()
+#     ppp.disconnect()
+#     print("Disconnected")
+
+publish_adafruit()
