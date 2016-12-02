@@ -1,46 +1,24 @@
-import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import os
-import time
 from pymongo import MongoClient
 
 
 def mongo_read():
-    # item = list(collection.find({"sensor":"02", "depth":"45"}).sort("when", -1))
     # sensors = ["01", "02", "03", "04"]
     sensors = ["01", "02"]
     depths = ["15", "45", "60"]
-    for depth in depths:
-        item = collection.find({"sensor": "02", "depth": depth}).sort("when", -1)
-    # item = collection.find({"sensor": "02", "depth": "45"}).sort("when", -1)
-        sensor = item[0]['sensor']
-        depth = item[0]['depth']
-        payload = item[0]['average']
-        print('sensor: ', sensor)
-        print('depth: ', depth)
-        print('payload: ', payload)
-
-# def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
-#     import datetime
-#     # inserting data into mongodb
-#     db.teste05.insert({
-#         "sensor": sensor_id,
-#         "depth": sensor_depth,
-#         "when": datetime.datetime.utcnow(),
-#         "average": data_average,
-#         "STD": data_std,
-#         "raw": tuple(data_list)
-#     })
-#
-#
-# def mongo_add_vcc(sensor_id, sensor_vcc):
-#     import datetime
-#     db.teste05.insert({
-#         "sensor": sensor_id,
-#         "when": datetime.datetime.utcnow(),
-#         "vcc": sensor_vcc
-#     })
-
+    payload = []
+    for sensor in sensors:
+        for depth in depths:
+            item = collection.find({"sensor": sensor, "depth": depth}).sort("when", -1)
+            sensor = item[0]['sensor']
+            depth = item[0]['depth']
+            average = item[0]['average']
+            print('sensor: ', sensor)
+            print('depth: ', depth)
+            print('average: ', average)
+            data = [sensor, depth, average]
+            payload.append(data)
 
 def gsm_connect():
     os.system('pon tim')
