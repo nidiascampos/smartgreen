@@ -1,6 +1,5 @@
 import paho.mqtt.publish as publish
 from pymongo import MongoClient
-# from paho.mqtt.publish import multiple
 # from pppd import PPPConnection
 
 
@@ -31,40 +30,21 @@ def publish_adafruit():
     adafruit_key = "f38fefdd1fa94e2aaec9fd857b036e19"
 
     sensors_data = mongo_read()
-    print(sensors_data)
+    # print(sensors_data)  # FIXME: DEBUG
 
     msgs = []
 
     for sensor in sensors_data:
-        print("teste: ", sensor[0])
         msg = (adafruit_username + "/f/WM_" + sensor[0] + "_" + sensor[1], sensor[2], 0, True)
         msgs.append(msg)
 
-    print(msgs)
-
-    # msgs = [(adafruit_username + "/f/WM_01_15", "13", 0, True),
-    #         (adafruit_username + "/f/WM_01_45", "23", 0, True),
-    #         (adafruit_username + "/f/WM_01_75", "33", 0, True),
-    #         (adafruit_username + "/f/WM_01_VCC", "4.7", 0, True)]
-    # print(msgs)
+    # print("Messages :", msgs)  # FIXME: DEBUG
 
     publish.multiple(msgs,
                      hostname="io.adafruit.com",
                      port=1883,
                      auth={"username": adafruit_username, "password": adafruit_key})
 
-    # publish.multiple(msgs,
-    #                  hostname="io.adafruit.com",
-    #                  port=1883,
-    #                  auth={'username': adafruit_username, 'password': adafruit_key}
-    #                  )]
-
-    # publish.single(adafruit_username+"/f/"+adafruit_topic, adafruit_payload, qos=0, retain=True,
-    #                hostname="io.adafruit.com",
-    #                port=1883,
-    #                auth={'username': adafruit_username, 'password': adafruit_key}
-    #                )
-    #
     print("Published to adafruit")  # FIXME: Debug
 
 
@@ -72,6 +52,7 @@ def publish_adafruit():
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
 collection = db.teste05
+
 
 # Publish data
 publish_adafruit()
