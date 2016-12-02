@@ -6,19 +6,25 @@ from pymongo import MongoClient
 def mongo_read():
     # sensors = ["01", "02", "03", "04"]
     sensors = ["01", "02"]
-    depths = ["15", "45", "60"]
+    depths = ["15", "45", "60", "vcc"]
     payload = []
     for sensor in sensors:
         for depth in depths:
-            item = collection.find({"sensor": sensor, "depth": depth}).sort("when", -1)
-            sensor = item[0]["sensor"]
-            depth = item[0]["depth"]
-            average = item[0]["average"]
+            if depth == "vcc":
+                item = collection.find({"sensor": sensor, "vcc": {"$exists": 1}}).sort("when", -1)
+                sensor = item[0]["sensor"]
+                depth = "vcc"
+                value = item[0]["vcc"]
+            else:
+                item = collection.find({"sensor": sensor, "depth": depth}).sort("when", -1)
+                sensor = item[0]["sensor"]
+                depth = item[0]["depth"]
+                value = item[0]["average"]
             # DEBUG
-            # print('sensor: ', sensor)
-            # print('depth: ', depth)
-            # print('average: ', average)
-            data = [sensor, depth, average]
+            print('sensor: ', sensor)
+            print('depth: ', depth)
+            print('value: ', value)
+            data = [sensor, depth, value]
             payload.append(data)
     return payload
 
