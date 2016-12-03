@@ -61,12 +61,11 @@ collection = db.teste05
 
 
 # Publish data
-# ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
-#
-# if ppp.connected():
-#     print("Connected")
-#     publish_adafruit()
-#     ppp.disconnect()
-#     print("Disconnected")
+ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
+if ppp.connected():
+    print("Connected")
+    publish_adafruit()
+    ppp.disconnect()
+    print("Disconnected")
 
-publish_adafruit()
+# publish_adafruit()
