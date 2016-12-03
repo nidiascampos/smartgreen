@@ -1,3 +1,5 @@
+#import threading
+import time
 import paho.mqtt.publish as publish
 from pymongo import MongoClient
 from pppd import PPPConnection
@@ -20,7 +22,7 @@ def mongo_read():
                 sensor = item[0]["sensor"]
                 depth = item[0]["depth"]
                 value = item[0]["average"]
-            # DEBUG
+            # FIXME: DEBUG
             print('sensor: ', sensor)
             print('depth: ', depth)
             print('value: ', value)
@@ -51,7 +53,9 @@ def publish_adafruit():
                      port=1883,
                      auth={"username": adafruit_username, "password": adafruit_key})
 
-    print("Published to adafruit")  # FIXME: Debug
+    print("Published to adafruit")  # FIXME: DEBUG
+
+    return True
 
 
 # DB
@@ -61,10 +65,14 @@ collection = db.teste05
 
 
 # Publish data
+print("Connecting")  # FIXME: DEBUG
 ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
 if ppp.connected():
     print("Connected")
+#    adafruit_thread = threading.Thread(target=publish_adafruit)
+#    adafruit_thread.start()
     publish_adafruit()
+    time.sleep(5)
     ppp.disconnect()
     print("Disconnected")
 
