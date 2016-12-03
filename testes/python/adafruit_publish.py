@@ -1,4 +1,4 @@
-#import threading
+import logging
 import time
 import paho.mqtt.publish as publish
 from pymongo import MongoClient
@@ -22,16 +22,13 @@ def mongo_read():
                 sensor = item[0]["sensor"]
                 depth = item[0]["depth"]
                 value = item[0]["average"]
-            # FIXME: DEBUG
-            print('sensor: ', sensor)
-            print('depth: ', depth)
-            print('value: ', value)
             data = [sensor, depth, value]
             payload.append(data)
+    logging.info("Sensors data:")
+    logging.info(payload)
     return payload
 
 
-# def publish_adafruit(adafruit_topic, adafruit_payload):
 def publish_adafruit():
 
     adafruit_username = "andreibosco"
@@ -53,9 +50,13 @@ def publish_adafruit():
                      port=1883,
                      auth={"username": adafruit_username, "password": adafruit_key})
 
-    print("Published to adafruit")  # FIXME: DEBUG
+    logging.info("Published to adafruit")  # FIXME: DEBUG
 
     return True
+
+# Basic config
+logging.basicConfig(filename="/home/pi/logs/adafruit.log", level=logging.INFO, format="%(asctime)s %(message)s")
+logging.info("=================") # String to separate logs
 
 
 # DB
@@ -65,15 +66,11 @@ collection = db.teste05
 
 
 # Publish data
-print("Connecting")  # FIXME: DEBUG
+logging.info("Connecting")
 ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
 if ppp.connected():
-    print("Connected")
-#    adafruit_thread = threading.Thread(target=publish_adafruit)
-#    adafruit_thread.start()
+    logging.info("Connected")
     publish_adafruit()
     time.sleep(5)
     ppp.disconnect()
-    print("Disconnected")
-
-# publish_adafruit()
+    logging.info("Disconnected")
