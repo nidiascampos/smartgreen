@@ -1,15 +1,16 @@
+import logging
 import paho.mqtt.client as mqtt
 from pymongo import MongoClient
 
 
 def mqtt_connect(client, userdata, rc):
-    print("Connected with result: "+str(rc))  # FIXME: Debug
+    logging.info("Connected with result: "+str(rc))
     client.subscribe("/#")
 
 
 def mqtt_message(client, userdata, msg):
-    print("Received message '" + str(msg.payload) + "' on topic '"
-          + msg.topic + "' with QoS " + str(msg.qos))  # FIXME: Debug
+    logging.info("Received message '" + str(msg.payload) + "' on topic '"
+          + msg.topic + "' with QoS " + str(msg.qos))
     # splitting topic info
     topic_list = msg.topic.split('/')
     sensor_id = topic_list[1]
@@ -48,6 +49,11 @@ def mongo_add_vcc(sensor_id, sensor_vcc):
         "when": datetime.datetime.utcnow(),
         "vcc": sensor_vcc
     })
+
+
+# Basic config
+logging.basicConfig(filename="/home/pi/logs/sensors_receive_data.log", level=logging.DEBUG, format="%(asctime)s %(message)s")
+logging.info("====================")
 
 
 # DB
