@@ -8,7 +8,7 @@ from pppd import PPPConnection
 def mongo_read():
     # sensors = ["01", "02", "03", "04"]
     sensors = ["01", "02"]
-    depths = ["15", "45", "60", "vcc"]
+    depths = ["15", "45", "75", "vcc"]
     payload = []
     for sensor in sensors:
         for depth in depths:
@@ -55,8 +55,10 @@ def publish_adafruit():
     return True
 
 # Basic config
-logging.basicConfig(filename="/home/pi/logs/adafruit.log", level=logging.INFO, format="%(asctime)s %(message)s")
-logging.info("====================") # String to separate logs
+logging.basicConfig(filename="/home/pi/logs/adafruit.log",
+                    level=logging.DEBUG,
+                    format="%(asctime)s %(message)s")
+logging.info("====================")  # String to separate logs
 
 
 # DB

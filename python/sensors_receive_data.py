@@ -10,12 +10,12 @@ def mqtt_connect(client, userdata, rc):
 
 def mqtt_message(client, userdata, msg):
     logging.info("Received message '" + str(msg.payload) + "' on topic '"
-          + msg.topic + "' with QoS " + str(msg.qos))
+                 + msg.topic + "' with QoS " + str(msg.qos))
     # splitting topic info
     topic_list = msg.topic.split('/')
     sensor_id = topic_list[1]
     sensor_depth = topic_list[2]
-    if sensor_depth != '0':
+    if sensor_depth != 'vcc':
         # splitting sensor data
         data_list = msg.payload.split(',')
         data_std = data_list.pop(21)
@@ -52,7 +52,9 @@ def mongo_add_vcc(sensor_id, sensor_vcc):
 
 
 # Basic config
-logging.basicConfig(filename="/home/pi/logs/sensors_receive_data.log", level=logging.DEBUG, format="%(asctime)s %(message)s")
+logging.basicConfig(filename="/home/pi/logs/sensors_receive_data.log",
+                    level=logging.DEBUG,
+                    format="%(asctime)s %(message)s")
 logging.info("====================")
 
 
