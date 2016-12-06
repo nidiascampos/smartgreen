@@ -53,7 +53,7 @@
 // GNU General Public License for more details.
 
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
-#define NUM_READS 11    // Number of sensor reads for filtering
+#define NUM_READS 2    // Number of sensor reads for filtering
 
 typedef struct {        // Structure to be used in percentage and resistance values matrix to be filtered (have to be in pairs)
   int moisture;
@@ -118,7 +118,7 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input)
 
     delay(1);
     addReading(resistance);
-    // Serial.print (resistance);
+    Serial.println(resistance);
     // Serial.print ("\t");
   }
 }
