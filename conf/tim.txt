@@ -1,5 +1,0 @@
-# TIM: config internet
-- numero: 99***1#
-- usuario: tim
-- senha: tim
-- apn: timbrasil.br

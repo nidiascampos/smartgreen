@@ -1,0 +1,23 @@
+# TIM
+- numero: 99***1#
+- usuario: tim
+- senha: tim
+- apn: timbrasil.br
+
+# Claro
+- numero: *99#
+- usuario: claro
+- senha: claro
+- apn: bandalarga.claro.com.br OU claro.com.br
+
+# Vivo
+- numero: *99#
+- usuario: vivo
+- senha: vivo
+- apn: zap.vivo.com.br
+
+# Oi
+- numero: *99***1#
+- usuario: oi
+- senha: oi
+- apn: gprs.oi.com.br
