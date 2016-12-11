@@ -11,18 +11,109 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 #include <SPI.h>
 
 // ** PROJECT FILES **
-#include "Watermark.h"
+// #include "Watermark.h"
 #include "Sleep.h"
 #include "RF24module.h"
 #include "batteryMonitor.h"
 
-// Formato do output (CSV)
-// (variância da leitura da resistência, leitura da resistência) * 3
+// ** WATERMARK CONFIG **
+// Setting up format for reading 3 soil sensors (FIXME: ajustar)
+#define NUM_READS 5    // Number of sensor reads for filtering
 
+typedef struct {        // Structure to be used in percentage and resistance values matrix to be filtered (have to be in pairs)
+  int moisture;
+  long resistance;
+} values;
+
+const long knownResistor = 4700;  // Constant value of known resistor in Ohms
+
+int supplyVoltage;                // Measured supply voltage
+int sensorVoltage;                // Measured sensor voltage
+
+values valueOf[NUM_READS];        // Calculated moisture percentages and resistances to be sorted and filtered
+long buffer[NUM_READS];
+int index;
+
+int i;                            // Simple index variable
+
+String rawData;
+bool rawDataReset;
+
+// ** WATERMARK FUNCTIONS **
+// Averaging algorithm
+void addReading(long resistance){
+  buffer[index] = resistance;
+  index++;
+  if (index >= NUM_READS) index = 0;
+}
+
+long average(){
+  long sum = 0;
+  for (int i = 0; i < NUM_READS; i++){
+    sum += buffer[i];
+  }
+  return (long)(sum / NUM_READS);
+}
+
+void measure (int sensor, int phase_b, int phase_a, int analog_input)
+{
+  // read sensor, filter, and calculate resistance value
+  // Noise filter: median filter
+
+  for (i=0; i<NUM_READS; i++) {
+
+    // Read 1 pair of voltage values
+    digitalWrite(phase_a, HIGH);                 // set the voltage supply on
+    delayMicroseconds(25);
+    supplyVoltage = analogRead(analog_input);   // read the supply voltage
+    // Serial.print("supply voltage:");
+    // Serial.println(supplyVoltage);
+    delayMicroseconds(25);
+    digitalWrite(phase_a, LOW);                  // set the voltage supply off
+    delay(1);
+
+    digitalWrite(phase_b, HIGH);                 // set the voltage supply on
+    delayMicroseconds(25);
+    sensorVoltage = analogRead(analog_input);   // read the sensor voltage
+    // Serial.print("sensor voltage: ");
+    // Serial.println(sensorVoltage);
+    delayMicroseconds(25);
+    digitalWrite(phase_b, LOW);                  // set the voltage supply off
+
+    // Calculate resistance
+    // the 0.5 add-term is used to round to the nearest integer
+    // Tip: no need to transform 0-1023 voltage value to 0-5 range, due to following fraction
+    long resistance = (knownResistor * (supplyVoltage - sensorVoltage ) / sensorVoltage) ;
+
+    delay(1);
+    addReading(resistance);
+    // Serial.println(resistance);
+
+    // if (rawDataReset == true) {
+    //   rawData = resistance;
+    // } else {
+    //   rawData.concat(resistance);
+    // }
+    rawData.concat(resistance);
+    // if (i == NUM_READS-1 ) {
+    //
+    // } else {
+    //   rawData.concat(",");
+    // }
+    rawData.concat(",");
+    // Serial.print ("\t");
+  }
+  // rawDataReset = false;
+
+  // Serial.print("raw data: ");
+  // Serial.println(rawData);
+}
+
+// ** SETUP **
 void setup ()
 {
   Serial.begin(57600);
-  Serial.println("DEBUG: setup -> iniciando");
+  // Serial.println("DEBUG: setup -> iniciando");
 
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
@@ -50,9 +141,10 @@ void setup ()
     Serial.println(F("DEBUG: setup -> RF24 -> falha"));
   }
 
-  Serial.println("DEBUG: setup -> concluido");
+  // Serial.println("DEBUG: setup -> iniciado OK");
 }
 
+// ** LOOP **
 void loop ()
 {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
@@ -62,58 +154,9 @@ void loop ()
   Serial.print(batteryVoltage);
   Serial.println(" Volts");
 
-  // float batteryPercent = vcc.Read_Perc(VccMin, VccMax);
-  // Serial.print(" / ");
-  // Serial.print(batteryPercent);
-  // Serial.println(" %");
-
   // make a string for assembling the data to log
-  // String dataString;
-  String wm01;
-  String wm02;
-  String wm03;
-  String wm01bias;
-  String wm02bias;
-  String wm03bias;
-
-  // measure: sensor id, phase B pin, phase A pin, analog input pin
-  measure(1,4,5,1);
-  long read1 = average();
-  measure(1,5,4,0);
-  long read2= average();
-  long sensor1 = (read1 + read2)/2;
-  wm01bias = String(read1-read2); // resistance bias
-  wm01 = String (sensor1); // sensor bias compensated value
-
-  measure(2,6,7,3);
-  long read3 = average();
-  measure(2,7,6,2);
-  long read4= average();
-  long sensor2 = (read3 + read4)/2;
-  wm02bias = String(read3-read4); // resistance bias
-  wm02 = String (sensor2); // sensor bias compensated value
-
-  measure(3,8,9,7);
-  long read5 = average();
-  measure(3,9,8,6);
-  long read6= average();
-  long sensor3 = (read5 + read6)/2;
-  wm03bias = String(read5-read6); // resistance bias
-  wm03 = String (sensor3); // sensor bias compensated value
-
-  // DEBUG: print to the serial port
-  // Serial.print("wm01 data: ");
-  // Serial.println(wm01);
-  // Serial.print("bias: ");
-  // Serial.println(wm01bias);
-  // Serial.print("wm02 data: ");
-  // Serial.println(wm02);
-  // Serial.print("bias: ");
-  // Serial.println(wm02bias);
-  // Serial.print("wm03 data: ");
-  // Serial.println(wm03);
-  // Serial.print("bias: ");
-  // Serial.println(wm03bias);
+  String wmData;
+  // String wm01raw, wm02raw, wm03raw;
 
   // check connection and renew address (if needed)
   if( ! mesh.checkConnection() ){
@@ -126,29 +169,67 @@ void loop ()
     reconnect();
   }
 
-  Serial.println("DEBUG: RF24  -> MQTT -> enviando dados");
-  // char array que serve como buffer da mensagem a ser enviada
-  char outputBuf[10];
-  // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
-  wm01.toCharArray(outputBuf, 10);
-  client.publish("/sensor/03/wm01",outputBuf);
-  wm01bias.toCharArray(outputBuf, 10);
-  client.publish("/sensor/03/wm01bias",outputBuf);
-  // delay(500);
+  // measure: sensor id, phase B pin, phase A pin, analog input pin
+  measure(1,4,5,1);
+  long read1 = average();
+  measure(1,5,4,0);
+  long read2= average();
+  long sensor1 = (read1 + read2)/2;
 
-  char outputBuf2[10];
-  wm02.toCharArray(outputBuf2, 10);
-  client.publish("/sensor/03/wm02",outputBuf2);
-  wm02bias.toCharArray(outputBuf2, 10);
-  client.publish("/sensor/03/wm02bias",outputBuf2);
-  // delay(500);
+  wmData = String(read1-read2); // resistance bias
+  wmData += ",";
+  wmData += String(sensor1); // sensor bias compensated value
+  wmData += ",";
+  wmData += rawData;
+  rawData = "";
 
-  char outputBuf3[10];
-  wm03.toCharArray(outputBuf3, 10);
-  client.publish("/sensor/03/wm03",outputBuf3);
-  wm03bias.toCharArray(outputBuf, 10);
-  client.publish("/sensor/03/wm03bias",outputBuf3);
-  // delay(500);
+  // Serial.print("DEBUG: RF24 -> MQTT -> enviando dados: ");
+  Serial.print("15cm: ");
+  Serial.println(wmData);
+
+  char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+  wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+  client.publish("/04/15",outputBuf);
+
+  measure(2,6,7,3);
+  long read3 = average();
+  measure(2,7,6,2);
+  long read4= average();
+  long sensor2 = (read3 + read4)/2;
+
+  wmData = String(read3-read4); // resistance bias
+  wmData += ",";
+  wmData += String(sensor2); // sensor bias compensated value
+  wmData += ",";
+  wmData += rawData;
+  rawData = "";
+
+  Serial.print("45cm: ");
+  Serial.println(wmData);
+
+  // char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+  wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+  client.publish("/04/45",outputBuf);
+
+  measure(3,8,9,7);
+  long read5 = average();
+  measure(3,9,8,6);
+  long read6= average();
+  long sensor3 = (read5 + read6)/2;
+
+  wmData = String(read5-read6); // resistance bias
+  wmData += ",";
+  wmData += String(sensor3); // sensor bias compensated value
+  wmData += ",";
+  wmData += rawData;
+  rawData = "";
+
+  Serial.print("75cm: ");
+  Serial.println(wmData);
+
+  // char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
+  wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
+  client.publish("/04/75",outputBuf);
 
   char outputBuf4[10];
   char str_voltage[10];
@@ -156,11 +237,14 @@ void loop ()
   dtostrf(batteryVoltage, 4, 2, str_voltage);
   sprintf(outputBuf4,"%s", str_voltage);
   // Serial.println(outputBuf4);
-  client.publish("/sensor/03/vcc",outputBuf4);
+  client.publish("/04/vcc",outputBuf4);
 
-  Serial.print("DEBUG: RF24  -> MQTT -> desconectando... ");
+  Serial.print("vcc: ");
+  Serial.println(outputBuf4);
+
+  // Serial.print("DEBUG: RF24 -> MQTT -> desconectando... ");
   client.disconnect();
-  Serial.println("OK");
+  // Serial.println("OK");
   delay(500); // delay necessário para o processo de desconexão
 
   // Sleep
@@ -168,7 +252,7 @@ void loop ()
   // except the watch dog timer and external reset
   Serial.print("DEBUG: hibernando por ");
   Serial.print(sleepTime / 60000);
-  Serial.println(" minuto(s)");
+  Serial.print(" minuto(s)");
   delay(100); // delay to allow serial to fully print before sleep
   sleep.pwrDownMode(); // set sleep mode
   sleep.sleepDelay(sleepTime); // sleep for: sleepTime

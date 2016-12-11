@@ -55,8 +55,10 @@ def publish_adafruit():
     return True
 
 # Basic config
-logging.basicConfig(filename="/home/pi/logs/adafruit.log", level=logging.INFO, format="%(asctime)s %(message)s")
-logging.info("====================") # String to separate logs
+logging.basicConfig(filename="/home/pi/logs/adafruit.log",
+                    level=logging.DEBUG,
+                    format="%(asctime)s %(message)s")
+logging.info("====================")  # String to separate logs
 
 
 # DB
