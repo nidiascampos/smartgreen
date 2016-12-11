@@ -21,4 +21,5 @@
 # 
 # m h  dom mon dow   command
 @reboot python /home/pi/devel/smartgreen/python/sensors_receive_data.py
+*/5 * * * * pgrep -f sensors_receive_data.py || nohup python /home/pi/devel/smartgreen/python/sensors_receive_data.py
 0 */2 * * * python /home/pi/devel/smartgreen/python/adafruit_publish.py
