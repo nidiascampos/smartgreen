@@ -15,11 +15,11 @@ def mqtt_message(client, userdata, msg):
     topic_list = msg.topic.split('/')
     sensor_id = topic_list[1]
     sensor_depth = topic_list[2]
-    if sensor_depth != '0':
+    if sensor_depth != 'vcc':
         # splitting sensor data
         data_list = msg.payload.split(',')
-        data_std = data_list.pop(21)
-        data_average = data_list.pop(20)
+        data_average = data_list.pop(0)
+        data_std = data_list.pop(0)
         # sending data do mongodb
         mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list)
     else:
