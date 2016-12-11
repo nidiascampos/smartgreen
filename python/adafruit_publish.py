@@ -7,8 +7,8 @@ from pppd import PPPConnection
 
 def mongo_read():
     # sensors = ["01", "02", "03", "04"]
-    sensors = ["01", "02"]
-    depths = ["15", "45", "60", "vcc"]
+    sensors = ["03", "04"]
+    depths = ["15", "45", "75", "vcc"]
     payload = []
     for sensor in sensors:
         for depth in depths:
