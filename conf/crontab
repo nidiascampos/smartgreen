@@ -20,6 +20,7 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-@reboot python /home/pi/devel/smartgreen/python/sensors_receive_data.py
-*/5 * * * * pgrep -f sensors_receive_data.py || nohup python /home/pi/devel/smartgreen/python/sensors_receive_data.py
+#@reboot python /home/pi/devel/smartgreen/python/sensors_receive_data.py
+#*/5 * * * * pgrep -f sensors_receive_data.py || nohup python /home/pi/devel/smartgreen/python/sensors_receive_data.py > /dev/null 2>&1
 0 */2 * * * python /home/pi/devel/smartgreen/python/adafruit_publish.py
+0 * * * * python /home/pi/devel/smartgreen/python/temperatura.py
