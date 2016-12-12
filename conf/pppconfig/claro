@@ -5,7 +5,7 @@ hide-password
 noauth
 connect "/usr/sbin/chat -v -f /etc/chatscripts/claro"
 debug
-/dev/ttyAMA0
+/dev/ttyUSB0
 115200
 defaultroute
 noipdefault 
