@@ -69,7 +69,7 @@ collection = db.teste05
 
 # Publish data
 logging.info("Connecting")
-ppp = PPPConnection(sudo=False, call='tim')  # activate PPP connection
+ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
 if ppp.connected():
     logging.info("Connected")
     publish_adafruit()
