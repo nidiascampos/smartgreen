@@ -1,6 +1,9 @@
 import logging
 import paho.mqtt.client as mqtt
+import w1thermsensor
+import datetime
 from pymongo import MongoClient
+from w1thermsensor import W1ThermSensor
 
 
 def mqtt_connect(client, userdata, rc):
@@ -27,12 +30,21 @@ def mqtt_message(client, userdata, msg):
         sensor_vcc = msg.payload
         # sending data do mongodb
         mongo_add_vcc(sensor_id, sensor_vcc)
+    mongo_add_temperature()
+
+
+def mongo_add_temperature():
+    sensor_temp = W1ThermSensor()
+    temp_celsius = sensor_temp.get_temperature()
+    db.teste06.insert({
+        "when": datetime.datetime.utcnow(),
+        "temperature": sensor_temp 
+    })
 
 
 def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
-    import datetime
     # inserting data into mongodb
-    db.teste05.insert({
+    db.teste06.insert({
         "sensor": sensor_id,
         "depth": sensor_depth,
         "when": datetime.datetime.utcnow(),
@@ -43,8 +55,7 @@ def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list
 
 
 def mongo_add_vcc(sensor_id, sensor_vcc):
-    import datetime
-    db.teste05.insert({
+    db.teste06.insert({
         "sensor": sensor_id,
         "when": datetime.datetime.utcnow(),
         "vcc": sensor_vcc

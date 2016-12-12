@@ -64,7 +64,7 @@ logging.info("====================")  # String to separate logs
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste05
+collection = db.teste06
 
 
 # Publish data
