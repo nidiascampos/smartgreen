@@ -15,6 +15,7 @@ D5 -> A1  | D7 -> A3  | D9 -> A7
 #include "Sleep.h"
 #include "RF24module.h"
 #include "batteryMonitor.h"
+#include "RTC.h"
 
 // ** WATERMARK CONFIG **
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
@@ -115,10 +116,12 @@ void setup ()
   Serial.begin(57600);
   // Serial.println("DEBUG: setup -> iniciando");
 
+  //------------ SLEEP ------------
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
   // sleepTime = 60000; // 1 minuto
 
+  //------------ PINS ------------
   // initialize the digital pins as an output.
   // Pin 4,5 is for sensor 1
   pinMode(4, OUTPUT);
@@ -130,7 +133,56 @@ void setup ()
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
 
-  // RF24
+  //------------ RTC ------------
+  Rtc.Begin();
+
+  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+  // DEBUG: para informar quando o sketch foi compilado e a hora inicial que foi setada no RTC
+  Serial.print("DEBUG: RTC -> Compilado em ");
+  Serial.println(printDateTime(compiled)); // YYYY,MM,DD
+
+  // Verificação se o RTC possui dados válidos
+  Serial.print("DEBUG: RTC -> ");
+  if (!Rtc.IsDateTimeValid())
+  {
+    // Common Causes:
+    // 1) first time you ran and the device wasn't running yet
+    // 2) the battery on the device is low or even missing
+    Serial.println("RTC lost confidence in the DateTime!");
+
+    // following line sets the RTC to the date & time this sketch was compiled
+    // it will also reset the valid flag internally unless the Rtc device is
+    // having an issue
+    Rtc.SetDateTime(compiled);
+  }
+
+  if (!Rtc.GetIsRunning())
+  {
+    Serial.println("RTC was not actively running, starting now");
+    Rtc.SetIsRunning(true);
+  }
+
+  RtcDateTime now = Rtc.GetDateTime();
+  if (now < compiled)
+  {
+    Serial.println("RTC is older than compile time!  (Updating DateTime)");
+    Rtc.SetDateTime(compiled);
+  }
+  else if (now > compiled)
+  {
+    Serial.println("RTC is newer than compile time. (this is expected)");
+  }
+  else if (now == compiled)
+  {
+    Serial.println("RTC is the same as compile time! (not expected but all is fine)");
+  }
+
+  // never assume the Rtc was last configured by you, so
+  // just clear them to your needed state
+  Rtc.Enable32kHzPin(false);
+  Rtc.SetSquareWavePin(DS3231SquareWavePin_ModeNone);
+
+  //------------ RF24 ------------
   client.setServer(server, 1883);
   client.setCallback(callback);
   Ethernet.begin(ip);
@@ -148,6 +200,21 @@ void setup ()
 void loop ()
 {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
+
+  if (!Rtc.IsDateTimeValid())
+  {
+    // Common Cuases:
+    // 1) the battery on the device is low or even missing and the power line was disconnected
+    Serial.println("RTC lost confidence in the DateTime!");
+  }
+
+  RtcDateTime now = Rtc.GetDateTime();
+  RtcTemperature temp = Rtc.GetTemperature();
+
+  Serial.print("DEBUG: Date -> ");
+  Serial.println(printDateTime(now)); // current time (YYYY,MM,DD))
+  Serial.print("DEBUG: Temp -> ");
+  Serial.println(temp.AsFloat());
 
   double batteryVoltage = vcc.Read_Volts();
   Serial.print("DEBUG: VCC   -> ");
