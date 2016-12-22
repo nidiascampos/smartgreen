@@ -14,7 +14,7 @@ void addReading(long resistance);
 long average();
 void measure(int phase_b, int phase_a, int analog_input);
 
-String dataString;
+String basicData;
 
 // ** WATERMARK CONFIG **
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
@@ -90,7 +90,7 @@ void setup () {
   DS3231AlarmTwo alarm2(
     0, // day
     0, // hour
-    20, // minute
+    40, // minute
     DS3231AlarmTwoControl_MinutesMatch);
   Rtc.SetAlarmTwo(alarm2);
 
@@ -124,17 +124,17 @@ void loop () {
 
   //----------- SD -------------
   // open file:
-  File dataFile = SD.open("WMlog1.csv", FILE_WRITE);
+  File dataFile = SD.open("WMlog2.csv", FILE_WRITE);
   // write initial data (date, temperature, vcc)
   if (dataFile) {
-    dataFile.print(dataString);
+    dataFile.print(basicData);
   } else {
     Serial.println("Error opening WMlog2.csv");
   }
 
-  // test
-  Serial.print("dataString: ");
-  Serial.println(dataString);
+  // DEBUG
+  // Serial.print("basicData: ");
+  // Serial.println(basicData);
 
   //---------- WM 01 -----------
   wm_check(4,5,0,1);
@@ -187,13 +187,13 @@ void rtc_check() {
 
   // Serial.print("DEBUG: Time  -> ");
   // Serial.println(printDateTime(now));
-  dataString += printDateTime(now); // FIXME: test code
-  dataString += ","; // FIXME: test code
+  basicData += printDateTime(now); // FIXME: test code
+  basicData += ","; // FIXME: test code
 
   // Serial.print("DEBUG: Temp  -> ");
   // Serial.println(temp.AsFloat());
-  dataString += String(temp.AsFloat()); // FIXME: test code
-  dataString += ","; // FIXME: test code
+  basicData += String(temp.AsFloat()); // FIXME: test code
+  basicData += ","; // FIXME: test code
 
   if (Alarmed())
   {
@@ -204,7 +204,7 @@ void rtc_check() {
 }
 
 void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) {
-  rawData = "";
+  rawData = ""; // resetting rawData
 
   // measure: phase B pin, phase A pin, analog input pin
   // measure(4,5,1);
@@ -219,14 +219,11 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
   wmData += ",";
   wmData += String(sensor1); // sensor bias compensated value
   wmData += ",";
-  // wmData += rawData;
 
-  Serial.print("wm data: ");
-  Serial.println(wmData);
+  // DEBUG
+  // Serial.print("wm data: ");
+  // Serial.println(wmData);
 
-  // rawData = "";
-
-  // return wmData;
 }
 
 void battery_check() {
@@ -234,8 +231,8 @@ void battery_check() {
   // Serial.print("DEBUG: VCC   -> ");
   // Serial.print(batteryVoltage);
   // Serial.println(" Volts");
-  dataString += batteryVoltage;
-  dataString += ",";
+  basicData += batteryVoltage;
+  basicData += ",";
 }
 
 void sleep() {
@@ -301,22 +298,11 @@ void measure (int phase_b, int phase_a, int analog_input) {
     addReading(resistance);
     // Serial.println(resistance);
 
-    // if (rawDataReset == true) {
-    //   rawData = resistance;
-    // } else {
-    //   rawData.concat(resistance);
-    // }
     rawData.concat(resistance);
-    // if (i == NUM_READS-1 ) {
-    //
-    // } else {
-    //   rawData.concat(",");
-    // }
     rawData.concat(",");
-    // Serial.print ("\t");
   }
-  // rawDataReset = false;
 
-  Serial.print("raw measure: ");
-  Serial.println(rawData);
+  // DEBUG
+  // Serial.print("raw measure: ");
+  // Serial.println(rawData);
 }
