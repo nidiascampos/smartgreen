@@ -41,7 +41,7 @@ String wmData;
 
 void setup () {
   Serial.begin(57600);
-  Serial.println("DEBUG: Setup -> Starting");
+  // Serial.println("DEBUG: Setup -> Starting");
 
   //------------ PINS ------------
   // initialize the digital pins as an output.
@@ -110,7 +110,7 @@ void setup () {
   }
   Serial.println("SD card initialized");
 
-  Serial.println("DEBUG: Setup -> OK");
+  // Serial.println("DEBUG: Setup -> OK");
 }
 
 void loop () {
@@ -185,13 +185,13 @@ void rtc_check() {
   RtcDateTime now = Rtc.GetDateTime();
   RtcTemperature temp = Rtc.GetTemperature();
 
-  Serial.print("DEBUG: Time  -> ");
-  Serial.println(printDateTime(now));
+  // Serial.print("DEBUG: Time  -> ");
+  // Serial.println(printDateTime(now));
   dataString += printDateTime(now); // FIXME: test code
   dataString += ","; // FIXME: test code
 
-  Serial.print("DEBUG: Temp  -> ");
-  Serial.println(temp.AsFloat());
+  // Serial.print("DEBUG: Temp  -> ");
+  // Serial.println(temp.AsFloat());
   dataString += String(temp.AsFloat()); // FIXME: test code
   dataString += ","; // FIXME: test code
 
@@ -231,11 +231,11 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
 
 void battery_check() {
   double batteryVoltage = vcc.Read_Volts();
-  Serial.print("DEBUG: VCC   -> ");
-  Serial.print(batteryVoltage);
-  Serial.println(" Volts");
-  dataString += batteryVoltage; // FIXME: test code
-  dataString += ","; // FIXME: test code
+  // Serial.print("DEBUG: VCC   -> ");
+  // Serial.print(batteryVoltage);
+  // Serial.println(" Volts");
+  dataString += batteryVoltage;
+  dataString += ",";
 }
 
 void sleep() {
