@@ -31,6 +31,7 @@ int supplyVoltage;                // Measured supply voltage
 int sensorVoltage;                // Measured sensor voltage
 
 values valueOf[NUM_READS];        // Calculated moisture percentages and resistances to be sorted and filtered
+
 long buffer[NUM_READS];
 int index;
 
@@ -251,20 +252,6 @@ void sleep() {
 }
 
 // ** WATERMARK FUNCTIONS **
-void addReading(long resistance){
-  buffer[index] = resistance;
-  index++;
-  if (index >= NUM_READS) index = 0;
-}
-
-long average(){
-  long sum = 0;
-  for (int i = 0; i < NUM_READS; i++){
-    sum += buffer[i];
-  }
-  return (long)(sum / NUM_READS);
-}
-
 void measure (int phase_b, int phase_a, int analog_input) {
   // read sensor, filter, and calculate resistance value
   // Noise filter: median filter
@@ -290,9 +277,8 @@ void measure (int phase_b, int phase_a, int analog_input) {
     digitalWrite(phase_b, LOW);                  // set the voltage supply off
 
     // Calculate resistance
-    // the 0.5 add-term is used to round to the nearest integer
     // Tip: no need to transform 0-1023 voltage value to 0-5 range, due to following fraction
-    long resistance = (knownResistor * (supplyVoltage - sensorVoltage ) / sensorVoltage) ;
+    long resistance = (knownResistor * (supplyVoltage - sensorVoltage ) / sensorVoltage);
 
     delay(1);
     addReading(resistance);
@@ -305,4 +291,18 @@ void measure (int phase_b, int phase_a, int analog_input) {
   // DEBUG
   // Serial.print("raw measure: ");
   // Serial.println(rawData);
+}
+
+void addReading(long resistance){
+  buffer[index] = resistance;
+  index++;
+  if (index >= NUM_READS) index = 0;
+}
+
+long average(){
+  long sum = 0;
+  for (int i = 0; i < NUM_READS; i++){
+    sum += buffer[i];
+  }
+  return (long)(sum / NUM_READS);
 }
