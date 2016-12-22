@@ -7,13 +7,12 @@
 
 void rtc_check();
 void battery_check();
-String wm_check();
-void sd_write();
+void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b);
 void sleep();
 
 void addReading(long resistance);
 long average();
-void measure(int sensor, int phase_b, int phase_a, int analog_input);
+void measure(int phase_b, int phase_a, int analog_input);
 
 String dataString;
 
@@ -38,7 +37,7 @@ int index;
 int i;                            // Simple index variable
 
 String rawData;
-String wmRead;
+String wmData;
 
 void setup () {
   Serial.begin(57600);
@@ -123,13 +122,53 @@ void loop () {
   //------ BatteryMonitor ------
   battery_check();
 
-  //----------- WM -------------
-  wmRead = wm_check();
-  Serial.print("wms: ");
-  Serial.println(wmRead);
+  //----------- SD -------------
+  // open file:
+  File dataFile = SD.open("WMlog1.csv", FILE_WRITE);
+  // write initial data (date, temperature, vcc)
+  if (dataFile) {
+    dataFile.print(dataString);
+  } else {
+    Serial.println("Error opening WMlog2.csv");
+  }
+
+  // test
+  Serial.print("dataString: ");
+  Serial.println(dataString);
+
+  //---------- WM 01 -----------
+  wm_check(4,5,0,1);
+  // write WM data to file on SD
+  if (dataFile) {
+    dataFile.print(wmData);
+    dataFile.print(rawData);
+  } else {
+    Serial.println("Error opening WMlog2.csv");
+  }
+
+  //---------- WM 02 -----------
+  wm_check(6,7,2,3);
+  // write WM data to file on SD
+  if (dataFile) {
+    dataFile.print(wmData);
+    dataFile.print(rawData);
+  } else {
+    Serial.println("Error opening WMlog2.csv");
+  }
+
+  //---------- WM 03 -----------
+  wm_check(8,9,6,7);
+  // write WM data to file on SD
+  if (dataFile) {
+    dataFile.print(wmData);
+    dataFile.println(rawData); // println because this is the last data
+  } else {
+    Serial.println("Error opening WMlog2.csv");
+  }
 
   //----------- SD -------------
-  sd_write();
+  // close file
+  dataFile.close();
 
   //---------- SLEEP -----------
   sleep();
@@ -164,14 +203,15 @@ void rtc_check() {
   }
 }
 
-String wm_check() {
-  // make a string for assembling the data to log
-  String wmData;
+void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) {
+  rawData = "";
 
-  // measure: sensor id, phase B pin, phase A pin, analog input pin
-  measure(1,4,5,1);
+  // measure: phase B pin, phase A pin, analog input pin
+  // measure(4,5,1);
+  measure(phase_b, phase_a, analog_input_b);
   long read1 = average();
-  measure(1,5,4,0);
+  // measure(5,4,0);
+  measure(phase_a, phase_b, analog_input_a);
   long read2= average();
   long sensor1 = (read1 + read2)/2;
 
@@ -179,50 +219,14 @@ String wm_check() {
   wmData += ",";
   wmData += String(sensor1); // sensor bias compensated value
   wmData += ",";
-  wmData.concat(rawData);
+  // wmData += rawData;
 
-  Serial.print("15cm: ");
+  Serial.print("wm data: ");
   Serial.println(wmData);
 
-  rawData = "";
+  // rawData = "";
 
-  measure(2,6,7,3);
-  long read3 = average();
-  measure(2,7,6,2);
-  long read4= average();
-  long sensor2 = (read3 + read4)/2;
-
-  wmData = String(read3-read4); // resistance bias
-  wmData += ",";
-  wmData += String(sensor2); // sensor bias compensated value
-  wmData += ",";
-  wmData += rawData;
-  rawData = "";
-
-  Serial.print("45cm: ");
-  Serial.println(wmData);
-  dataString += wmData;
-  dataString += ",";
-
-  measure(3,8,9,7);
-  long read5 = average();
-  measure(3,9,8,6);
-  long read6= average();
-  long sensor3 = (read5 + read6)/2;
-
-  wmData = String(read5-read6); // resistance bias
-  wmData += ",";
-  wmData += String(sensor3); // sensor bias compensated value
-  wmData += ",";
-  wmData += rawData;
-  rawData = "";
-
-  Serial.print("75cm: ");
-  Serial.println(wmData);
-  dataString += wmData;
-  dataString += ",";
-
-  return wmData;
+  // return wmData;
 }
 
 void battery_check() {
@@ -232,20 +236,6 @@ void battery_check() {
   Serial.println(" Volts");
   dataString += batteryVoltage; // FIXME: test code
   dataString += ","; // FIXME: test code
-}
-
-void sd_write() {
-  // open the file:
-  File dataFile = SD.open("WMlog.csv", FILE_WRITE);
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
-  }
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("Error opening WMlog.csv");
-  }
 }
 
 void sleep() {
@@ -278,7 +268,7 @@ long average(){
   return (long)(sum / NUM_READS);
 }
 
-void measure (int sensor, int phase_b, int phase_a, int analog_input) {
+void measure (int phase_b, int phase_a, int analog_input) {
   // read sensor, filter, and calculate resistance value
   // Noise filter: median filter
 
@@ -327,6 +317,6 @@ void measure (int sensor, int phase_b, int phase_a, int analog_input) {
   }
   // rawDataReset = false;
 
-  Serial.print("raw data: ");
+  Serial.print("raw measure: ");
   Serial.println(rawData);
 }
