@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 // Low Power
 #include <LowPower.h>
 // RTC
@@ -11,7 +12,7 @@ bool Alarmed();
 // Use pin 2 as wake up pin
 // const int wakeUpPin = 2;
 
-RtcDS3231 Rtc;
+RtcDS3231<TwoWire> Rtc(Wire);
 
 // Interrupt Pin Lookup Table
 // From: https://www.arduino.cc/en/Reference/AttachInterrupt
