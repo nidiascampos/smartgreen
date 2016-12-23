@@ -18,7 +18,7 @@ String basicData;
 
 // ** WATERMARK CONFIG **
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
-#define NUM_READS 5    // Number of sensor reads for filtering
+#define NUM_READS 11    // Number of sensor reads for filtering
 
 typedef struct {        // Structure to be used in percentage and resistance values matrix to be filtered (have to be in pairs)
   int moisture;
@@ -91,8 +91,9 @@ void setup () {
   DS3231AlarmTwo alarm2(
     0, // day
     0, // hour
-    40, // minute
+    35, // minute
     DS3231AlarmTwoControl_MinutesMatch);
+    // DS3231AlarmTwoControl_OncePerMinute);
   Rtc.SetAlarmTwo(alarm2);
 
   // throw away any old alarm state before we ran
@@ -117,6 +118,9 @@ void setup () {
 void loop () {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
 
+  // Allow wake up pin to trigger interrupt on low.
+  // attachInterrupt(0, wakeUp, LOW);
+
   //----------- RTC ------------
   rtc_check();
 
@@ -125,12 +129,13 @@ void loop () {
 
   //----------- SD -------------
   // open file:
-  File dataFile = SD.open("WMlog2.csv", FILE_WRITE);
+  File dataFile = SD.open("WMlog3.csv", FILE_WRITE);
   // write initial data (date, temperature, vcc)
   if (dataFile) {
     dataFile.print(basicData);
+    Serial.println(basicData);
   } else {
-    Serial.println("Error opening WMlog2.csv");
+    Serial.println("Error opening WMlog3.csv");
   }
 
   // DEBUG
@@ -144,7 +149,7 @@ void loop () {
     dataFile.print(wmData);
     dataFile.print(rawData);
   } else {
-    Serial.println("Error opening WMlog2.csv");
+    Serial.println("Error opening WMlog3.csv");
   }
 
   //---------- WM 02 -----------
@@ -154,7 +159,7 @@ void loop () {
     dataFile.print(wmData);
     dataFile.print(rawData);
   } else {
-    Serial.println("Error opening WMlog2.csv");
+    Serial.println("Error opening WMlog3.csv");
   }
 
   //---------- WM 03 -----------
@@ -164,7 +169,7 @@ void loop () {
     dataFile.print(wmData);
     dataFile.println(rawData); // println because this is the last data
   } else {
-    Serial.println("Error opening WMlog2.csv");
+    Serial.println("Error opening WMlog3.csv");
   }
 
   //----------- SD -------------
@@ -186,9 +191,10 @@ void rtc_check() {
   RtcDateTime now = Rtc.GetDateTime();
   RtcTemperature temp = Rtc.GetTemperature();
 
-  // Serial.print("DEBUG: Time  -> ");
-  // Serial.println(printDateTime(now));
-  basicData += printDateTime(now); // FIXME: test code
+  Serial.print("DEBUG: Time  -> ");
+  Serial.println(printDateTime(now));
+
+  basicData = printDateTime(now); // FIXME: test code
   basicData += ","; // FIXME: test code
 
   // Serial.print("DEBUG: Temp  -> ");
@@ -279,14 +285,31 @@ void measure (int phase_b, int phase_a, int analog_input) {
     // Calculate resistance
     // Tip: no need to transform 0-1023 voltage value to 0-5 range, due to following fraction
     long resistance = (knownResistor * (supplyVoltage - sensorVoltage ) / sensorVoltage);
+    // test
+    // valueOf[i].resistance = long( float(knownResistor) * ( supplyVoltage - sensorVoltage ) / sensorVoltage);
+    // valueOf[i].moisture = min( int( pow( valueOf[i].resistance/31.65 , 1.0/-1.695 ) * 400 + 0.5 ) , 100 );
 
-    delay(1);
+    // delay(1);
     addReading(resistance);
     // Serial.println(resistance);
 
     rawData.concat(resistance);
     rawData.concat(",");
+
+    // test
+    // Serial.print("resistencia: ");
+    // Serial.println(valueOf[i].resistance);
+    // Serial.print("umidade: ");
+    // Serial.print(valueOf[i].moisture);
+    // Serial.println();
   }
+
+  // Print out median values -- test
+  // Serial.print("resistencia: ");
+  // Serial.println(valueOf[NUM_READS/2].resistance);
+  // Serial.print("umidade: ");
+  // Serial.print(valueOf[NUM_READS/2].moisture);
+  // Serial.println();
 
   // DEBUG
   // Serial.print("raw measure: ");
