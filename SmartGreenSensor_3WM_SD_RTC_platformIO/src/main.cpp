@@ -91,9 +91,9 @@ void setup () {
   DS3231AlarmTwo alarm2(
     0, // day
     0, // hour
-    35, // minute
-    DS3231AlarmTwoControl_MinutesMatch);
-    // DS3231AlarmTwoControl_OncePerMinute);
+    0, // minute
+    // DS3231AlarmTwoControl_MinutesMatch);
+    DS3231AlarmTwoControl_OncePerMinute);
   Rtc.SetAlarmTwo(alarm2);
 
   // throw away any old alarm state before we ran
@@ -228,8 +228,8 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
   wmData += ",";
 
   // DEBUG
-  // Serial.print("wm data: ");
-  // Serial.println(wmData);
+  Serial.print("wm data: ");
+  Serial.println(wmData);
 
 }
 
