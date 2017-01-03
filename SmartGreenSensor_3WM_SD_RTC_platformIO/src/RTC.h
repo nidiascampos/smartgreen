@@ -1,3 +1,10 @@
+// CONNECTIONS:
+// GND  --> GND
+// VCC  --> 3.3v or 5.v
+// SDA  --> Analog 4
+// SCL  --> Analog 5
+// SQW  --> Digital 2
+
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 // Low Power
@@ -58,13 +65,13 @@ bool Alarmed() {
     // then allows for others to trigger again
     DS3231AlarmFlag flag = Rtc.LatchAlarmsTriggeredFlags();
 
-    if (flag & DS3231AlarmFlag_Alarm1)
-    {
-      Serial.println("DEBUG: alarm one triggered"); // FIXME: remove and disable alarm 1
-    }
+    // if (flag & DS3231AlarmFlag_Alarm1)
+    // {
+    //   Serial.println("DEBUG: alarm one triggered"); // FIXME: remove and disable alarm 1
+    // }
     if (flag & DS3231AlarmFlag_Alarm2)
     {
-      Serial.println("DEBUG: Waking up");
+      Serial.println("DEBUG: Waking up (Alarm 2)");
     }
   }
   return wasAlarmed;

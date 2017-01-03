@@ -15,6 +15,7 @@ long average();
 void measure(int phase_b, int phase_a, int analog_input);
 
 String basicData;
+bool printDebug;
 
 // ** WATERMARK CONFIG **
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
@@ -42,6 +43,8 @@ String wmData;
 
 void setup () {
   Serial.begin(57600);
+
+  printDebug = false;
   // Serial.println("DEBUG: Setup -> Starting");
 
   //------------ PINS ------------
@@ -92,8 +95,8 @@ void setup () {
     0, // day
     0, // hour
     0, // minute
-    // DS3231AlarmTwoControl_MinutesMatch);
-    DS3231AlarmTwoControl_OncePerMinute);
+    DS3231AlarmTwoControl_MinutesMatch);
+    // DS3231AlarmTwoControl_OncePerMinute);
   Rtc.SetAlarmTwo(alarm2);
 
   // throw away any old alarm state before we ran
@@ -104,7 +107,7 @@ void setup () {
 
   //------------ SD ------------
   // see if the card is present and can be initialized:
-  Serial.print("DEBUG: SD    -> ");
+  Serial.print("DEBUG: SD -> ");
   if (!SD.begin(chipSelect)) {
     Serial.println("SD failed or not found");
     // don't do anything more:
@@ -129,13 +132,16 @@ void loop () {
 
   //----------- SD -------------
   // open file:
-  File dataFile = SD.open("WMlog3.csv", FILE_WRITE);
+  File dataFile = SD.open("WMlog.csv", FILE_WRITE);
   // write initial data (date, temperature, vcc)
   if (dataFile) {
     dataFile.print(basicData);
-    Serial.println(basicData);
+    if (printDebug == 1) {
+        Serial.print("basic data: ");
+        Serial.println(basicData);
+    }
   } else {
-    Serial.println("Error opening WMlog3.csv");
+    Serial.println("Error opening WMlog.csv");
   }
 
   // DEBUG
@@ -149,7 +155,7 @@ void loop () {
     dataFile.print(wmData);
     dataFile.print(rawData);
   } else {
-    Serial.println("Error opening WMlog3.csv");
+    Serial.println("Error opening WMlog.csv");
   }
 
   //---------- WM 02 -----------
@@ -159,7 +165,7 @@ void loop () {
     dataFile.print(wmData);
     dataFile.print(rawData);
   } else {
-    Serial.println("Error opening WMlog3.csv");
+    Serial.println("Error opening WMlog.csv");
   }
 
   //---------- WM 03 -----------
@@ -168,8 +174,10 @@ void loop () {
   if (dataFile) {
     dataFile.print(wmData);
     dataFile.println(rawData); // println because this is the last data
+    // Serial.print(rawData);
+    // Serial.println();
   } else {
-    Serial.println("Error opening WMlog3.csv");
+    Serial.println("Error opening WMlog.csv");
   }
 
   //----------- SD -------------
@@ -191,8 +199,10 @@ void rtc_check() {
   RtcDateTime now = Rtc.GetDateTime();
   RtcTemperature temp = Rtc.GetTemperature();
 
-  Serial.print("DEBUG: Time  -> ");
-  Serial.println(printDateTime(now));
+  // if (printDebug == 1) {
+  //   Serial.print("DEBUG: Time  -> ");
+  //   Serial.println(printDateTime(now));
+  // }
 
   basicData = printDateTime(now); // FIXME: test code
   basicData += ","; // FIXME: test code
@@ -228,8 +238,10 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
   wmData += ",";
 
   // DEBUG
-  Serial.print("wm data: ");
-  Serial.println(wmData);
+  if (printDebug == 1) {
+    Serial.print("wm data: ");
+    Serial.println(wmData);
+  }
 
 }
 
@@ -245,8 +257,10 @@ void battery_check() {
 void sleep() {
   // Enter power down state with ADC and BOD module disabled.
   // Wake up when wake up pin is low.
-  Serial.println("DEBUG: Going into sleep");
-  Serial.println();
+  if (printDebug == 1) {
+    Serial.println("DEBUG: Going into sleep");
+    Serial.println();
+  }
 
   delay(500);
 

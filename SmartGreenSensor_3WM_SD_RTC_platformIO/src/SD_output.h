@@ -2,7 +2,7 @@
  * SD card attached to SPI bus as follows:
  * MOSI - pin 11
  * MISO - pin 12
- * CLK - pin 13
+ * CLK/SCK - pin 13
  * CS - pin 10
  * VCC - 3.3 or 5v
  * GND
