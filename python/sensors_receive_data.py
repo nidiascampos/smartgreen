@@ -2,7 +2,9 @@ import logging
 import paho.mqtt.client as mqtt
 import datetime
 from pymongo import MongoClient
+from os.path import expanduser
 
+home = expanduser("~")
 
 def mqtt_connect(client, userdata, rc):
     logging.info("Connected with result: "+str(rc))
@@ -18,7 +20,9 @@ def mqtt_message(client, userdata, msg):
     sensor_depth = topic_list[2]
     if sensor_depth != 'vcc':
         # splitting sensor data
-        data_list = msg.payload.split(',')
+        data_temp = str(msg.payload)
+        # data_list = msg.payload.split(b',')
+        data_list = data_temp.split(',')
         data_average = data_list.pop(0)
         data_std = data_list.pop(0)
         # sending data do mongodb
@@ -51,7 +55,7 @@ def mongo_add_vcc(sensor_id, sensor_vcc):
 
 
 # Basic config
-logging.basicConfig(filename="/home/pi/logs/sensors_receive_data.log",
+logging.basicConfig(filename=home+"/logs/sensors_receive_data.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
 logging.info("====================")
