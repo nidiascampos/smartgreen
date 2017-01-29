@@ -24,7 +24,7 @@ temp_celsius = sensor.get_temperature()
 
 # Save data
 logging.info(temp_celsius)
-db.teste06.insert({
+db.coleta02.insert({
     "when": datetime.datetime.utcnow(),
     "temperature": temp_celsius
 })
