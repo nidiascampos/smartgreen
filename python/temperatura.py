@@ -6,10 +6,10 @@ from w1thermsensor import W1ThermSensor
 
 
 # Logging config
-logging.basicConfig(filename="/home/pi/logs/temperature_sensor.log",
+logging.basicConfig(filename="/var/log/smartgreen/temperature_sensor.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("====================")
+#logging.info("====================")
 
 
 # DB

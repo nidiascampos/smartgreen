@@ -2,15 +2,12 @@ import logging
 import datetime
 import CHIP_IO.GPIO as GPIO
 from pymongo import MongoClient
-from os.path import expanduser
-
-home = expanduser("~")
 
 # Logging config
-logging.basicConfig(filename=home+"/logs/rain_sensor.log",
+logging.basicConfig(filename="/var/log/smartgreen/rain_sensor.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("====================")
+#logging.info("====================")
 
 
 # DB
@@ -36,4 +33,4 @@ db.coleta02.insert({
 
 
 # Cleanup GPIO
-GPIO.cleanup("XIO-P0")
+GPIO.cleanup(pin)
