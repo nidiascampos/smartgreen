@@ -83,4 +83,4 @@ fi
 #   *) echo "?";;
 # esac
 
-echo "["$TEMP_C","$VBIN_VOLT","$VBIN_I"]"
+echo $TEMP_C","$VBIN_VOLT","$VBIN_I
