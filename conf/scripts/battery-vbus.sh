@@ -30,9 +30,9 @@ fi
 #read Power status register @00h
 POWER_STATUS=$(i2cget -y -f 0 0x34 0x00)
 
-echo -n "Battery current direction = "
-[ $(($POWER_STATUS & 0x04)) -ne 0 ] && echo "Charging" \
-    || echo "Discharging"
+# echo -n "Battery current direction = "
+# [ $(($POWER_STATUS & 0x04)) -ne 0 ] && echo "Charging" \
+    # || echo "Discharging"
 
 ###################
 #read internal temperature 	5eh, 5fh	-144.7c -> 000h,	0.1c/bit	FFFh -> 264.8c
@@ -42,7 +42,7 @@ TEMP_LSB=$(i2cget -y -f 0 0x34 0x5f)
 TEMP_BIN=$(( ($TEMP_MSB << 4) | ($TEMP_LSB & 0x0F) ))
 
 TEMP_C=$(echo "$TEMP_BIN*0.1-144.7"|bc)
-echo "Internal temperature = "$TEMP_C"c"
+ echo "Internal temperature = "$TEMP_C"c"
 
 ###################
 #read VBUS information
@@ -81,3 +81,4 @@ case $VBUS_I_LIMIT in
   *) echo "?";;
 esac
 
+echo "["$TEMP_C","$VBIN_VOLT","$VBIN_I"]"
