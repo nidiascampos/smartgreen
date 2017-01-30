@@ -19,7 +19,7 @@ logging.basicConfig(filename="/var/log/smartgreen/adafruit.log",
 
 
 def mongo_read():
-    sensors = ["rain", "temperature"]
+    sensors = ["rain", "temperature", "temperature_internal", "battery_current", "battery_voltage"]
 #    sensors = ["03", "04"]
 #    depths = ["15", "45", "75", "vcc"]
     payload = []
