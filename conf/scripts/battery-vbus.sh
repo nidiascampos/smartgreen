@@ -41,44 +41,44 @@ TEMP_LSB=$(i2cget -y -f 0 0x34 0x5f)
 
 TEMP_BIN=$(( ($TEMP_MSB << 4) | ($TEMP_LSB & 0x0F) ))
 
-TEMP_C=$(echo "$TEMP_BIN*0.1-144.7"|bc)
- echo "Internal temperature = "$TEMP_C"c"
+# TEMP_C=$(echo "$TEMP_BIN*0.1-144.7"|bc)
+ # echo "Internal temperature = "$TEMP_C"c"
 
 ###################
 #read VBUS information
 if [ $(($POWER_STATUS & 0x20)) -ne 0 ] ; then
-    echo "VBUS present"
+    # echo "VBUS present"
     VBIN_VOLT_MSB=$(i2cget -y -f 0 0x34 0x5a)
     VBIN_VOLT_LSB=$(i2cget -y -f 0 0x34 0x5b)
     VBIN_BIN=$(( ($VBIN_VOLT_MSB << 4) | ($VBIN_VOLT_LSB & 0x0F) ))
     VBIN_VOLT=$(echo "$VBIN_BIN*1.7"|bc)
-    echo "  VBUS voltage = "$VBIN_VOLT"mV"
+    # echo "  VBUS voltage = "$VBIN_VOLT"mV"
 
     VBIN_I_MSB=$(i2cget -y -f 0 0x34 0x5c)
     VBIN_I_LSB=$(i2cget -y -f 0 0x34 0x5d)
     VBIN_I_BIN=$(( ($VBIN_I_MSB << 4) | ($VBIN_I_LSB & 0x0F) ))
     VBIN_I=$(echo "$VBIN_I_BIN*0.375"|bc)
-    echo "  VBUS current = "$VBIN_I"mA"
+    # echo "  VBUS current = "$VBIN_I"mA"
 else
-    echo "VBUS not present"
+    # echo "VBUS not present"
 fi
 
-VBUS_IPSOUT=$(i2cget -y -f 0 0x34 0x30)
+# VBUS_IPSOUT=$(i2cget -y -f 0 0x34 0x30)
 
-VBUS_V_LIMIT=$(($VBUS_IPSOUT >> 3 & 0x07))
-VBUS_V_LIMIT=$(echo "scale=2;$VBUS_V_LIMIT*0.10+4.00"|bc)
-[ $(($VBUS_IPSOUT & 0x40)) -ne 0 ] && VBUS_V_LIMIT_E="Enabled" \
-    || VBUS_V_LIMIT_E="Disabled"
-echo "  VBUS voltage limit = "$VBUS_V_LIMIT"V ("$VBUS_V_LIMIT_E")"
+# VBUS_V_LIMIT=$(($VBUS_IPSOUT >> 3 & 0x07))
+# VBUS_V_LIMIT=$(echo "scale=2;$VBUS_V_LIMIT*0.10+4.00"|bc)
+# [ $(($VBUS_IPSOUT & 0x40)) -ne 0 ] && VBUS_V_LIMIT_E="Enabled" \
+    # || VBUS_V_LIMIT_E="Disabled"
+# echo "  VBUS voltage limit = "$VBUS_V_LIMIT"V ("$VBUS_V_LIMIT_E")"
 
-VBUS_I_LIMIT=$((VBUS_IPSOUT & 3))
-echo -n "  VBUS current limit = "
-case $VBUS_I_LIMIT in
-  0) echo "900mA";;
-  1) echo "500mA";;
-  2) echo "100mA";;
-  3) echo "~spooky~ unlimited";;
-  *) echo "?";;
-esac
+# VBUS_I_LIMIT=$((VBUS_IPSOUT & 3))
+# echo -n "  VBUS current limit = "
+# case $VBUS_I_LIMIT in
+#   0) echo "900mA";;
+#   1) echo "500mA";;
+#   2) echo "100mA";;
+#   3) echo "~spooky~ unlimited";;
+#   *) echo "?";;
+# esac
 
 echo "["$TEMP_C","$VBIN_VOLT","$VBIN_I"]"
