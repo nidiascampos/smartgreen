@@ -4,7 +4,7 @@ import subprocess
 from pymongo import MongoClient
 
 # Logging config
-logging.basicConfig(filename="/var/log/smartgreen/rain_sensor.log",
+logging.basicConfig(filename="/var/log/smartgreen/chip_sensor.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
 #logging.info("====================")
@@ -21,11 +21,11 @@ db = clientMongo.SmartGreen
 # temperature,battery voltage,battery current
 # (celsius, miliVolts, miliAmp)
 chip_status = subprocess.check_output(['battery-vbus.sh'])
-chip_status = battery_status.strip().split(',')
+chip_status = chip_status.strip().split(',')
 
 
 # Save data
-logging.info(sensor_read)
+logging.info(chip_status)
 db.coleta02.insert({
     "when": datetime.datetime.utcnow(),
     "temperature_internal": chip_status[0],
