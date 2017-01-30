@@ -1,15 +1,18 @@
 # Instruções de configuração do nó gateway (sink)
 
+## Pre-requisitos
+- instalar pacotes
+  ```
+  sudo apt install build-essential libncurses5-dev git locales pppconfig mongodb python3 python3-dev flex bison
+  ```
+
 ## Configurar locales e fuso horario
-- instalar pacotes necessários
-  ```
-  sudo apt install locales
-  ```
 
 - configurar locales
   ```
   sudo dpkg-reconfigure locales
   sudo locale-gen
+  echo 'export LC_ALL="en_US.UTF-8"' >> ~/.bashrc
   ```
 
 - configurar fuso horario
@@ -68,7 +71,6 @@
 
 - instalar o *wvdial* ou *pppconfig*
   ```
-  sudo apt install pppconfig
   sudo cp smartgreen/conf/pppconfig/chatscripts/claro /etc/chatscripts/claro
   sudo cp smartgreen/conf/pppconfig/claro /etc/ppp/peers/claro
   ```
@@ -80,9 +82,8 @@
   ```
 
 ## MongoDB
-- instalar mongo
-  ```
-  sudo apt install mongodb
+- criar diretorio de dados do mongo
+  ``` 
   sudo mkdir -p /data/db
   ```
 
@@ -121,3 +122,103 @@
       *.=debug;*.=info;\
       *.=notice;*.=warn   |/dev/xconsole
   ```
+
+# CHIP.IO
+
+## Sensor de temperatura
+Fonte: https://bbs.nextthing.co/t/keenly-wanting-onewire-support/1737/17?u=andreibosco
+
+The right pin for onewire is PD2 (labelled on the socket LCD-D2).
+
+```
+# cat /sys/kernel/debug/pinctrl/1c20800.pinctrl/pinmux-pins | grep onewire
+pin 98 (PD2): onewire 1c20800.pinctrl:98 function gpio_in group PD2
+```
+
+I have connected a ds18b20 to +3,3v, LCD-D2 and ground, a 4.7K resistor between +3.3v and LCD-D2 and it works:
+```
+$ sudo modprobe w1_therm 
+$ ls /sys/bus/w1/devices/
+28-031650decbff  w1_bus_master1
+$ cat /sys/bus/w1/devices/28-031650decbff/w1_slave 
+30 00 4b 46 ff ff 0f 10 b8 : crc=b8 YES
+30 00 4b 46 ff ff 0f 10 b8 t=23812
+```
+
+## Sensor chuva
+Fonte:
+- https://github.com/xtacocorex/CHIP_IO
+- https://www.raspberrypi.org/forums/viewtopic.php?f=37&t=75213
+
+- instalar biblioteca DTC
+  ```
+  git clone https://github.com/atenart/dtc.git
+  cd dtc
+  make
+  sudo  make install PREFIX=/usr
+  ```
+
+- instalar biblioteca CHIP_IO. **Obs:** ela já deve estar instalada no ambiente virtual do projeto smartgreen. Seguir os passos abaixo somente se realmente necessário.
+  ```
+  cd ..
+  git clone git://github.com/xtacocorex/CHIP_IO.git
+  cd CHIP_IO
+  sudo python3 setup.py install
+  ```
+
+## RF24 libs
+Fonte: https://tmrh20.github.io/RF24/Linux.html
+
+- download do script de instalação e executa-lo
+  ```
+  wget http://tmrh20.github.io/RF24Installer/RPi/install.sh
+  chmod +x install.sh
+  ./install.sh
+  ```
+
+- para funcionar com o C.H.I.P. é necessário modificar o arquivo *spi.cpp*
+  ```
+  cd rf24libs/RF24
+  make clean
+  sudo rm Makefile.inc
+  sudo chown chip:chip utility/includes.h
+  sed -i 's/spidev0.0/spidev32766.0/g' utility/SPIDEV/spi.cpp # esse comando substitui o texto spidev0.0 por spidev32766.0 no arquivo spi.cpp
+  ./configure
+  make
+  sudo make install
+  ```
+
+## Desativar serviços
+- avahi-daemon, wpa_supplicant, ssh, supervisor, NetworkManager, bluetooth
+
+## Desabilitar bluetooth
+Fonte: https://bbs.nextthing.co/t/disable-c-h-i-p-default-uart-hci-bluetooth/12512
+
+```
+sudo systemctl disable bt_rtk_hciattach@ttyS1
+sudo systemctl mask bt_rtk_hciattach@ttyS1
+```
+
+## Wifi
+
+### Desconectar
+
+- Para desconectar:
+  ```
+  sudo nmcli dev disconnect wlan0
+  ```
+
+- Para esquecer uma rede:
+  ```
+  nmcli c # obter o nome da rede, ex. NTC 2461
+  sudo nmcli connection delete id "NTC 2461"
+  ```
+
+## RTC
+Fonte: https://bbs.nextthing.co/t/wanted-real-time-clock-setup-instructions/1934/9
+
+```
+sudo cp smartgreen/conf/scripts/rtc.sh /etc/init.d
+sudo update-rc.d rtc.sh defaults
+systemctl disable fake-hwclock.service
+```
