@@ -60,6 +60,8 @@ if [ $(($POWER_STATUS & 0x20)) -ne 0 ] ; then
     VBIN_I=$(echo "$VBIN_I_BIN*0.375"|bc)
     # echo "  VBUS current = "$VBIN_I"mA"
 else
+    VBIN_VOLT=0
+    VBIN_I=0
     # echo "VBUS not present"
 fi
 
