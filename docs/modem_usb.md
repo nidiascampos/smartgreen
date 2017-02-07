@@ -220,6 +220,5 @@ Fonte: https://bbs.nextthing.co/t/wanted-real-time-clock-setup-instructions/1934
 ```
 sudo cp smartgreen/conf/scripts/rtc.sh /etc/init.d
 sudo update-rc.d rtc.sh defaults
-sudo systemctl disable fake-hwclock.service
-sudo systemctl mask fake-hwclock.service
+systemctl disable fake-hwclock.service
 ```

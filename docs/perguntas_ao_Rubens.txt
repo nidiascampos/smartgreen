@@ -1,0 +1,5 @@
+# Reunião 2017-01-12
+- como é definido qual o melhor, hidrogel ou biocarvão? quais os parametros? existe uma formula?
+- qual a influencia da umidade do solo? como os dados dos tensiometros são utilizados?
+- qual a influencia da temperatura?
+- é possível considerar os T6s monitorados como fontes de um dado unico? qual a distancia minima para unir/separar os dados?
