@@ -1,0 +1,32 @@
+# Sem modem USB
+Battery current direction = Discharging
+Charging indicator = Not charging or charging completed
+Internal temperature = 47.8c
+ACIN not present
+VBUS present
+  VBUS voltage = 4981.0mV
+  VBUS current = 158.625mA
+  VBUS voltage limit = 4.40V (Enabled)
+  VBUS current limit = 900mA
+Battery charging enabled
+  Charging target voltage = 4.20V
+  Charge current limit = 1200mA
+  Charge termination current = 120.00mA
+Battery not present
+
+
+# Com modem USB
+attery current direction = Discharging
+Charging indicator = Not charging or charging completed
+Internal temperature = 50.4c
+ACIN not present
+VBUS present
+  VBUS voltage = 4943.6mV
+  VBUS current = 242.625mA
+  VBUS voltage limit = 4.40V (Enabled)
+  VBUS current limit = 900mA
+Battery charging enabled
+  Charging target voltage = 4.20V
+  Charge current limit = 1200mA
+  Charge termination current = 120.00mA
+Battery not present
