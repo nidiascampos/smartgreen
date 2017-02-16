@@ -1,0 +1,3 @@
+[submodule "matlab/libs/SensorFusion"]
+	path = matlab/libs/SensorFusion
+	url = https://github.com/andreibosco/SensorFusion.git
