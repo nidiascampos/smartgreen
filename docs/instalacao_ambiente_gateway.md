@@ -3,7 +3,7 @@
 ## Pre-requisitos
 - instalar pacotes
   ```
-  sudo apt install build-essential libncurses5-dev git locales pppconfig mongodb python3 python3-dev flex bison
+  sudo apt install build-essential libncurses5-dev git locales pppconfig mongodb python3 python3-dev flex bison modemmanager
   ```
 
 ## Configurar locales e fuso horario
@@ -29,8 +29,8 @@
   sudo apt-key add mosquitto-repo.gpg.key
   cd /etc/apt/sources.list.d/
   sudo wget http://repo.mosquitto.org/debian/mosquitto-jessie.list
-  sudo apt-get update
-  sudo apt-get install mosquitto mosquitto-clients
+  sudo apt update
+  sudo apt install mosquitto mosquitto-clients
   ```
 
 - adicionar mosquitto à lista de serviços iniciadas no boot
@@ -75,10 +75,16 @@
   sudo cp smartgreen/conf/pppconfig/claro /etc/ppp/peers/claro
   ```
 
+- adicionar usuario ao grupo necessário para ter permissão de iniciar/encerrar conexão
+  ```
+  sudo adduser pi dip
+  ```
+
 - testar conexão
   ```
-  sudo pon claro
+  pon claro
   tail /var/log/messages
+  poff
   ```
 
 ## MongoDB
@@ -122,6 +128,35 @@
       *.=debug;*.=info;\
       *.=notice;*.=warn   |/dev/xconsole
   ```
+
+
+# Pi Zero
+
+## Desabilitar LED de status
+Fonte: https://www.jeffgeerling.com/blogs/jeff-geerling/controlling-pwr-act-leds-raspberry-pi
+
+The Pi Zero's values are opposite to the other Pi models, and it only has one LED, led0 (labeled 'ACT' on the board). The LED defaults to on (brightness 0), and turns off (brightness 1) to indicate disk activity.
+
+If you want to turn off the LED on the Pi Zero completely, run the following two commands:
+```
+# Set the Pi Zero ACT LED trigger to 'none'.
+echo none | sudo tee /sys/class/leds/led0/trigger
+
+# Turn off the Pi Zero ACT LED.
+echo 1 | sudo tee /sys/class/leds/led0/brightness
+```
+
+To make these settings permanent, add the following lines to your Pi's /boot/config.txt file and reboot:
+```
+# Disable the ACT LED on the Pi Zero.
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=on
+```
+
+## Desabilitar HDMI
+Fonte:
+
+If you're running a headless Raspberry Pi, there's no need to power the display circuitry, and you can save a little power by running `/usr/bin/tvservice -o` (`-p` to re-enable). Add the line to `/etc/rc.local` to disable HDMI on boot.
 
 # CHIP.IO
 
