@@ -23,11 +23,12 @@ Ross_data = [101.2, 90.0, 99.0, 102.0, 103.0, 100.2, 89.0, 98.1, 101.5, 102.0];
 
 % pick which dataset should be used
 
-%mydata = Ross_data; 
-mydata = sample_data2;
+% mydata = Ross_data; 
+% mydata = sample_data2;
+mydata = sensor1mean(:,63) % testando com meus dados dos sensores de 15cm
 
 % shuffle data, for the fun of it 
-mydata = mydata(randperm(length(mydata)));
+% mydata = mydata(randperm(length(mydata)));
 
 % apply peirce criterion
 
