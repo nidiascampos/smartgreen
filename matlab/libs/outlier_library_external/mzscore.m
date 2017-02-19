@@ -71,7 +71,9 @@ if ~isempty(i),
     outlier = [x_date(i) cellstr(strcat('Series', num2str(j)))];
     outlier_num = [i j];
 else
-    outlier = ('No outliers have been identified!');
-    outlier_num = ('No outliers have been identified!');
+%     outlier = ('No outliers have been identified!');
+%     outlier_num = ('No outliers have been identified!');
+    outlier = 0;
+    outlier_num = [0 0];
 end
 
