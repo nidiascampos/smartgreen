@@ -1,4 +1,4 @@
-function [sensorFused, sensorOutliers, sensorOutliersTotal] = mzScoreFusion(sensor,period)
+function [sensorFused, sensorOutliers, sensorOutliersTotal, sensorMZscores] = mzScoreFusion(sensor,period,thresh)
 % applies modified Z-score outlier detection method and fuses the remaining data
 %    
 % aplica o metodo nos dados dos 4 nos e caso algum outlier seja 
@@ -12,9 +12,12 @@ function [sensorFused, sensorOutliers, sensorOutliersTotal] = mzScoreFusion(sens
 
 % criando a variavel de outliers (nao criei com tamanho pre-determinado
 % pois nao tenho como saber a quantidade aproximada de outliers)
+sensorMZscores = [];
 sensorOutliers = [];
+
 for i = 1:size(sensor,1)
-    [~, ~, ~, MZoutnum] = mzscore(sensor(i,:),period);
+    [MZscore, ~, ~, MZoutnum] = mzscore(sensor(i,:),period,thresh);
+    sensorMZscores = [sensorMZscores; MZscore];
     sensorOutliers = [sensorOutliers; MZoutnum(2)];
 end
 
