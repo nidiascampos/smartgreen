@@ -10,13 +10,15 @@ function [clean,outlier,index] = chauvenet(x)
 
 tau = (x-mean(x))./std(x);
 chauv = norminv(1-1/4/length(x));
-clean = []; outlier = []; index = [];
+clean = [];
+outlier = [];
+index = [];
 
-  for n = 1:length(x)
+for n = 1:length(x)
     if tau(n) < chauv
-      clean = vertcat(clean,[x(n)]);
-      else
-      outlier = vertcat(outlier,[x(n)]);
-      index = vertcat(index,[n]);
-      end
-      end
+        clean = vertcat(clean,[x(n)]);
+    else
+        outlier = vertcat(outlier,[x(n)]);
+    index = vertcat(index,[n]);
+    end
+end
