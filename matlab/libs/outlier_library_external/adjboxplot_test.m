@@ -67,17 +67,17 @@ k1 = k1 - 4*(MC<0);
 k3 = 4*(MC>=0);
 k3 = k3 + 3.5*(MC<0);
 
-[i1,j1] = find(x < repmat(Q1 - k*exp(k1.*MC).*(Q3-Q1),n,1));
-[i2,j2] = find(x > repmat(Q3 + k*exp(k3.*MC).*(Q3-Q1),n,1));
+[i1,j1] = find(x < repmat(Q1 - k*exp(k1.*MC).*(Q3-Q1),n,1))
+[i2,j2] = find(x > repmat(Q3 + k*exp(k3.*MC).*(Q3-Q1),n,1))
 
-if (isempty(i1)+isempty(i2)) == 0,
+if (isempty(i1)+isempty(i2)) == 0
     outlier = [x_date(i1) cellstr(strcat('Series', num2str(j1)));
     x_date(i2) cellstr(strcat('Series', num2str(j2)))];
     outlier_num = [i1 j1; i2 j2];
-elseif isempty(i1),
+elseif isempty(i1)
     outlier = [x_date(i2) cellstr(strcat('Series', num2str(j2)))];
     outlier_num = [i2 j2];
-elseif isempty(i2),
+elseif isempty(i2)
     outlier = [x_date(i1) cellstr(strcat('Series', num2str(j1)))];
     outlier_num = [i1 j1];
 else
