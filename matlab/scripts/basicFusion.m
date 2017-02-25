@@ -11,9 +11,9 @@ sensorFused = zeros(size(sensor,1),1);
 for i = 1:size(sensor,1)
     switch method
         case 'median'
-            sensorFused(i) = median(sensor(i,:));
+            sensorFused(i) = median(sensor(i,:),'omitnan');
         case 'mean'
-            sensorFused(i) = mean(sensor(i,:));
+            sensorFused(i) = mean(sensor(i,:),'omitnan');
         otherwise
             sensorFused = [];
     end 
