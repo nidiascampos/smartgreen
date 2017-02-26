@@ -1,0 +1,19 @@
+load Qoff.data;
+Yn = Qoff(:,4);
+x = 1; % initial state value
+P = 0.01;
+A = 1;
+C = 1;
+Q = .005;
+% R = 1e-4;
+R = 0.64;
+ss_wrKF.sum_wzxT = 0;                
+ss_wrKF.sum_wxxT = 0;
+ss_wrKF.sum_xxold = 0;
+ss_wrKF.sum_xxoldT = 0;
+ss_wrKF.sum_N = 0;
+ss_wrKF.sum_wzz = 0;
+ss_wrKF.sum_wzx = 0;
+ss_wrKF.sum_ExTx = 0;
+ss_wrKF.sum_Exxold = 0;
+[zPred, weight, S, P, A, C, Q, R, ss] = wrKF_learn_alt(x, Yn, P, A, C, Q, R, ss_wrKF);
