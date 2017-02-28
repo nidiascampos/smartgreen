@@ -1,4 +1,6 @@
 ### EXEMPLOS
+library(robustbase)
+
 if(require("boot")) {
   ### Hubert and Vandervieren (2006), p. 10, Fig. 4.
   data(coal, package = "boot")
@@ -23,7 +25,7 @@ par(op)
 
 ### MEU CODIGO
 # teste com dados do nó 2, sensor 1
-setwd("/Users/andreibosco/Devel/smartgreen/R")
+setwd("/Users/andreibosco/Devel/git/smartgreen/R")
 node2 <- read.csv("node2.csv", header=FALSE)
 op <- par(mfrow = c(1,2))
 boxplot(node2, main = "Original Boxplot", log = "y")
