@@ -43,8 +43,8 @@ Yn     = Qoff(:,4);
 % (use the plain Kalman filter as a standard comparison)
 
 THRESHOLDED_KF_ON     = 0;   % thresholded Kalman filter
-HACKED_WEIGHTED_KF_ON = 1;   % "hacked" weighted Kalman filter
-WEIGHTED_ROBUST_KF_ON = 0;   % weighted robust Kalman filter
+HACKED_WEIGHTED_KF_ON = 0;   % "hacked" weighted Kalman filter
+WEIGHTED_ROBUST_KF_ON = 1;   % weighted robust Kalman filter
 
 
 %------------------------------------------------------------
@@ -64,7 +64,8 @@ if WEIGHTED_ROBUST_KF_ON == 1
 end
 
 % Initialize the state estimate, x_hat, to some random value
-x_hat(1,:) = rand;           % for the standard KF
+% x_hat(1,:) = rand;           % for the standard KF
+x_hat(1,:) = 1;
 if THRESHOLDED_KF_ON == 1 
   x_hat_thres(1,:)   = x_hat(1,1);
 end
