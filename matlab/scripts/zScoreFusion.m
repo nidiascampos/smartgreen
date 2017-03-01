@@ -27,8 +27,9 @@ end
 sensorFused = zeros((size(sensor,1)),1);
 for i = 1:size(sensor,1)
     if (sensorOutliers(i) == 0)
-        sensorFused(i,1) = mean(sensor(i,:));
+        sensorFused(i,1) = mean(sensor(i,:),'omitnan');
     else
+        % FIXME: e se ouver mais de 1 outlier?
         j = sensorOutliers(i);
         sensorFused(i,1) = (sum(sensor(i,:)) - sensor(i,j))/3;
     end

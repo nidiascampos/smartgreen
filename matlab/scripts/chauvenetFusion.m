@@ -17,15 +17,20 @@ sensorFused = zeros((size(sensor,1)),1);
 % criando a variavel de outliers (nao criei com tamanho pre-determinado
 % pois nao tenho como saber a quantidade aproximada de outliers)
 sensorOutliers = [];
+
 for i = 1:size(sensor,1)
-    % aplica o metodo de Chauvenet nos dados dos 4 nos, caso um outlier seja detectado ele eh removido
-    [clean,outlier,index] = chauvenet(sensor(i,:));
+    % verifica se existe um NaN e o remove dos dados
+    sensorClean = sensor(i,:);
+    sensorClean = sensorClean(~isnan(sensorClean));
+%     sensor(i,:)
+    % aplica o metodo de Chauvenet nos dados dos nos, caso um outlier seja detectado ele eh removido
+    [clean,outlier,index] = chauvenet(sensorClean);
     if size(outlier) ~= 0
         % caso exista um outlier, eh gravado a posicao do outlier e seu valor
         sensorOutliers = [sensorOutliers; index, outlier];
     end
-    % media dos dados dos 4 n?s
-    sensorFused(i,1) = mean(clean);
+    % media dos dados
+    sensorFused(i,1) = mean(clean,'omitnan');
 end
 
 % total de outliers detectados

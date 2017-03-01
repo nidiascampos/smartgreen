@@ -25,8 +25,8 @@ for i = 1:size(sensor,1)
         % caso exista um outlier, ? gravado a posi??o do outlier e seu valor
         sensorOutliers = [sensorOutliers; i, outliers];
     end
-    % media dos dados dos 4 n?s
-    sensorFused(i,1) = mean(or_data);
+    % media dos dados
+    sensorFused(i,1) = mean(or_data,'omitnan');
 end
 
 % total de outliers detectados

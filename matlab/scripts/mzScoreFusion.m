@@ -26,8 +26,9 @@ end
 % se nao, faz uma media com os dados dos 4 nos
 sensorFused = zeros((size(sensor,1)),1);
 for i = 1:size(sensor,1)
+    % FIXME: e se ouver mais de 1 outlier?
     if (sensorOutliers(i) == 0)
-        sensorFused(i,1) = mean(sensor(i,:));
+        sensorFused(i,1) = mean(sensor(i,:),'omitnan');
     else
         j = sensorOutliers(i);
         sensorFused(i,1) = (sum(sensor(i,:)) - sensor(i,j))/3;

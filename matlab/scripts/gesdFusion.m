@@ -37,7 +37,7 @@ if sensorOutliers ~= 0
 %     sensorFused = mean(sensor,2);
 end
 
-sensorFused = mean(sensor,2);
+sensorFused = mean(sensor,2,'omitnan');
 
 % total de outliers detectados
 sensorOutliersTotal = size(sensorOutliers,1);
