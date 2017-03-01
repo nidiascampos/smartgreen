@@ -32,7 +32,7 @@
 %
 %************************************************************
 function [z_predicted_wrKF, x, weight, S, P, A, C, Q, R, ss] = ...
-         wrKF_learn_alt(x_prev, z, P, A, C, Q, R, ss) 
+         wrKF_learn_alt(x_pred, z, P, A, C, Q, R, ss) 
 
 % Initializtion =====================================================
 
@@ -54,7 +54,7 @@ numobs = size(z, 1);
 % z = zeros(numobs, 1);
 % x_hat(1,:) = rand;
 % x_hat_wrKF(1,:)  = x_hat(1,1);
-x(1,:) = x_prev;
+x(1,:) = x_pred;
 
 % Initialize P, I
 % P = ones(size(A));
@@ -87,14 +87,11 @@ for i = 2:numobs % come?a em 2 pq 1 ? o valor inicial (k-1)
     oldP = P;
     r = z(i,:) - C*x(i-1,:);
     omega = r'*r + trace(C'*C*oldP); 
-    %weight = (alpha + 0.5)\(beta + (0.5\(R+SMALL))*omega); 
-    weight = (alpha + 0.5)./(beta + (0.5./(R+SMALL))*omega);
+    weight = (alpha + 0.5)/(beta + (0.5/(R+SMALL))*omega); 
 
-    % S = C*Q*C' + R./(weight+SMALL); % 2x2 (aparentemente n?o ? usado em
-    % canto algum)
-    %P = inv(weight.*(C'/(R+SMALL))*C + 1/Q + SMALL); % inv(P) = P^-1
-    P = (weight.*(C'/(R+SMALL))*C + 1/Q + SMALL).^-1; % inv(P) = P^-1
-    x(i,:) = P/Q*A*x(i-1,:) + weight*P*C'/(R+SMALL)*z(i,:);
+    S = C*Q*C' + R/(weight+SMALL);
+    P = inv(weight*(C'/(R+SMALL))*C + 1/Q + SMALL);
+    x(i,:) = P/Q*A*x(i-1,:)  + weight*P*C'/(R+SMALL)*z(i,:);
 
     % Update sufficient statistics for A, C, Q and R
     %--------------------------------------------------
