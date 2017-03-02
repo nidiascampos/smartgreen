@@ -13,32 +13,20 @@ function [sensorFused, sensorScores, sensorOutliers, sensorOutliersTotal] = adjb
 % criando a variavel de outliers (nao criei com tamanho pre-determinado
 % pois nao tenho como saber a quantidade aproximada de outliers)
 sensorScores = [];
+sensorOutliers = [];
+sensorOutliersTotal = [];
 
-[Q1, Q3, MC, sensorOutliers] = adjboxplot_alt(sensor,k);
-sensorScores = [sensorScores; Q1 Q3 MC];
-
-% sensorFused = sum(sensor,2);
-
-% verifica se foi detectado outlier nos dados atuais
-% se sim, remove o outlier e faz a m?dia do restante
-% se nao, faz uma media com os dados dos 4 nos
-
-if sensorOutliers ~= 0
-%     total = size(sensor,1) - size(sensorOutliers,1);
-    for i = 1:size(sensorOutliers,1)
-        id = sensorOutliers(i,1);
-        outlier = sensorOutliers(i,2);
-        sensorOutliers(i,2) = sensor(outlier,id);
-        sensor(outlier,id) = 0;
-%         sensorFused(id) = sensorFused(id) - sensor(outlier,id)
+for i = 1:size(sensor,1)
+    [Q1, Q3, MC, sensorOutlier] = adjboxplot_alt(sensor(i,:),k);
+    if ~isempty(sensorOutlier)
+        sensorScores = [sensorScores; i Q1 Q3 MC];
+        id = sensorOutlier(1);
+        sensorOutliers = [sensorOutliers; i sensor(i,id)];
+        sensor(i,id) = NaN;
     end
-%     sensorFused = sum(sensor,2)/total;
-%     sensorFused = sensorFused/total;
-% else
-%     sensorFused = mean(sensor,2);
 end
 
-sensorFused = mean(sensor,2);
+sensorFused = mean(sensor,2,'omitnan');
 
 % total de outliers detectados
 sensorOutliersTotal = size(sensorOutliers,1);
