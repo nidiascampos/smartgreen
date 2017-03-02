@@ -28,7 +28,7 @@ if sensorOutliers ~= 0
         outlier = sensorOutliers(i,2);
         sensorOutliers(i,1) = sensorOutliers(i,2);
         sensorOutliers(i,2) = sensor(outlier,id);
-        sensor(outlier,id) = 0;
+        sensor(outlier,id) = NaN;
 %         sensorFused(id) = sensorFused(id) - sensor(outlier,id)
     end
 %     sensorFused = sum(sensor,2)/total;
