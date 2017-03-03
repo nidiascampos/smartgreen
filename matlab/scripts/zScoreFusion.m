@@ -16,8 +16,13 @@ sensorZscores = [];
 sensorOutliers = [];
 
 for i = 1:size(sensor,1)
-    [Zscore, ~, ~, Zoutnum] = zzscore(sensor(i,:),period,thresh);
-    sensorZscores = [sensorZscores; Zscore];
+    % verifica se existe um NaN e o remove dos dados
+    sensorClean = sensor(i,:);
+    sensorClean = sensorClean(~isnan(sensorClean));
+    % aplica o m?todo nos dados dos n?s
+    %[Zscore, ~, ~, Zoutnum] = zzscore(sensor(i,:),period,thresh);
+    [~, ~, ~, Zoutnum] = zzscore(sensorClean,period,thresh);
+    %sensorZscores = [sensorZscores; Zscore];
     sensorOutliers = [sensorOutliers; Zoutnum(2)];
 end
 

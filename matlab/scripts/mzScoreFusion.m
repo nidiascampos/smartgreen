@@ -16,8 +16,13 @@ sensorMZscores = [];
 sensorOutliers = [];
 
 for i = 1:size(sensor,1)
-    [MZscore, ~, ~, MZoutnum] = mzscore(sensor(i,:),period,thresh);
-    sensorMZscores = [sensorMZscores; MZscore];
+    % verifica se existe um NaN e o remove dos dados
+    sensorClean = sensor(i,:);
+    sensorClean = sensorClean(~isnan(sensorClean));
+    % aplica o m?todo nos dados dos n?s
+    %[MZscore, ~, ~, MZoutnum] = mzscore(sensor(i,:),period,thresh);
+    [~, ~, ~, MZoutnum] = mzscore(sensorClean,period,thresh);
+    %sensorMZscores = [sensorMZscores; MZscore];
     sensorOutliers = [sensorOutliers; MZoutnum(2)];
 end
 
@@ -31,7 +36,11 @@ for i = 1:size(sensor,1)
         sensorFused(i,1) = mean(sensor(i,:),'omitnan');
     else
         j = sensorOutliers(i);
-        sensorFused(i,1) = (sum(sensor(i,:)) - sensor(i,j))/3;
+        if isnan(sensor(i,j))
+            sensorFused(i,1) = mean(sensor(i,:),'omitnan');
+        else
+            sensorFused(i,1) = (sum(sensor(i,:),'omitnan') - sensor(i,j))/3;
+        end
     end
 end
 
