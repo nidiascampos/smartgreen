@@ -1,6 +1,6 @@
 %% SETTINGS
-sensor = sensor1fusedESD;
-sensorKAF = sensor1fusedKAFalt;
+sensor = sensor3fusedESD;
+sensorKAF = sensor3fusedKAFalt;
 
 % date range
 periodoComparacao = datetime({'31/01/2017' '07/02/2017'});
@@ -53,7 +53,7 @@ sgolay4 = smooth(sensor,'sgolay',4);
 
 %% PLOTTING
 filtering = figure;
-plot(baterias_Mean.Date,baterias_Mean.baterias_p15cmMean,'--d','DisplayName','tensiometros');
+plot(baterias_Mean.Date,baterias_Mean.baterias_p75cmMean,'--d','DisplayName','tensiometros');
 hold on;
 plot(dateRange,sensor,'DisplayName','ESD','LineStyle','-.','Visible','on');
 plot(dateRange,sensorKAF,'DisplayName','ESD+Kalman','LineStyle','--','Visible','on');
@@ -100,4 +100,4 @@ xlim(periodoComparacao);
 ylim([18 70]);
 
 % SAVE
-saveas(filtering,'graphs/manuais/ESD_kalman_loess_sgolay_15cm','png');
+saveas(filtering,'graphs/manuais/ESD_kalman_loess_sgolay_75cm','png');
