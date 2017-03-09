@@ -51,6 +51,10 @@ sgolay2 = smooth(sensor,'sgolay',2); % valor default
 sgolay3 = smooth(sensor,'sgolay',3);
 sgolay4 = smooth(sensor,'sgolay',4);
 
+% SCALE-SPACE
+% dados gerados pelo script 'python/scale-space/sensors.run.m'
+load('data/scale_space.mat','scale_space02');
+
 %% PLOTTING
 filtering = figure;
 plot(baterias_Mean.Date,baterias_Mean.baterias_p45cmMean*0.3,'--d','DisplayName','tensiometros');
@@ -89,6 +93,10 @@ plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1');
 % WRKF
 % plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
 plot(dateRange,wrkf,'DisplayName','ESD+WRKF');
+
+% SCALE-SPACE
+% plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
+plot(dateRange,scale_space02,'DisplayName','ESD+Scale Space');
 
 % LEGEND
 hold off;

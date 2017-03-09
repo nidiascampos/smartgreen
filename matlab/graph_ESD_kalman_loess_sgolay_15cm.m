@@ -51,6 +51,10 @@ sgolay2 = smooth(sensor,'sgolay',2); % valor default
 sgolay3 = smooth(sensor,'sgolay',3);
 sgolay4 = smooth(sensor,'sgolay',4);
 
+% SCALE-SPACE
+% dados gerados pelo script 'python/scale-space/sensors.run.m'
+load('data/scale_space.mat','scale_space01');
+
 %% PLOTTING
 filtering = figure;
 plot(baterias_Mean.Date,baterias_Mean.baterias_p15cmMean,'--d','DisplayName','tensiometros');
@@ -90,13 +94,17 @@ plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1');
 % plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
 plot(dateRange,wrkf,'DisplayName','ESD+WRKF');
 
+% SCALE-SPACE
+% resultados similares ao LOESS 0.2
+% plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
+plot(dateRange,scale_space01,'DisplayName','ESD+Scale Space');
+
 % LEGEND
 hold off;
 legend('show','Location','best');
 
 % SET LIMIT
 xlim(periodoComparacao);
-% ylim([10 25]);
 ylim([18 70]);
 
 % SAVE
