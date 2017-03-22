@@ -1,3 +1,8 @@
+clear;
+clf;
+
+load('data/semish_data.mat');
+
 %% SETTINGS
 sensor = sensor3fusedESD;
 sensorKAF = sensor3fusedKAFalt;
@@ -57,55 +62,118 @@ load('data/scale_space.mat','scale_space03');
 
 %% PLOTTING
 filtering = figure;
-plot(baterias_Mean.Date,baterias_Mean.baterias_p75cmMean,'--d','DisplayName','tensiometros');
-hold on;
+% plot(baterias_Mean.Date,baterias_Mean.baterias_p75cmMean,'--d','DisplayName','tensiometros');
 plot(dateRange,sensor,'DisplayName','ESD','LineStyle','-.','Visible','on');
-plot(dateRange,sensorKAF,'DisplayName','ESD+Kalman','LineStyle','--','Visible','on');
+hold on;
+
+% WRKF
+% plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
+plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices',1:7:length(wrkf));
+
+% KALMAN + ESD
+plot(dateRange,sensorKAF,'-x','DisplayName','ESD+Kalman','MarkerIndices',1:7:length(sensorKAF),'MarkerSize',10);
 
 % LOESS
 % plot(dateRange,loess01,'DisplayName','ESD+loess 0.1');
 % plot(dateRange,loess02,'DisplayName','ESD+loess 0.2','Marker','+','Visible','on');
-plot(dateRange,loess02,'DisplayName','ESD+loess 0.2');
+% plot(dateRange,loess02,'DisplayName','ESD+loess 0.2');
 % plot(dateRange,loess03,'DisplayName','ESD+loess 0.3');
 % plot(dateRange,loess04,'DisplayName','ESD+loess 0.4');
 
 % RLOESS
 % plot(dateRange,rloess01,'DisplayName','ESD+rloess 0.1','Marker','*','Visible','on');
-plot(dateRange,rloess01,'DisplayName','ESD+rloess 0.1');
+plot(dateRange,rloess01,'-d','DisplayName','ESD+rloess 0.1','MarkerIndices',1:7:length(rloess01),'MarkerSize',10);
 % plot(dateRange,rloess02,'DisplayName','ESD+rloess 0.2');
 % plot(dateRange,rloess03,'DisplayName','ESD+rloess 0.3');
 % plot(dateRange,rloess04,'DisplayName','ESD+rloess 0.4');
 
 % RLOWESS
 % plot(dateRange,rlowess01,'DisplayName','ESD+rlowess 0.1','Marker','x','Visible','on');
-plot(dateRange,rlowess01,'DisplayName','ESD+rlowess 0.1');
+plot(dateRange,rlowess01,'-*','DisplayName','ESD+rlowess 0.1','MarkerIndices',1:7:length(rlowess01),'MarkerSize',10);
 % plot(dateRange,rlowess02,'DisplayName','ESD+rlowess 0.2');
 % plot(dateRange,rlowess03,'DisplayName','ESD+rlowess 0.3');
 % plot(dateRange,rlowess04,'DisplayName','ESD+rlowess 0.4');
 
 % SAVITZKY-GOLAY
 % plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1','Marker','o','Visible','on');
-plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1');
+% plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1');
 % plot(dateRange,sgolay2,'DisplayName','ESD+sgolay 2');
 % plot(dateRange,sgolay3,'DisplayName','ESD+sgolay 3');
 % plot(dateRange,sgolay4,'DisplayName','ESD+sgolay 4');
 
+% SCALE-SPACE
+% resultados similares ao LOESS 0.2
+% plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
+% plot(dateRange,scale_space03,'DisplayName','ESD+Scale Space');
+
+% LEGEND
+hold off;
+legend('show','Location','northwest');
+xlabel('Days');
+ylabel('kPa/cbar');
+
+% SET LIMIT
+xlim(periodoComparacao);
+ylim([32 43]);
+
+% SAVE
+% saveas(filtering,'graphs/manuais/ESD_kalman_loess_sgolay_75cm_a','png');
+
+%% PLOTTING
+filtering = figure;
+% plot(baterias_Mean.Date,baterias_Mean.baterias_p75cmMean,'--d','DisplayName','tensiometros');
+plot(dateRange,sensor,'DisplayName','ESD','LineStyle','-.','Visible','on');
+hold on;
+
 % WRKF
 % plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
-plot(dateRange,wrkf,'DisplayName','ESD+WRKF');
+plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices',1:7:length(wrkf));
+
+% KALMAN + ESD
+% plot(dateRange,sensorKAF,'DisplayName','ESD+Kalman');
+
+% LOESS
+% plot(dateRange,loess01,'DisplayName','ESD+loess 0.1');
+% plot(dateRange,loess02,'DisplayName','ESD+loess 0.2','Marker','+','Visible','on');
+% plot(dateRange,loess02,'DisplayName','ESD+loess 0.2');
+% plot(dateRange,loess03,'DisplayName','ESD+loess 0.3');
+% plot(dateRange,loess04,'DisplayName','ESD+loess 0.4');
+
+% RLOESS
+% plot(dateRange,rloess01,'DisplayName','ESD+rloess 0.1','Marker','*','Visible','on');
+% plot(dateRange,rloess01,'DisplayName','ESD+rloess 0.1');
+% plot(dateRange,rloess02,'DisplayName','ESD+rloess 0.2');
+% plot(dateRange,rloess03,'DisplayName','ESD+rloess 0.3');
+% plot(dateRange,rloess04,'DisplayName','ESD+rloess 0.4');
+
+% RLOWESS
+% plot(dateRange,rlowess01,'DisplayName','ESD+rlowess 0.1','Marker','x','Visible','on');
+% plot(dateRange,rlowess01,'DisplayName','ESD+rlowess 0.1');
+% plot(dateRange,rlowess02,'DisplayName','ESD+rlowess 0.2');
+% plot(dateRange,rlowess03,'DisplayName','ESD+rlowess 0.3');
+% plot(dateRange,rlowess04,'DisplayName','ESD+rlowess 0.4');
+
+% SAVITZKY-GOLAY
+% plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1','Marker','o','Visible','on');
+plot(dateRange,sgolay1,'-x','DisplayName','ESD+sgolay 1','MarkerIndices',1:7:length(sgolay1),'MarkerSize',10);
+% plot(dateRange,sgolay2,'DisplayName','ESD+sgolay 2');
+% plot(dateRange,sgolay3,'DisplayName','ESD+sgolay 3');
+% plot(dateRange,sgolay4,'DisplayName','ESD+sgolay 4');
 
 % SCALE-SPACE
 % resultados similares ao LOESS 0.2
 % plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
-plot(dateRange,scale_space03,'DisplayName','ESD+Scale Space');
+plot(dateRange,scale_space03,'-d','DisplayName','ESD+Scale Space','MarkerIndices',1:7:length(scale_space03),'MarkerSize',10);
 
 % LEGEND
 hold off;
-legend('show','Location','best');
+legend('show','Location','northwest');
+xlabel('Days');
+ylabel('kPa/cbar');
 
 % SET LIMIT
 xlim(periodoComparacao);
-ylim([18 70]);
+ylim([32 43]);
 
 % SAVE
-saveas(filtering,'graphs/manuais/ESD_kalman_loess_sgolay_75cm','png');
+% saveas(filtering,'graphs/manuais/ESD_kalman_loess_sgolay_75cm_b','png');
