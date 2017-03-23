@@ -70,7 +70,7 @@ hold on;
 plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices',1:7:length(wrkf));
 
 % KALMAN + ESD
-plot(dateRange,sensorKAF,'-x','DisplayName','ESD+Kalman','MarkerIndices',1:7:length(sensorKAF),'MarkerSize',10);
+plot(dateRange,sensorKAF,'-x','DisplayName','ESD+Kalman','MarkerIndices',1:7:length(sensorKAF),'MarkerSize',15);
 
 % LOESS
 % plot(dateRange,loess01,'DisplayName','ESD+loess 0.1');
@@ -81,14 +81,14 @@ plot(dateRange,sensorKAF,'-x','DisplayName','ESD+Kalman','MarkerIndices',1:7:len
 
 % RLOESS
 % plot(dateRange,rloess01,'DisplayName','ESD+rloess 0.1','Marker','*','Visible','on');
-plot(dateRange,rloess01,'-d','DisplayName','ESD+rloess 0.1','MarkerIndices',1:7:length(rloess01),'MarkerSize',10);
+plot(dateRange,rloess01,'-d','DisplayName','ESD+rloess 0.1','MarkerIndices',1:7:length(rloess01),'MarkerSize',15);
 % plot(dateRange,rloess02,'DisplayName','ESD+rloess 0.2');
 % plot(dateRange,rloess03,'DisplayName','ESD+rloess 0.3');
 % plot(dateRange,rloess04,'DisplayName','ESD+rloess 0.4');
 
 % RLOWESS
 % plot(dateRange,rlowess01,'DisplayName','ESD+rlowess 0.1','Marker','x','Visible','on');
-plot(dateRange,rlowess01,'-*','DisplayName','ESD+rlowess 0.1','MarkerIndices',1:7:length(rlowess01),'MarkerSize',10);
+plot(dateRange,rlowess01,'-*','DisplayName','ESD+rlowess 0.1','MarkerIndices',1:7:length(rlowess01),'MarkerSize',15);
 % plot(dateRange,rlowess02,'DisplayName','ESD+rlowess 0.2');
 % plot(dateRange,rlowess03,'DisplayName','ESD+rlowess 0.3');
 % plot(dateRange,rlowess04,'DisplayName','ESD+rlowess 0.4');
@@ -154,7 +154,7 @@ plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices'
 
 % SAVITZKY-GOLAY
 % plot(dateRange,sgolay1,'DisplayName','ESD+sgolay 1','Marker','o','Visible','on');
-plot(dateRange,sgolay1,'-x','DisplayName','ESD+sgolay 1','MarkerIndices',1:7:length(sgolay1),'MarkerSize',10);
+plot(dateRange,sgolay1,'-x','DisplayName','ESD+sgolay 1','MarkerIndices',1:7:length(sgolay1),'MarkerSize',15);
 % plot(dateRange,sgolay2,'DisplayName','ESD+sgolay 2');
 % plot(dateRange,sgolay3,'DisplayName','ESD+sgolay 3');
 % plot(dateRange,sgolay4,'DisplayName','ESD+sgolay 4');
@@ -162,7 +162,7 @@ plot(dateRange,sgolay1,'-x','DisplayName','ESD+sgolay 1','MarkerIndices',1:7:len
 % SCALE-SPACE
 % resultados similares ao LOESS 0.2
 % plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
-plot(dateRange,scale_space01,'-d','DisplayName','ESD+Scale Space','MarkerIndices',1:7:length(scale_space01),'MarkerSize',10);
+plot(dateRange,scale_space01,'-d','DisplayName','ESD+Scale Space','MarkerIndices',1:7:length(scale_space01),'MarkerSize',15);
 
 % LEGEND
 hold off;
