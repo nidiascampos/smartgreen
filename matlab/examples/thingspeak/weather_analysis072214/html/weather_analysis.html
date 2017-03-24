@@ -1,0 +1,590 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Introduction</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-07-16"><meta name="DC.source" content="weather_analysis.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Introduction</h1><!--introduction--><p>Analyzing Weather Data from an Arduino-based Weather Station Connected to ThingSpeak, an Internet of Things (IoT) Data Aggregator</p><p>Description of Project</p><p>Building your own personal weather station is a lot easier than it used to be.  With fickle New England weather, we decided we wanted to build our own weather station and use MATLAB to analyze the data.  We wanted to answer questions such as:</p><div><ul><li>What direction was the wind blowing during the last 3 hours?</li><li>How have the temperature and dew point varied over the last week?</li><li>Does the barometric pressure really fall as a rain storm approaches?</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Step 1: Placement of the Weather Station</a></li><li><a href="#2">Step 2:  Choosing the Hardware</a></li><li><a href="#3">Hardware List</a></li><li><a href="#4">Step 3: Wiring up the Weather Station Transmitter and Programming the Outdoor Arduino</a></li><li><a href="#5">Step 4: Wiring up the Weather Station Receiver and Programming the Indoor Arduino</a></li><li><a href="#6">Step 5: Answering Our Questions Using the Weather Data</a></li><li><a href="#7">Retrieve Weather Data from ThingSpeak</a></li><li><a href="#9">Compute Some Basic Statistics over the Time Period and Display</a></li><li><a href="#11">Visualize the Wind over Last Three Hours</a></li><li><a href="#12">Calculate Dew Point</a></li><li><a href="#13">Plot Temperature, Humidity and Dew Point versus Time</a></li><li><a href="#15">Acquire and Process Weather Data on a Rainy Day in New England</a></li><li><a href="#17">Visualize the Hourly Rain and Pressure Data and Find Pressure Trend</a></li><li><a href="#19">Clean-up Data When There Are Outliers</a></li><li><a href="#20">Use Threshold Filter to Remove Outlier Data</a></li><li><a href="#22">Use Median Filter to Remove Outlier Data</a></li><li><a href="#25">Conclusion</a></li></ul></div><h2>Step 1: Placement of the Weather Station<a name="1"></a></h2><p>First, we had to decide where to place our weather station.  We decided to place our station on the top floor of the parking garage.  This spot was chosen since it was exposed to the elements but also had a roof to mount and shelter the electronics. Because we ultimately wanted to send data to a third party data aggregator, we had to keep that in mind when choosing our hardware.</p><p><img vspace="5" hspace="5" src="wsfinal.png" alt=""> </p><h2>Step 2:  Choosing the Hardware<a name="2"></a></h2><p>Because we ultimately wanted to send data to a third party data aggregator, we had to keep that in mind when choosing our hardware. The location we chose was out of range of our building's Wi-Fi so we needed to find a way to transmit the data from the station to another receiver located inside a nearby building.  To do this we equipped an Arduino&reg; Uno with a high power XBee&reg; module.  The data was then transmitted to another XBee module on an Arduino Mega inside the building.  This Arduino was connected to the internet and the data was sent to a free data aggregation service, <a href="https://thingspeak.com">ThingSpeak.com</a>. The full list of hardware we used in our setup is shown below.</p><h2>Hardware List<a name="3"></a></h2><div><ul><li><a href="https://www.sparkfun.com/products/11021">Arduino Uno</a> plus <a href="https://www.sparkfun.com/products/12081">weather shield</a> and <a href="https://www.sparkfun.com/products/8942">weather meters</a></li><li>2x <a href="https://www.sparkfun.com/products/10854">XBee shields</a> and 2x <a href="http://www.digi.com/products/wireless-wired-embedded-solutions/zigbee-rf-modules/point-multipoint-rfmodules/xbee-series1-module#overview">extended range XBee modules</a> from Digi(R)International</li><li><a href="https://www.sparkfun.com/products/11061">Arduino Mega</a> with <a href="https://www.sparkfun.com/products/9026">Ethernet Shield</a></li><li>2x <a href="https://www.sparkfun.com/products/11417">Arduino stackable header kits</a> for mounting</li><li>2x 5V transformer to power Arduinos</li><li><a href="https://www.sparkfun.com/products/9819">XBee Explorer Dongle</a> to program the XBee transmitter</li></ul></div><p><img vspace="5" hspace="5" src="arduinos_ws.png" alt=""> </p><h2>Step 3: Wiring up the Weather Station Transmitter and Programming the Outdoor Arduino<a name="4"></a></h2><p>The outdoor Arduino is mounted on the garage and is responsible for acquiring the measurements and transmitting the data to an indoor Arduino.  To build it, we first soldered header pins onto the weather shield and one XBee shield. We then inserted the weather shield and XBee shield into the Arduino Uno according to the schematics provided with the shields. The XBee shield has a high power XBee transceiver plugged into it.  We used <a href="http://www.digi.com/support/kbase/kbaseresultdetl?id=2125">X-CTU</a> software to program the appropriate destination address and download the required firmware to the XBee shield. The anemometer, weather vane and rain sensor connect to the weather shield via RJ-45 connectors provided with the weather meters.  Next we modified the Arduino code for the weather shield (found on GitHub) to allow the Arduino to send serial data using the XBee module.</p><h2>Step 4: Wiring up the Weather Station Receiver and Programming the Indoor Arduino<a name="5"></a></h2><p>The indoor Arduino is inside our building, and is responsible for receiving the data from the outdoor Arduino, validating the data then posting the data to an internet aggregator (ThingSpeak). To build it, we first soldered header pins onto the Ethernet shield and the second XBee shield. We then inserted the Ethernet shield and XBee shield into the Arduino Mega according to the schematics provided with the shields. We again used <a href="http://www.digi.com/support/kbase/kbaseresultdetl?id=2125">X-CTU</a> software to program the appropriate destination address and download the required firmware to the XBee shield. Next, we programmed the Arduino to receive XBee messages and forward these messages at a rate of once per minute to ThingSpeak using the Ethernet connection. Prior to sending messages to ThingSpeak, we setup an account and configured the channel and field information.  Once we have the station sending data to ThingSpeak, we are ready to start looking at the data with MATLAB.</p><p>Note that to reproduce the analysis entailed in the article, you do not need to set up the hardware. Live data from our setup is available on <a href="https://thingspeak.com/channels/12397">channel 12397</a> of ThingSpeak.com.</p><h2>Step 5: Answering Our Questions Using the Weather Data<a name="6"></a></h2><h2>Retrieve Weather Data from ThingSpeak<a name="7"></a></h2><p>To answer our first two questions, we use the <a href="http://www.mathworks.com/matlabcentral/fileexchange/46714-thingspeak-support-from-matlab">thingSpeakFetch</a> command to view available fields of data, simultaneously import all the fields into MATLAB and store the temperature, humidity, wind speed, and wind direction data in their own variables. Find more information about our <a href="http://www.mathworks.com/thingspeak">ThingSpeak support</a>.</p><pre class="codeinput">[d,t,ci] = thingSpeakFetch(12397,<span class="string">'NumPoints'</span>,8000); <span class="comment">% fetch last 8000 minutes of data</span>
+</pre><p>8000 points is the maximum number of points that ThingSpeak allows to be fetched in a single query.  For our data rate, it corresponds to about 6 days of data.</p><pre class="codeinput">tempF = d(:,4); <span class="comment">% field 4 is temperature in deg F</span>
+baro = d(:,6); <span class="comment">% pressure in inches Hg</span>
+humidity = d(:,3); <span class="comment">% field 3 is relative humidity in percent</span>
+windDir = d(:,1);
+windSpeed = d(:,2);
+tempC = (5/9)*(tempF-32); <span class="comment">% convert to Celsius</span>
+availableFields = ci.FieldDescriptions'
+</pre><pre class="codeoutput">
+availableFields = 
+
+    'Wind Direction (North = 0 degrees)'
+    'Wind Speed (mph)'
+    '% Humidity'
+    'Temperature (F)'
+    'Rain (Inches/minute)'
+    'Pressure ("Hg)'
+    'Power Level (V)'
+    'Light Intensity'
+
+</pre><h2>Compute Some Basic Statistics over the Time Period and Display<a name="9"></a></h2><p>To get a better understanding of our data, we find the minimum, maximum and mean values for the data that we imported and we find the timestamp where the maximum and minimum values occur.  This gives us a quick way to inspect if the data from our weather station looks reasonable.</p><pre class="codeinput">[maxData,index_max] = max(d);
+maxData = maxData';
+times_max = datestr(t(index_max));
+times_max = cellstr(times_max);
+[minData,index_min] = min(d);
+minData = minData';
+times_min = datestr(t(index_min));
+times_min = cellstr(times_min);
+meanData = mean(d);
+meanData = meanData'; <span class="comment">% make column vector</span>
+summary = table(availableFields,maxData,times_max,meanData,minData,times_min) <span class="comment">% display</span>
+</pre><pre class="codeoutput">
+summary = 
+
+              availableFields               maxData          times_max       
+    ____________________________________    _______    ______________________
+
+    'Wind Direction (North = 0 degrees)'      338      '10-Jul-2014 05:01:32'
+    'Wind Speed (mph)'                        6.3      '10-Jul-2014 12:47:14'
+    '% Humidity'                             86.5      '15-Jul-2014 04:51:24'
+    'Temperature (F)'                        96.7      '12-Jul-2014 16:28:55'
+    'Rain (Inches/minute)'                   0.04      '15-Jul-2014 13:47:13'
+    'Pressure ("Hg)'                        30.23      '11-Jul-2014 09:25:07'
+    'Power Level (V)'                        4.44      '10-Jul-2014 10:25:01'
+    'Light Intensity'                        0.06      '12-Jul-2014 13:23:38'
+
+
+     meanData     minData          times_min       
+    __________    _______    ______________________
+
+           NaN        0      '10-Jul-2014 04:54:32'
+        3.2072        0      '10-Jul-2014 01:33:14'
+        57.386     25.9      '12-Jul-2014 13:39:39'
+        80.339     69.6      '11-Jul-2014 06:59:54'
+     5.625e-05        0      '10-Jul-2014 01:02:11'
+         30.04    29.78      '15-Jul-2014 13:04:08'
+        4.4149     4.38      '11-Jul-2014 09:22:06'
+     0.0092475        0      '10-Jul-2014 01:02:11'
+
+</pre><p>If we get unexpected values such as maximum barometric pressure of 40 inches or a maximum temperature of 1700 degrees, we can assume that there may be some erroneous data points in our data set. Such errors can occur due to transmission errors, power glitches and other sources.  In the last section of this article, we will show some ways to handle data that you have determined in an outlier, but for the data pulled when this report was published, everything looks to be in order. Here we used table, a new data type introduced in R2013b, to help visualize the data. For more information on table, see this <a href="http://blogs.mathworks.com/loren/2013/09/10/introduction-to-the-new-matlab-data-types-in-r2013b/">blog entry</a>.</p><h2>Visualize the Wind over Last Three Hours<a name="11"></a></h2><p>Since our weather station reports data approximately once every minute, we look at the last 180 minutes to answer our question about what the wind has been doing in the last 3 hours and we use the compass visualization in MATLAB to see both the wind speed and direction over the time period of interest.  This is a mathematical compass where North (0 degrees) is at the right, and the degree values increase counterclockwise.  90 degree represents East (top), 180 degrees represents South (left) and 270 degrees represents West (bottom).  Unless we are experiencing a wind shift due to a thunderstorm or a frontal passage, the compass will typically show a predominant wind direction denoted by a higher density of arrows during a three hour period.  In the case of the data pulled for this example, we see the wind is predominantly out of the west and southwest, typical of summer time in New England.</p><pre class="codeinput">figure(1)
+windDir = windDir((end-180):end); <span class="comment">% last 3 hours</span>
+windSpeed = windSpeed((end-180):end);
+rad = windDir*2*pi/360;
+u = cos(rad) .* windSpeed; <span class="comment">% x coordinate of wind speed on circular plot</span>
+v = sin(rad) .* windSpeed; <span class="comment">% y coordinate of wind speed on circular plot</span>
+compass(u,v)
+titletext = strcat(<span class="string">' for last 3 hours ending on: '</span>,datestr(now));
+title({<span class="string">'Wind Speed, MathWorks Weather Station'</span>; titletext})
+</pre><img vspace="5" hspace="5" src="weather_analysis_01.png" alt=""> <h2>Calculate Dew Point<a name="12"></a></h2><p>Now we are ready to answer our second question about how temperature and dew point have varied over the past week. The dew point is the temperature at which the air (when cooled) would become saturated with water vapor. The more humid the air mass, the higher the dew point.  Dew point is also sometimes a measure of discomfort.  When the dew point is over 65 degrees, many people start to say the air feels "sticky." Dew points over 70 feel uncomfortable to many.  A common estimation for dew point,tdp, can be found using the equations and constants (see <a href="http://en.wikipedia.org/wiki/Dew_point">Reference</a>) shown below: <img src="weather_analysis_eq77778.png" alt="$$tdp = \frac{c*\gamma}{(b-\gamma)}$"></p><p><img src="weather_analysis_eq89630.png" alt="$$\gamma = ln(humidity/100) + \frac{b*tempC}{(c+tempC)}$$"></p><p><img src="weather_analysis_eq48089.png" alt="$$b= 17.62$ and $c=243.5$$"></p><pre class="codeinput">b = 17.62;
+c = 243.5;
+gamma = log(humidity/100) + b*tempC ./ (c+tempC);
+tdp = c*gamma ./ (b-gamma);
+tdpf = (tdp*1.8) + 32;  <span class="comment">% convert back to Fahrenheit</span>
+</pre><h2>Plot Temperature, Humidity and Dew Point versus Time<a name="13"></a></h2><p>Now that we have calculated the dew point, we are ready to plot the data and observe its behavior over the last 5 or 6 days.</p><pre class="codeinput">figure(2)
+[ax, h1, h2] = plotyy(t,[tempF tdpf],t,humidity);
+set(ax(2),<span class="string">'XTick'</span>,[])
+set(ax(2),<span class="string">'YColor'</span>,<span class="string">'k'</span>)
+set(ax(1),<span class="string">'YTick'</span>,[0,20,40,60,80,100])
+set(ax(2),<span class="string">'YTick'</span>,[0,20,40,60,80,100])
+datetick(ax(1),<span class="string">'x'</span>,<span class="string">'keeplimits'</span>,<span class="string">'keepticks'</span>)
+set(get(ax(2),<span class="string">'YLabel'</span>),<span class="string">'String'</span>,availableFields(3))
+set(get(ax(1),<span class="string">'YLabel'</span>),<span class="string">'String'</span>,availableFields(4))
+grid <span class="string">on</span>
+legend(<span class="string">'Location'</span>,<span class="string">'South'</span>,<span class="string">'Temperature'</span>,<span class="string">'Dew point'</span>, <span class="string">'Humidity'</span>)
+</pre><img vspace="5" hspace="5" src="weather_analysis_02.png" alt=""> <p>During a typical week, you can clearly see the daily variation in temperature and humidity.  As expected the relative humidity typically rises at night (as the temperature falls toward the dew point) and the maximum temperatures are typically in the afternoon. The dew point temperature indicates how humid the air mass is.  When we pulled the data to publish this example, you can see that the dew point was over 70 degrees which is typical of a hot and humid summer day in New England. If you run this code in MATLAB, you may get a different answer as you will be pulling the most recent data reported by the weather station.</p><h2>Acquire and Process Weather Data on a Rainy Day in New England<a name="15"></a></h2><p>The last question that we wanted to answer was does the barometric pressure really fall before it rains?  To do this, we retrieve data from the weather station on a known rainy day.  This time, we are interested in barometric pressure and rainfall.  Our rainfall gauge is a self-emptying gauge that empties when it is filled. Our gauge rotates and empties when 0.01 inches of rain have fallen. Our Arduino code counts the number of times the meter has emptied every minute and sends the appropriate rainfall value to ThingSpeak.   We use MATLAB to down sample our data to hourly samples so we can more easily see the accumulated rainfall and the pressure trend.</p><pre class="codeinput">[d,t,ci] = thingSpeakFetch(12397,<span class="string">'DateRange'</span>,{<span class="string">'6/4/2014'</span>,<span class="string">'6/6/2014'</span>}); <span class="comment">% get data</span>
+baro = d(:,6); <span class="comment">% pressure</span>
+extraData = rem(length(baro),60); <span class="comment">% computes excess points beyond the hour</span>
+baro(1:extraData) = []; <span class="comment">% removes excess points so we have even number of hours</span>
+rain = d(:,5); <span class="comment">% rainfall from sensor in inches per minute</span>
+</pre><p>Did we really get a lot of rain on June 5?  Well, it's hard to tell if we just look at the minute by minute data since the maximum value is just 0.01 inches. However if we sum all the rain fall on June 5, we can see that we received 0.48 inches of rain which is 13% of the monthly average of 3.68 inches, indicating it was indeed quite rainy on this day.  To get a better idea of when the maximum rainfall occurred we convert the data to hourly data as shown below.</p><pre class="codeinput">rain(1:extraData) = [];
+t(1:extraData) = [];
+rainHourly = sum(reshape(rain,60,[]))'; <span class="comment">% convert to hourly summed samples</span>
+maxRainPerMinute = max(rain)
+june5rainfall = sum(rainHourly(25:end)) <span class="comment">% 24 hours of measurements from June 5</span>
+baroHourly = downsample(baro,60); <span class="comment">% hourly samples</span>
+timestamps = downsample(t,60); <span class="comment">% hourly samples</span>
+</pre><pre class="codeoutput">
+maxRainPerMinute =
+
+    0.0100
+
+
+june5rainfall =
+
+    0.4800
+
+</pre><h2>Visualize the Hourly Rain and Pressure Data and Find Pressure Trend<a name="17"></a></h2><p>After we have pre-processed our data, we are now ready to plot it.  Here we use MATLAB to fit a trend line to the barometric pressure data.  When plotted alongside the rainfall, do we see a drop in pressure in advance of the heaviest rainfall?</p><pre class="codeinput">figure(3)
+subplot(2,1,1)
+bar(timestamps,rainHourly) <span class="comment">% plot rain</span>
+xlabel(<span class="string">'Date and Time'</span>)
+ylabel(<span class="string">'Rainfall (inches /per hour)'</span>)
+grid <span class="string">on</span>
+datetick(<span class="string">'x'</span>,<span class="string">'dd-mmm HH:MM'</span>,<span class="string">'keeplimits'</span>,<span class="string">'keepticks'</span>)
+title(<span class="string">'Rainfall on June 4 and 5'</span>)
+subplot(2,1,2)
+hold <span class="string">on</span>
+plot(timestamps,baroHourly) <span class="comment">% plot barometer</span>
+xlabel(<span class="string">'Date and Time'</span>)
+ylabel(availableFields(6))
+grid <span class="string">on</span>
+datetick(<span class="string">'x'</span>,<span class="string">'dd-mmm HH:MM'</span>,<span class="string">'keeplimits'</span>,<span class="string">'keepticks'</span>)
+detrended_Baro = detrend(baroHourly);
+baroTrend = baroHourly - detrended_Baro;
+plot(timestamps,baroTrend,<span class="string">'r'</span>) <span class="comment">% plot trend</span>
+hold <span class="string">off</span>
+legend(<span class="string">'Barometric Pressure'</span>,<span class="string">'Pressure Trend'</span>)
+title(<span class="string">'Barometric Pressure on June 4 and 5'</span>)
+</pre><img vspace="5" hspace="5" src="weather_analysis_03.png" alt=""> <p>Once we plot this data and look at the trend, we can clearly see that the barometric pressure does indeed drop prior to our heavy rainfall event!</p><h2>Clean-up Data When There Are Outliers<a name="19"></a></h2><p>Our questions were fairly straightforward to answer but sometimes there are problems with the available data.  For example, on May 30, we recorded some unreasonable temperature data.   Let's see how to use MATLAB to clean it up.</p><pre class="codeinput">[d,t] = thingSpeakFetch(12397,<span class="string">'DateRange'</span>,{<span class="string">'5/30/2014'</span>,<span class="string">'5/31/2014'</span>});
+rawTemperatureData = d(:,4);
+newTemperatureData = rawTemperatureData;
+minTemp = min(rawTemperatureData) <span class="comment">% wow that is cold!</span>
+</pre><pre class="codeoutput">
+minTemp =
+
+  -1.7662e+03
+
+</pre><h2>Use Threshold Filter to Remove Outlier Data<a name="20"></a></h2><p>Delete elements that fail the threshold test.  In this case, we have some data points that are completely unreasonable such as a temperature reading of -1766 degrees F so let's limit the data to include only temperatures that are &gt; 0 or &lt; 120 which is reasonable for a Spring day here in New England.</p><pre class="codeinput">tnew = t';
+outlierIndices = [find(rawTemperatureData &lt; 0); find(rawTemperatureData &gt; 120)];
+tnew(outlierIndices) = [];
+newTemperatureData(outlierIndices) = [];
+</pre><p>Plot the cleaned up data and the original data.</p><pre class="codeinput">figure(4)
+subplot(2,1,2)
+plot(tnew,newTemperatureData,<span class="string">'-o'</span>)
+datetick
+xlabel(<span class="string">'Time of Day'</span>)
+ylabel(availableFields(4))
+title(<span class="string">'Filtered Data - outliers deleted'</span>)
+grid <span class="string">on</span>
+subplot(2,1,1)
+plot(t,rawTemperatureData,<span class="string">'-o'</span>)
+datetick
+xlabel(<span class="string">'Time of Day'</span>)
+ylabel(availableFields(4))
+title(<span class="string">'Original Data'</span>)
+grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="weather_analysis_04.png" alt=""> <h2>Use Median Filter to Remove Outlier Data<a name="22"></a></h2><p>Another way to remove outlier data is with a median filter.  The median filter does not require as much pre-knowledge of the data set.  It will just remove samples that appear to be outside the median of nearest neighbors. The filter Results in a vector of same length as original vector unlike deleting a data point which results in a gap in the data and a shorter record.  This type of filter can be used to remove noise in a signal.</p><pre class="codeinput">n = 5; <span class="comment">% this value determines the number of total points used in the filter</span>
+</pre><p>Larger values of n include more neighboring values.  For temperatures collected once per minute, we choose n = 5 because temperature should not typically change too much in 5 minutes.</p><pre class="codeinput">f = medfilt1(rawTemperatureData,n);
+figure(5)
+subplot(2,1,2)
+plot(t,f,<span class="string">'-o'</span>)
+datetick
+xlabel(<span class="string">'Time of Day'</span>)
+ylabel(availableFields(4))
+title(<span class="string">'Filtered Data - using median filter'</span>)
+grid <span class="string">on</span>
+subplot(2,1,1)
+plot(t,rawTemperatureData,<span class="string">'-o'</span>)
+datetick
+xlabel(<span class="string">'Time of Day'</span>)
+ylabel(availableFields(4))
+title(<span class="string">'Original Data'</span>)
+grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="weather_analysis_05.png" alt=""> <h2>Conclusion<a name="25"></a></h2><p>Well, we have now analyzed the data from our weather station and have answered the questions we were curious about.  We have also demonstrated some ways to clean up data that does not pass initial inspection. Although our experiment focused on collecting data from a weather station, you may find this example useful for analyzing environmental data from other Internet of Things connected sensors with which you may be experimenting.</p><p>Copyright 2014, The MathWorks, Inc.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Introduction
+% Analyzing Weather Data from an Arduino-based Weather Station Connected to
+% ThingSpeak, an Internet of Things (IoT) Data Aggregator
+%
+% Description of Project
+% 
+% Building your own personal weather station is a lot easier than it used
+% to be.  With fickle New England weather, we decided we wanted to build
+% our own weather station and use MATLAB to analyze the data.  We wanted to
+% answer questions such as:
+%
+% * What direction was the wind blowing during the last 3 hours? 
+% * How have the temperature and dew point varied over the last week? 
+% * Does the barometric pressure really fall as a rain storm approaches?
+%
+%% Step 1: Placement of the Weather Station
+%
+% First, we had to decide where to place our weather station.  We decided
+% to place our station on the top floor of the parking garage.  This spot
+% was chosen since it was exposed to the elements but also had a roof to
+% mount and shelter the electronics. Because we ultimately wanted to send
+% data to a third party data aggregator, we had to keep that in mind when
+% choosing our hardware.
+% 
+% <<wsfinal.png>>
+%
+%% Step 2:  Choosing the Hardware
+%
+% Because we ultimately wanted to send data to a third party data
+% aggregator, we had to keep that in mind when choosing our hardware. The
+% location we chose was out of range of our building's Wi-Fi so we needed
+% to find a way to transmit the data from the station to another receiver
+% located inside a nearby building.  To do this we equipped an Arduino(R)
+% Uno with a high power XBee(R) module.  The data was then transmitted to
+% another XBee module on an Arduino Mega inside the building.  This Arduino
+% was connected to the internet and the data was sent to a free data
+% aggregation service, <https://thingspeak.com ThingSpeak.com>. The full
+% list of hardware we used in our setup is shown below.
+% 
+%% Hardware List
+%
+% * <https://www.sparkfun.com/products/11021 Arduino Uno> plus <https://www.sparkfun.com/products/12081 weather shield> and <https://www.sparkfun.com/products/8942 weather meters> 
+% * 2x <https://www.sparkfun.com/products/10854 XBee shields> and 2x <http://www.digi.com/products/wireless-wired-embedded-solutions/zigbee-rf-modules/point-multipoint-rfmodules/xbee-series1-module#overview extended range XBee modules> from Digi(R)International
+% * <https://www.sparkfun.com/products/11061 Arduino Mega> with
+% <https://www.sparkfun.com/products/9026 Ethernet Shield>
+% * 2x <https://www.sparkfun.com/products/11417 Arduino stackable header kits> for mounting
+% * 2x 5V transformer to power Arduinos
+% * <https://www.sparkfun.com/products/9819 XBee Explorer Dongle> to program the XBee transmitter
+%
+% <<arduinos_ws.png>>
+%
+%% Step 3: Wiring up the Weather Station Transmitter and Programming the Outdoor Arduino
+% The outdoor Arduino is mounted on the garage and is responsible for
+% acquiring the measurements and transmitting the data to an indoor
+% Arduino.  To build it, we first soldered header pins onto the weather
+% shield and one XBee shield. We then inserted the weather shield and XBee
+% shield into the Arduino Uno according to the schematics provided with the
+% shields. The XBee shield has a high power XBee transceiver plugged into
+% it.  We used <http://www.digi.com/support/kbase/kbaseresultdetl?id=2125
+% X-CTU> software to program the appropriate destination address and
+% download the required firmware to the XBee shield. The anemometer,
+% weather vane and rain sensor connect to the weather shield via RJ-45
+% connectors provided with the weather meters.  Next we modified the
+% Arduino code for the weather shield (found on GitHub) to allow the
+% Arduino to send serial data using the XBee module.
+% 
+%% Step 4: Wiring up the Weather Station Receiver and Programming the Indoor Arduino
+% The indoor Arduino is inside our building, and is responsible for
+% receiving the data from the outdoor Arduino, validating the data then
+% posting the data to an internet aggregator (ThingSpeak). To build it, we
+% first soldered header pins onto the Ethernet shield and the second XBee
+% shield. We then inserted the Ethernet shield and XBee shield into the
+% Arduino Mega according to the schematics provided with the shields. We
+% again used <http://www.digi.com/support/kbase/kbaseresultdetl?id=2125
+% X-CTU> software to program the appropriate destination address and
+% download the required firmware to the XBee shield. Next, we programmed
+% the Arduino to receive XBee messages and forward these messages at a rate
+% of once per minute to ThingSpeak using the Ethernet connection. Prior to
+% sending messages to ThingSpeak, we setup an account and configured the
+% channel and field information.  Once we have the station sending data to
+% ThingSpeak, we are ready to start looking at the data with MATLAB.
+%
+% Note that to reproduce the analysis entailed in the article, you do not
+% need to set up the hardware. Live data from our setup is available on
+% <https://thingspeak.com/channels/12397 channel 12397> of ThingSpeak.com.
+%
+%% Step 5: Answering Our Questions Using the Weather Data
+%% Retrieve Weather Data from ThingSpeak
+% To answer our first two questions, we use the
+% <http://www.mathworks.com/matlabcentral/fileexchange/46714-thingspeak-support-from-matlab
+% thingSpeakFetch> command to view available fields of data, simultaneously
+% import all the fields into MATLAB and store the temperature, humidity,
+% wind speed, and wind direction data in their own variables. Find more
+% information about our <http://www.mathworks.com/thingspeak ThingSpeak
+% support>.
+[d,t,ci] = thingSpeakFetch(12397,'NumPoints',8000); % fetch last 8000 minutes of data
+%%
+% 8000 points is the maximum number of points that ThingSpeak allows to be
+% fetched in a single query.  For our data rate, it corresponds to about 6
+% days of data.
+tempF = d(:,4); % field 4 is temperature in deg F
+baro = d(:,6); % pressure in inches Hg
+humidity = d(:,3); % field 3 is relative humidity in percent
+windDir = d(:,1);
+windSpeed = d(:,2);
+tempC = (5/9)*(tempF-32); % convert to Celsius
+availableFields = ci.FieldDescriptions' 
+%% Compute Some Basic Statistics over the Time Period and Display
+% To get a better understanding of our data, we find the minimum, maximum
+% and mean values for the data that we imported and we find the timestamp
+% where the maximum and minimum values occur.  This gives us a quick way to
+% inspect if the data from our weather station looks reasonable.
+[maxData,index_max] = max(d);
+maxData = maxData';
+times_max = datestr(t(index_max));
+times_max = cellstr(times_max);
+[minData,index_min] = min(d);
+minData = minData';
+times_min = datestr(t(index_min));
+times_min = cellstr(times_min);
+meanData = mean(d);
+meanData = meanData'; % make column vector
+summary = table(availableFields,maxData,times_max,meanData,minData,times_min) % display
+%%
+% If we get unexpected values such as maximum barometric pressure of 40
+% inches or a maximum temperature of 1700 degrees, we can assume that there
+% may be some erroneous data points in our data set. Such errors can occur
+% due to transmission errors, power glitches and other sources.  In the
+% last section of this article, we will show some ways to handle data that
+% you have determined in an outlier, but for the data pulled when this
+% report was published, everything looks to be in order. Here we used
+% table, a new data type introduced in R2013b, to help visualize the data.
+% For more information on table, see this
+% <http://blogs.mathworks.com/loren/2013/09/10/introduction-to-the-new-matlab-data-types-in-r2013b/
+% blog entry>.
+%
+%% Visualize the Wind over Last Three Hours
+% Since our weather station reports data approximately once every minute,
+% we look at the last 180 minutes to answer our question about what the
+% wind has been doing in the last 3 hours and we use the compass
+% visualization in MATLAB to see both the wind speed and direction over the
+% time period of interest.  This is a mathematical compass where North (0
+% degrees) is at the right, and the degree values increase
+% counterclockwise.  90 degree represents East (top), 180 degrees
+% represents South (left) and 270 degrees represents West (bottom).  Unless
+% we are experiencing a wind shift due to a thunderstorm or a frontal
+% passage, the compass will typically show a predominant wind direction
+% denoted by a higher density of arrows during a three hour period.  In the
+% case of the data pulled for this example, we see the wind is
+% predominantly out of the west and southwest, typical of summer time in
+% New England.
+figure(1)
+windDir = windDir((end-180):end); % last 3 hours
+windSpeed = windSpeed((end-180):end);
+rad = windDir*2*pi/360;
+u = cos(rad) .* windSpeed; % x coordinate of wind speed on circular plot
+v = sin(rad) .* windSpeed; % y coordinate of wind speed on circular plot
+compass(u,v)
+titletext = strcat(' for last 3 hours ending on: ',datestr(now));
+title({'Wind Speed, MathWorks Weather Station'; titletext})
+%% Calculate Dew Point
+% Now we are ready to answer our second question about how temperature and
+% dew point have varied over the past week. The dew point is the
+% temperature at which the air (when cooled) would become saturated with
+% water vapor. The more humid the air mass, the higher the dew point.  Dew
+% point is also sometimes a measure of discomfort.  When the dew point is
+% over 65 degrees, many people start to say the air feels "sticky." Dew
+% points over 70 feel uncomfortable to many.  A common estimation for dew
+% point,tdp, can be found using the equations and constants (see
+% <http://en.wikipedia.org/wiki/Dew_point Reference>) shown below:
+% $$tdp = \frac{c*\gamma}{(b-\gamma)}$
+%
+% $$\gamma = ln(humidity/100) + \frac{b*tempC}{(c+tempC)}$$
+%
+% $$b= 17.62$ and $c=243.5$$ 
+b = 17.62;  
+c = 243.5; 
+gamma = log(humidity/100) + b*tempC ./ (c+tempC);
+tdp = c*gamma ./ (b-gamma);
+tdpf = (tdp*1.8) + 32;  % convert back to Fahrenheit
+%% Plot Temperature, Humidity and Dew Point versus Time
+% Now that we have calculated the dew point, we are ready to plot the
+% data and observe its behavior over the last 5 or 6 days.
+figure(2)
+[ax, h1, h2] = plotyy(t,[tempF tdpf],t,humidity);
+set(ax(2),'XTick',[])
+set(ax(2),'YColor','k')
+set(ax(1),'YTick',[0,20,40,60,80,100])
+set(ax(2),'YTick',[0,20,40,60,80,100])
+datetick(ax(1),'x','keeplimits','keepticks')
+set(get(ax(2),'YLabel'),'String',availableFields(3))
+set(get(ax(1),'YLabel'),'String',availableFields(4))
+grid on
+legend('Location','South','Temperature','Dew point', 'Humidity')
+%%
+% During a typical week, you can clearly see the daily variation in
+% temperature and humidity.  As expected the relative humidity typically
+% rises at night (as the temperature falls toward the dew point) and the
+% maximum temperatures are typically in the afternoon. The dew point
+% temperature indicates how humid the air mass is.  When we pulled the data
+% to publish this example, you can see that the dew point was over 70
+% degrees which is typical of a hot and humid summer day in New England. If
+% you run this code in MATLAB, you may get a different answer as you will
+% be pulling the most recent data reported by the weather station.
+%% Acquire and Process Weather Data on a Rainy Day in New England
+% The last question that we wanted to answer was does the barometric
+% pressure really fall before it rains?  To do this, we retrieve data from
+% the weather station on a known rainy day.  This time, we are interested
+% in barometric pressure and rainfall.  Our rainfall gauge is a
+% self-emptying gauge that empties when it is filled. Our gauge rotates and
+% empties when 0.01 inches of rain have fallen. Our Arduino code counts the
+% number of times the meter has emptied every minute and sends the
+% appropriate rainfall value to ThingSpeak.   We use MATLAB to down sample
+% our data to hourly samples so we can more easily see the accumulated
+% rainfall and the pressure trend.
+[d,t,ci] = thingSpeakFetch(12397,'DateRange',{'6/4/2014','6/6/2014'}); % get data 
+baro = d(:,6); % pressure 
+extraData = rem(length(baro),60); % computes excess points beyond the hour
+baro(1:extraData) = []; % removes excess points so we have even number of hours
+rain = d(:,5); % rainfall from sensor in inches per minute
+%%
+% Did we really get a lot of rain on June 5?  Well, it's hard to tell if we
+% just look at the minute by minute data since the maximum value is just
+% 0.01 inches. However if we sum all the rain fall on June 5, we can see
+% that we received 0.48 inches of rain which is 13% of the monthly average
+% of 3.68 inches, indicating it was indeed quite rainy on this day.  To get
+% a better idea of when the maximum rainfall occurred we convert the data
+% to hourly data as shown below.
+rain(1:extraData) = []; 
+t(1:extraData) = []; 
+rainHourly = sum(reshape(rain,60,[]))'; % convert to hourly summed samples
+maxRainPerMinute = max(rain)  
+june5rainfall = sum(rainHourly(25:end)) % 24 hours of measurements from June 5
+baroHourly = downsample(baro,60); % hourly samples
+timestamps = downsample(t,60); % hourly samples
+%% Visualize the Hourly Rain and Pressure Data and Find Pressure Trend
+% After we have pre-processed our data, we are now ready to plot it.  Here
+% we use MATLAB to fit a trend line to the barometric pressure data.  When
+% plotted alongside the rainfall, do we see a drop in pressure in advance
+% of the heaviest rainfall?
+figure(3)
+subplot(2,1,1)
+bar(timestamps,rainHourly) % plot rain
+xlabel('Date and Time')
+ylabel('Rainfall (inches /per hour)')
+grid on
+datetick('x','dd-mmm HH:MM','keeplimits','keepticks')
+title('Rainfall on June 4 and 5')
+subplot(2,1,2)
+hold on
+plot(timestamps,baroHourly) % plot barometer
+xlabel('Date and Time')
+ylabel(availableFields(6))
+grid on
+datetick('x','dd-mmm HH:MM','keeplimits','keepticks')
+detrended_Baro = detrend(baroHourly);
+baroTrend = baroHourly - detrended_Baro;
+plot(timestamps,baroTrend,'r') % plot trend
+hold off
+legend('Barometric Pressure','Pressure Trend')
+title('Barometric Pressure on June 4 and 5')
+%%
+% Once we plot this data and look at the trend, we can clearly see that the
+% barometric pressure does indeed drop prior to our heavy rainfall event!
+%% Clean-up Data When There Are Outliers
+% Our questions were fairly straightforward to answer but sometimes there
+% are problems with the available data.  For example, on May 30, we
+% recorded some unreasonable temperature data.   Let's see how to use
+% MATLAB to clean it up.
+[d,t] = thingSpeakFetch(12397,'DateRange',{'5/30/2014','5/31/2014'});
+rawTemperatureData = d(:,4);
+newTemperatureData = rawTemperatureData;
+minTemp = min(rawTemperatureData) % wow that is cold!
+%% Use Threshold Filter to Remove Outlier Data
+% Delete elements that fail the threshold test.  In this case, we have some
+% data points that are completely unreasonable such as a temperature
+% reading of -1766 degrees F so let's limit the data to include only
+% temperatures that are > 0 or < 120 which is reasonable for a Spring day
+% here in New England.
+tnew = t';
+outlierIndices = [find(rawTemperatureData < 0); find(rawTemperatureData > 120)];
+tnew(outlierIndices) = [];
+newTemperatureData(outlierIndices) = [];
+%%
+% Plot the cleaned up data and the original data.
+figure(4)
+subplot(2,1,2)
+plot(tnew,newTemperatureData,'-o')
+datetick 
+xlabel('Time of Day')
+ylabel(availableFields(4))
+title('Filtered Data - outliers deleted')
+grid on
+subplot(2,1,1)
+plot(t,rawTemperatureData,'-o')
+datetick 
+xlabel('Time of Day')
+ylabel(availableFields(4))
+title('Original Data')
+grid on
+%% Use Median Filter to Remove Outlier Data
+% Another way to remove outlier data is with a median filter.  The median
+% filter does not require as much pre-knowledge of the data set.  It will
+% just remove samples that appear to be outside the median of nearest
+% neighbors. The filter Results in a vector of same length as original
+% vector unlike deleting a data point which results in a gap in the data
+% and a shorter record.  This type of filter can be used to remove noise in
+% a signal.
+n = 5; % this value determines the number of total points used in the filter
+%%
+% Larger values of n include more neighboring values.  For temperatures
+% collected once per minute, we choose n = 5 because temperature should not
+% typically change too much in 5 minutes.
+f = medfilt1(rawTemperatureData,n);
+figure(5)
+subplot(2,1,2)
+plot(t,f,'-o')
+datetick
+xlabel('Time of Day')
+ylabel(availableFields(4))
+title('Filtered Data - using median filter')
+grid on
+subplot(2,1,1)
+plot(t,rawTemperatureData,'-o')
+datetick
+xlabel('Time of Day')
+ylabel(availableFields(4))
+title('Original Data')
+grid on
+%%
+%% Conclusion
+% Well, we have now analyzed the data from our weather station and have
+% answered the questions we were curious about.  We have also demonstrated
+% some ways to clean up data that does not pass initial inspection.
+% Although our experiment focused on collecting data from a weather
+% station, you may find this example useful for analyzing environmental
+% data from other Internet of Things connected sensors with which you may
+% be experimenting.
+%
+% Copyright 2014, The MathWorks, Inc.
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

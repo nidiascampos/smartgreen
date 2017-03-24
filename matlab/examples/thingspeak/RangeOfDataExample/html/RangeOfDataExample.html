@@ -1,0 +1,310 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Retrieve a Range of Data Using thingSpeakRead</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-08-17"><meta name="DC.source" content="RangeOfDataExample.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Retrieve a Range of Data Using thingSpeakRead</h1><!--introduction--><p>This example shows how to retrieve a range of data for a channel using available name-value pairs.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Inspect fields present in the channel</a></li><li><a href="#11">Download the last month of recorded data</a></li></ul></div><h2>Inspect fields present in the channel<a name="1"></a></h2><p>Display channel information to inspect field descriptions.</p><pre class="codeinput">[~,~,channelInfo] = thingSpeakRead(12397);
+channelInfo
+</pre><pre class="codeoutput">
+channelInfo = 
+
+            ChannelID: 12397
+                 Name: 'WeatherStation'
+          Description: 'MathWorks Weather Station, West Garage, Natick, MA...'
+             Latitude: 42.2997
+            Longitude: -71.3505
+             Altitude: 60
+              Created: [1x1 datetime]
+              Updated: [1x1 datetime]
+          LastEntryID: 625927
+    FieldDescriptions: {1x8 cell}
+             FieldIDs: [1 2 3 4 5 6 7 8]
+                  URL: 'https://api.thingspeak.com/channels/12397/feed.json?'
+
+</pre><p>Observe there are eight fields, but the descriptions are not visible. To see the descriptions, display the FieldDescriptions.</p><pre class="codeinput">channelInfo.FieldDescriptions'
+</pre><pre class="codeoutput">
+ans = 
+
+    'Wind Direction (North = 0 degrees)'
+    'Wind Speed (mph)'
+    '% Humidity'
+    'Temperature (F)'
+    'Rain (Inches/minute)'
+    'Pressure ("Hg)'
+    'Power Level (V)'
+    'Light Intensity'
+
+</pre><p>The descriptions correspond to the IDs shown in the FieldIDs.</p><pre class="codeinput">channelInfo.FieldIDs
+</pre><pre class="codeoutput">
+ans =
+
+     1     2     3     4     5     6     7     8
+
+</pre><p>Looking at the FieldDescriptions we can see that Humidity is at index 3.</p><pre class="codeinput">channelInfo.FieldDescriptions{3}
+</pre><pre class="codeoutput">
+ans =
+
+% Humidity
+
+</pre><p>Index 3 of the FieldIDs tells us that the ID is also equal to 3.</p><pre class="codeinput">channelInfo.FieldIDs(3)
+</pre><pre class="codeoutput">
+ans =
+
+     3
+
+</pre><p>In this case, the ID was the same as the index, but that may not always be the case.</p><p>Download the last 10 minutes of Field 3.</p><pre class="codeinput">[data,timestamps,channelInfo] = thingSpeakRead(12397,<span class="string">'Fields'</span>,3,<span class="keyword">...</span>
+    <span class="string">'numMinutes'</span>,10);
+</pre><p>Check the timestamps to verify the data.</p><pre class="codeinput">timestamps(1)
+timestamps(end)
+</pre><pre class="codeoutput">
+ans = 
+
+   17-Aug-2015 07:19:59
+
+
+ans = 
+
+   17-Aug-2015 07:29:00
+
+</pre><p>Find the mean between data points.</p><pre class="codeinput">mean(diff(timestamps))
+</pre><pre class="codeoutput">
+ans = 
+
+   00:01:00
+
+</pre><p>Time between data points is 1 minute and for 10 minutes of data requested, you should see 10 data points returned.</p><pre class="codeinput">length(timestamps)
+</pre><pre class="codeoutput">
+ans =
+
+    10
+
+</pre><p>Plot the data. There might be fewer than 10 points if the sensor missed a few measurements.</p><pre class="codeinput">figure
+plot(timestamps,data,<span class="string">'ro-'</span>)
+title(sprintf(<span class="string">'ThingSpeak Channel %d\n%s'</span>,channelInfo.ChannelID,channelInfo.Name))
+xlabel(<span class="string">'Time'</span>)
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+</pre><img vspace="5" hspace="5" src="RangeOfDataExample_01.png" alt=""> <h2>Download the last month of recorded data<a name="11"></a></h2><p>Finally, let's download all of the Humidity data.  ThingSpeak will always send the most recent data of the date range that you specify.  This means that if you specify a date range that has a number of total points within the maximum number of points that it can send, that you will receive all of the points.  However, if you specify too wide of range, you will only receive 8000 points from the end of your range backwards towards the start time. Let us try this.</p><p>Download data for the last 30 days</p><pre class="codeinput">[data,timestamps] = thingSpeakRead(12397,<span class="string">'Fields'</span>,3,<span class="string">'NumDays'</span>,30);
+</pre><p>The warning received indicates that the full number of days was not read. Examine the length of the data to see if there is a mismatch with the ThingSpeak data limits.</p><pre class="codeinput">length(data)
+</pre><pre class="codeoutput">
+ans =
+
+        8000
+
+</pre><p>ThingSpeak.com limits the data at 8000 points for a single query. Plot the data returned so far.</p><pre class="codeinput">figure
+plot(timestamps,data,<span class="string">'b-'</span>)
+title(sprintf(<span class="string">'ThingSpeak Channel %d\n%s'</span>,channelInfo.ChannelID,channelInfo.Name))
+xlabel(<span class="string">'Date'</span>)
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+</pre><img vspace="5" hspace="5" src="RangeOfDataExample_02.png" alt=""> <p>Therefore, if we need to request more data than allowed in a single call, we can use a for loop to get data for multiple days.</p><pre class="codeinput">startDate = datetime(<span class="string">'now'</span>, <span class="string">'TimeZone'</span>, <span class="string">'local'</span>) - calmonths(1);
+endDate   = datetime(<span class="string">'now'</span>, <span class="string">'TimeZone'</span>, <span class="string">'local'</span>);
+dateVector = startDate:caldays(1):endDate;
+data = [];
+timestamps = [];
+<span class="keyword">for</span> nDays = 1:numel(dateVector)-1
+    [dataPrev,timestampsPrev] = thingSpeakRead(12397,<span class="string">'Field'</span>,3,<span class="keyword">...</span>
+        <span class="string">'DateRange'</span>, [dateVector(0+nDays), dateVector(1+nDays)]);
+    data = [data; dataPrev];
+    timestamps = [timestamps; timestampsPrev];
+<span class="keyword">end</span>
+</pre><p>Plot the full data.</p><pre class="codeinput">figure
+plot(timestamps,data,<span class="string">'r-'</span>)
+title(sprintf(<span class="string">'ThingSpeak Channel %d\n%s'</span>,channelInfo.ChannelID,channelInfo.Name))
+xlabel(<span class="string">'Date'</span>)
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+</pre><img vspace="5" hspace="5" src="RangeOfDataExample_03.png" alt=""> <p class="footer">Copyright 2014-2015 The MathWorks, Inc.<br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Retrieve a Range of Data Using thingSpeakRead
+% This example shows how to retrieve a range of data for a channel using
+% available name-value pairs.
+%
+% Copyright 2014-2015 The MathWorks, Inc.
+
+%% Inspect fields present in the channel
+% Display channel information to inspect field descriptions.
+
+[~,~,channelInfo] = thingSpeakRead(12397);
+channelInfo
+
+%%
+% Observe there are eight fields, but the descriptions are not visible. To
+% see the descriptions, display the FieldDescriptions.
+
+channelInfo.FieldDescriptions'
+
+%%
+% The descriptions correspond to the IDs shown in the FieldIDs.
+
+channelInfo.FieldIDs 
+
+%%
+% Looking at the FieldDescriptions we can see that Humidity is at index 3.
+
+channelInfo.FieldDescriptions{3}
+
+%%
+% Index 3 of the FieldIDs tells us that the ID is also equal to 3.
+
+channelInfo.FieldIDs(3)
+
+%%
+% In this case, the ID was the same as the index, but that may not always
+% be the case.  
+%
+% Download the last 10 minutes of Field 3.
+
+[data,timestamps,channelInfo] = thingSpeakRead(12397,'Fields',3,...
+    'numMinutes',10);
+
+%%
+% Check the timestamps to verify the data.
+
+timestamps(1)
+timestamps(end)
+
+%%
+% Find the mean between data points.
+
+mean(diff(timestamps))
+
+%%
+% Time between data points is 1 minute and for 10 minutes of data
+% requested, you should see 10 data points returned.
+
+length(timestamps)
+
+%%
+% Plot the data. There might be fewer than 10 points if the sensor missed a
+% few measurements.
+
+figure
+plot(timestamps,data,'ro-')
+title(sprintf('ThingSpeak Channel %d\n%s',channelInfo.ChannelID,channelInfo.Name))
+xlabel('Time')
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+
+%% Download the last month of recorded data
+% Finally, let's download all of the Humidity data.  ThingSpeak will always
+% send the most recent data of the date range that you specify.  This means
+% that if you specify a date range that has a number of total points within
+% the maximum number of points that it can send, that you will receive all
+% of the points.  However, if you specify too wide of range, you will only
+% receive 8000 points from the end of your range backwards towards the
+% start time. Let us try this.
+
+%%
+% Download data for the last 30 days
+[data,timestamps] = thingSpeakRead(12397,'Fields',3,'NumDays',30);
+
+%%
+% The warning received indicates that the full number of days was not read.
+% Examine the length of the data to see if there is a mismatch with the
+% ThingSpeak data limits.
+
+length(data)
+
+%%
+% ThingSpeak.com limits the data at 8000 points for a single query. Plot
+% the data returned so far.
+
+figure
+plot(timestamps,data,'b-')
+title(sprintf('ThingSpeak Channel %d\n%s',channelInfo.ChannelID,channelInfo.Name))
+xlabel('Date')
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+
+
+%%
+% Therefore, if we need to request more data than allowed in a single call,
+% we can use a for loop to get data for multiple days.
+
+startDate = datetime('now', 'TimeZone', 'local') - calmonths(1);
+endDate   = datetime('now', 'TimeZone', 'local');
+dateVector = startDate:caldays(1):endDate;
+data = [];
+timestamps = [];
+for nDays = 1:numel(dateVector)-1
+    [dataPrev,timestampsPrev] = thingSpeakRead(12397,'Field',3,...
+        'DateRange', [dateVector(0+nDays), dateVector(1+nDays)]);
+    data = [data; dataPrev];
+    timestamps = [timestamps; timestampsPrev];    
+end
+
+%%
+% Plot the full data.
+
+figure
+plot(timestamps,data,'r-')
+title(sprintf('ThingSpeak Channel %d\n%s',channelInfo.ChannelID,channelInfo.Name))
+xlabel('Date')
+ylabel(channelInfo.FieldDescriptions{3})
+legend(channelInfo.FieldDescriptions{3})
+##### SOURCE END #####
+--></body></html>
