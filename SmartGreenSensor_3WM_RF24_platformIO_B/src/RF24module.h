@@ -2,7 +2,7 @@
 // nRF24 GND  --> GND
 // nRF24 VCC  --> 3.3v
 // nRF24 CE   --> Digital 2
-// nRF24 CSN  --> Digital 3
+// nRF24 CSN  --> Digital 10
 // nRF24 SCK  --> Digital 13
 // nRF24 MOSI --> Digital 11
 // nRF24 MISO --> Digital 12
@@ -16,7 +16,7 @@
 #include <RF24Ethernet.h>
 #include <PubSubClient.h>
 
-RF24 radio(2,3);
+RF24 radio(2,10);
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 RF24EthernetClass RF24Ethernet(radio,network,mesh);
