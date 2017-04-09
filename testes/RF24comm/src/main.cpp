@@ -49,7 +49,6 @@ const uint16_t other_node = 00;      // Address of the other node in Octal forma
 // Watermark Config -----------------------------------------------------------
 // Setting up format for reading 3 soil sensors (FIXME: ajustar)
 #define NUM_READS 10    // Number of sensor reads for filtering
-
 const long knownResistor = 4700;  // Constant value of known resistor in Ohms
 int supplyVoltage;                // Measured supply voltage
 int sensorVoltage;                // Measured sensor voltage
@@ -58,6 +57,7 @@ int i;                            // Simple index variable
 long buffer[NUM_READS];
 String wmData;
 
+// Setup ----------------------------------------------------------------------
 void setup(void)
 {
   Serial.begin(57600);
@@ -71,7 +71,7 @@ void setup(void)
   // sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
   // sleepTime = 3600000; // 1 hora
 
-  //------------ PINS ------------
+  //------------ PINS -------------
   // initialize the digital pins as an output.
   // Pin 4,5 is for sensor 1
   pinMode(4, OUTPUT);
@@ -83,6 +83,7 @@ void setup(void)
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
 
+  //------------ RADIO ------------
   SPI.begin();
   radio.begin();
   // Format: channel, node address
@@ -91,6 +92,7 @@ void setup(void)
 
 void loop() {
 
+  //---------- WATERMARK ----------
   // Check watermark sensors
   wmdata_t wm15 = wm_check(4,5,0,1);
   wmdata_t wm45 = wm_check(6,7,2,3);
@@ -111,21 +113,18 @@ void loop() {
   // Serial.print(" | bias: ");
   // Serial.println(wm75.bias);
 
-  radio.powerUp();
-  delay(100);
-
-  network.update(); // Check the network regularly
-
-  Serial.println("Sending payload...");
-
-  // battery
+  //----------- BATTERY -----------
   float batteryVoltage = vcc.Read_Volts();
 
-  // payload_t payload = { wm15data, wm45data, wm75data, batteryVoltage, packets_sent++ };
+  //---------- SEND DATA ----------
+  radio.powerUp(); // Turn on the radio
+  delay(100);
+  network.update(); // Check the network regularly
+
   payload_t payload = { wm15.data, wm15.bias, wm45.data, wm45.bias, wm75.data, wm75.bias, batteryVoltage };
 
-  // Serial.print("Payload id: ");
-  // Serial.print(payload.counter);
+  // Debug info
+  Serial.println("Sending payload...");
   Serial.print("Module id: ");
   Serial.print(this_node);
   Serial.print(" | wm15: ");
@@ -144,17 +143,17 @@ void loop() {
   Serial.println(payload.vcc);
 
   RF24NetworkHeader header(/*to node*/ other_node);
+
   bool ok = network.write(header,&payload,sizeof(payload));
   if (ok)
     Serial.println("Ok.");
   else
     Serial.println("Failed."); // FIXME: tentar fazer com que ele tente reenviar em caso de erro
 
-  radio.powerDown();
+  radio.powerDown(); // Turn off radio to save power
 
   //---------- SLEEP -----------
   sleepModule();
-
 }
 
 void sleepModule() {
@@ -194,22 +193,22 @@ void measure (int phase_b, int phase_a, int analog_input) {
   for (i=0; i<NUM_READS; i++) {
 
     // Read 1 pair of voltage values
-    digitalWrite(phase_a, HIGH);                 // set the voltage supply on
+    digitalWrite(phase_a, HIGH); // set the voltage supply on
     delayMicroseconds(25);
-    supplyVoltage = analogRead(analog_input);   // read the supply voltage
+    supplyVoltage = analogRead(analog_input); // read the supply voltage
     // Serial.print("supply voltage:");
     // Serial.println(supplyVoltage);
     delayMicroseconds(25);
-    digitalWrite(phase_a, LOW);                  // set the voltage supply off
+    digitalWrite(phase_a, LOW); // set the voltage supply off
     delay(1);
 
-    digitalWrite(phase_b, HIGH);                 // set the voltage supply on
+    digitalWrite(phase_b, HIGH); // set the voltage supply on
     delayMicroseconds(25);
-    sensorVoltage = analogRead(analog_input);   // read the sensor voltage
+    sensorVoltage = analogRead(analog_input); // read the sensor voltage
     // Serial.print("sensor voltage: ");
     // Serial.println(sensorVoltage);
     delayMicroseconds(25);
-    digitalWrite(phase_b, LOW);                  // set the voltage supply off
+    digitalWrite(phase_b, LOW); // set the voltage supply off
 
     // Calculate resistance
     // Tip: no need to transform 0-1023 voltage value to 0-5 range, due to following fraction
@@ -217,7 +216,6 @@ void measure (int phase_b, int phase_a, int analog_input) {
 
     addReading(resistance);
     // Serial.println(resistance);
-
   }
 
 }
