@@ -1,0 +1,6 @@
+paho-mqtt
+pymongo
+w1thermsensor
+python-pppd
+wiringpi
+rpi.gpio
