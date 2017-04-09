@@ -2,7 +2,7 @@
 // nRF24 GND  --> GND
 // nRF24 VCC  --> 3.3v
 // nRF24 CE   --> Digital 2
-// nRF24 CSN  --> Digital 3
+// nRF24 CSN  --> Digital 10
 // nRF24 SCK  --> Digital 13
 // nRF24 MOSI --> Digital 11
 // nRF24 MISO --> Digital 12
@@ -16,7 +16,7 @@
 #include <RF24Ethernet.h>
 #include <PubSubClient.h>
 
-RF24 radio(2,3);
+RF24 radio(2,10);
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 RF24EthernetClass RF24Ethernet(radio,network,mesh);
@@ -27,7 +27,7 @@ RF24EthernetClass RF24Ethernet(radio,network,mesh);
 // sensor3: 6 (mini) - ok (WM3 estranho)
 // sensor4: 7 (nano) - ok (WMs ok)
 // #define nodeID 9 // FIXME: tentar implementar esse metodo
-IPAddress ip(10,10,2,7);
+IPAddress ip(10,10,2,6);
 IPAddress gateway(10,10,2,2); //Specify the gateway in case different from the server
 IPAddress server(10,10,2,2);
 
@@ -49,7 +49,7 @@ void reconnect() {
   if (!client.connected()) {
     Serial.print("DEBUG: RF24  -> MQTT -> conectando... ");
     // Attempt to connect
-    if (client.connect("sensor04")) { // clientID, willTopic, willQoS, willRetain, willMessage
+    if (client.connect("sensor03")) { // clientID, willTopic, willQoS, willRetain, willMessage
       Serial.println("OK");
       // Once connected, publish an announcement...
       // client.publish("/sensor/02","connected");

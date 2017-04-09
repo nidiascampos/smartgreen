@@ -1,16 +1,12 @@
 #include <Arduino.h>
 
 // ** PROJECT FILES **
-// #include "RTC.h"
 #include "RF24module.h"
 #include "batteryMonitor.h"
-#include <LowPower.h>
-// #include "SD_output.h"
 
+// FUNCTIONS
 void battery_check();
-void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b);
 void sleep();
-
 void addReading(long resistance);
 long average();
 void measure(int phase_b, int phase_a, int analog_input);
@@ -39,14 +35,21 @@ int index;
 
 int i;                            // Simple index variable
 
-String rawData;
+// String rawData;
 String wmData;
 
+// ** SETUP **
 void setup () {
   Serial.begin(57600);
 
   printDebug = true;
-  // Serial.println("DEBUG: Setup -> Starting");
+
+  // Serial.println("DEBUG: setup -> iniciando");
+
+  //------------ SLEEP ------------
+  // set sleep time in ms, max sleep time is 49.7 days
+  // sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
+  sleepTime = 60000; // 1 minuto
 
   //------------ PINS ------------
   // initialize the digital pins as an output.
@@ -71,18 +74,21 @@ void setup () {
     Serial.println(F("DEBUG: setup -> RF24 -> falha"));
   }
 
+  // Serial.println("DEBUG: setup -> iniciado OK");
 }
 
+// ** LOOP **
 void loop () {
   delay(100); // (sleep) delays are just for serial print, without serial they can be removed
 
-  radio.powerUp();
+  //------ BatteryMonitor ------
+  battery_check();
 
   // DEBUG
   // Serial.print("basicData: ");
   // Serial.println(basicData);
 
-  //------- RF24 CONNECT -------
+  // RF24 CONNECTION
   // check connection and renew address (if needed)
   if( ! mesh.checkConnection() ){
     Serial.print("DEBUG: RF24  -> mesh -> conectando... ");
@@ -97,6 +103,8 @@ void loop () {
   //---------- WM 01 -----------
   wm_check(4,5,0,1);
   // Serial.print("DEBUG: RF24 -> MQTT -> enviando dados: ");
+  Serial.print("15cm: ");
+  Serial.println(wmData);
 
   char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
   wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
@@ -104,6 +112,8 @@ void loop () {
 
   //---------- WM 02 -----------
   wm_check(6,7,2,3);
+  Serial.print("45cm: ");
+  Serial.println(wmData);
 
   // char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
   wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
@@ -111,40 +121,41 @@ void loop () {
 
   //---------- WM 03 -----------
   wm_check(8,9,6,7);
+  Serial.print("75cm: ");
+  Serial.println(wmData);
 
   // char outputBuf[50]; // char array que serve como buffer da mensagem a ser enviada
   wmData.toCharArray(outputBuf, 50); // convertendo string 'dataString' para char (50 bytes) **FIXME: verificar valor tamanho ideal de bytes
   client.publish("/04/75",outputBuf);
 
-  //---------  BATTERY ---------
-  double batteryVoltage = vcc.Read_Volts();
   char outputBuf4[10];
   char str_voltage[10];
   /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
   dtostrf(batteryVoltage, 4, 2, str_voltage);
-  sprintf(outputBuf4,"%s", batteryVoltage);
+  sprintf(outputBuf4,"%s", str_voltage);
   // Serial.println(outputBuf4);
   client.publish("/04/vcc",outputBuf4);
 
-  if (printDebug) {
-    Serial.print("vcc: ");
-    Serial.println(outputBuf4);
-  }
+  Serial.print("vcc: ");
+  Serial.println(outputBuf4);
 
-  //----- RF 24 DISCONNECT -----
   // Serial.print("DEBUG: RF24 -> MQTT -> desconectando... ");
   client.disconnect();
   // Serial.println("OK");
   delay(500); // delay necessário para o processo de desconexão
 
-  radio.powerDown();
-
   //---------- SLEEP -----------
   sleep();
+  // Serial.print("DEBUG: hibernando por ");
+  // Serial.print(sleepTime / 60000);
+  // Serial.print(" minuto(s)");
+  // delay(100); // delay to allow serial to fully print before sleep
+  // sleep.pwrDownMode(); // set sleep mode
+  // sleep.sleepDelay(sleepTime); // sleep for: sleepTime
 }
 
 void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) {
-  rawData = ""; // resetting rawData
+  // rawData = ""; // resetting rawData
 
   // measure: phase B pin, phase A pin, analog input pin
   // measure(4,5,1);
@@ -158,7 +169,7 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
   wmData = String(read1-read2); // resistance bias
   wmData += ",";
   wmData += String(sensor1); // sensor bias compensated value
-  // wmData += ",";
+  wmData += ",";
 
   // DEBUG
   if (printDebug == 1) {
@@ -166,6 +177,15 @@ void wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input_b) 
     Serial.println(wmData);
   }
 
+}
+
+void battery_check() {
+  double batteryVoltage = vcc.Read_Volts();
+  // Serial.print("DEBUG: VCC   -> ");
+  // Serial.print(batteryVoltage);
+  // Serial.println(" Volts");
+  basicData += batteryVoltage;
+  basicData += ",";
 }
 
 void sleep() {
@@ -182,8 +202,7 @@ void sleep() {
   // ADC_OFF = disables ADC module
   // BOD_OFF = disables Brown Out Detector module
   // it will only wakeup via an interrupt trigger (even watchdog is disabled)
-  LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-  // LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
 }
 
 // ** WATERMARK FUNCTIONS **
@@ -222,23 +241,10 @@ void measure (int phase_b, int phase_a, int analog_input) {
     addReading(resistance);
     // Serial.println(resistance);
 
-    rawData.concat(resistance);
-    rawData.concat(",");
-
-    // test
-    // Serial.print("resistencia: ");
-    // Serial.println(valueOf[i].resistance);
-    // Serial.print("umidade: ");
-    // Serial.print(valueOf[i].moisture);
-    // Serial.println();
+    // RAW DATA
+    // rawData.concat(resistance);
+    // rawData.concat(",");
   }
-
-  // Print out median values -- test
-  // Serial.print("resistencia: ");
-  // Serial.println(valueOf[NUM_READS/2].resistance);
-  // Serial.print("umidade: ");
-  // Serial.print(valueOf[NUM_READS/2].moisture);
-  // Serial.println();
 
   // DEBUG
   // Serial.print("raw measure: ");
