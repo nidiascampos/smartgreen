@@ -61,7 +61,9 @@ String wmData;
 void setup(void)
 {
   Serial.begin(57600);
-  Serial.println("RF24Network Test");
+  Serial.print("*** SmartGreen - Module ID: ");
+  Serial.print(this_node);
+  Serial.println(" ***");
 
   //------------ SLEEP ------------
   // set sleep time in ms, max sleep time is 49.7 days
@@ -124,10 +126,8 @@ void loop() {
   payload_t payload = { wm15.data, wm15.bias, wm45.data, wm45.bias, wm75.data, wm75.bias, batteryVoltage };
 
   // Debug info
-  Serial.println("Sending payload...");
-  Serial.print("Module id: ");
-  Serial.print(this_node);
-  Serial.print(" | wm15: ");
+  Serial.print("Payload: ");
+  Serial.print(" wm15: ");
   Serial.print(payload.wm15);
   Serial.print(" , bias: ");
   Serial.print(payload.wm15bias);
@@ -141,6 +141,7 @@ void loop() {
   Serial.print(payload.wm75bias);
   Serial.print(" | vcc: ");
   Serial.println(payload.vcc);
+  Serial.print("Sending...");
 
   RF24NetworkHeader header(/*to node*/ other_node);
 
@@ -161,7 +162,7 @@ void sleepModule() {
   // Wake up when wake up pin is low.
   Serial.print("Sleeping for ");
   Serial.print(sleepTime / 60000);
-  Serial.println(" minute(s)");
+  Serial.println(" minute(s) \n");
 
   delay(500); // delay to allow serial to fully print before sleep
 
