@@ -12,12 +12,15 @@ def mongo_read():
     payload = []
 
     for module in modules:
-        # obter a ultima leitura do sensor
+        # get the latest module data
         data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
+        # verify if the data has been published already
+        # (that means that the module isn't sending data regularly correctly)
         if data["published"] == False:
             payload.append(data)
         else:
             logging.warning("!!! Data from module " + data["module"] + " already published, ignoring (id: " + str(data["_id"]) + ")")
+    # logs data payload
     logging.info("Modules data: ")
     logging.info(payload)
 
@@ -25,45 +28,48 @@ def mongo_read():
 
 
 def mongo_update(module_id):
+    # set data status as published
     collection.find_one_and_update({ "_id": module_id }, { "$set": { "published": True } })
 
 
 def publish_thingspeak():
     logging.info("Publishing...")
 
+    # get data from mongodb
     modules_data = mongo_read()
-    print(modules_data)  # FIXME: DEBUG
-
     msgs = []
 
+    # split data and publish to thingspeak
     for module in modules_data:
+        # string format required by thingspeak API
         msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"],module["15cm"],module["15cm_bias"],module["45cm"],module["45cm_bias"],module["75cm"],module["75cm_bias"])
+        # every module have its own channel, and its own API key
         if module["module"] == "01":
-            print("module 01")
+            logging.info("module 1 data ok")
             thingspeak_channel = "41313"
             thingspeak_key = "6622XUT2PQOITIX4"
         elif module["module"] == "02":
-            print("module 02")
+            logging.info("module 2 data ok")
             thingspeak_channel = "255953"
             thingspeak_key = "IOF8CFV6JDP3DY8Q"
         elif module["module"] == "03":
-            print("module 03")
+            logging.info("module 3 data ok")
             thingspeak_channel = "256208"
             thingspeak_key = "RCV2LDXRFWWU0NWV"
         elif module["module"] == "04":
-            print("module 04")
+            logging.info("module 4 data ok")
             thingspeak_channel = "256209"
             thingspeak_key = "ITNOWFUYCS7ZVIQ3"
+        # publish each module data
         publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
                         msg, hostname="mqtt.thingspeak.com", port=1883)
+        # update data status to published
         mongo_update(module["_id"])
-        # msgs.append(msg)
-
-    # print("Messages :", msgs)  # FIXME: DEBUG
 
     logging.info("Published OK")
 
     return True
+
 
 # Basic config
 logging.basicConfig(filename="/var/log/smartgreen/thingspeak_publish.log",
