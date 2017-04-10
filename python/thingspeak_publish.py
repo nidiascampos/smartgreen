@@ -25,19 +25,21 @@ def publish_thingspeak():
     logging.info("Publishing to ThingSpeak")
 
     modules_data = mongo_read()
-    print(sensors_data)  # FIXME: DEBUG
+    print(modules_data)  # FIXME: DEBUG
 
     msgs = []
 
     for module in modules_data:
         msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"],module["15cm"],module["15cm_bias"],module["45cm"],module["45cm_bias"],module["75cm"],module["75cm_bias"])
-        if module["module"] == 01:
+        if module["module"] == "01":
+            print("module 01")
             thingspeak_channel = "41313"
             thingspeak_key = "6622XUT2PQOITIX4"
-        elif module["module"] == 02:
+        elif module["module"] == "02":
+            print("module 02")
             thingspeak_channel = "255953"
             thingspeak_key = "IOF8CFV6JDP3DY8Q"
-        publish.single("channels/" + thingspeak_channel + "/publish/6622XUT2PQOITIX4",
+        publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
                         msg, hostname="mqtt.thingspeak.com", port=1883)
         # msgs.append(msg)
 
@@ -61,7 +63,7 @@ collection = db.teste07
 
 
 # Publish data
-publish_adafruit()
+publish_thingspeak()
 
 # logging.info("Connecting")
 # ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
