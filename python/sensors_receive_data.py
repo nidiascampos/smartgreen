@@ -33,10 +33,10 @@ packets_sent = 0
 last_sent = 0
 
 # Logging config
-logging.basicConfig(filename="/var/log/smartgreen/sensors_rx_data.log",
+logging.basicConfig(filename="/var/log/smartgreen/sensors_rx.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("====================")
+logging.info("SENSORS_RX STARTED ====================")
 
 # MongoDB
 clientMongo = MongoClient('localhost:27017')
@@ -71,7 +71,8 @@ while 1:
         # print payload content
         print('Payload: ', oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
         # output payload content to log file
-        logging.info("Payload:", oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
+	payload_log = "Payload: " + str(oct(header.from_node)) + ' ' + str(wm15) + ' ' + str(wm15bias) + ' ' + str(wm45) + ' ' + str(wm45bias) + ' ' + str(wm75) + ' ' + str(wm75bias) + ' ' + str(vcc)
+	logging.info(payload_log);
         # add payload to mongoDB
         mongo_add_message(oct(header.from_node), vcc, wm15, wm15bias, wm45, wm45bias, wm75, wm75bias)
     time.sleep(1)
