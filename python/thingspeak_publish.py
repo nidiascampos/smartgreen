@@ -16,6 +16,8 @@ def mongo_read():
         data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
         if data["published"] == False:
             payload.append(data)
+        else
+            logging.warning("!!! Data from module " + module["module"] + "already published, ignoring")
     logging.info("Modules data: ")
     logging.info(payload)
 
@@ -27,7 +29,7 @@ def mongo_update(module_id):
 
 
 def publish_thingspeak():
-    logging.info("Publishing to ThingSpeak")
+    logging.info("Publishing...")
 
     modules_data = mongo_read()
     print(modules_data)  # FIXME: DEBUG
@@ -44,6 +46,14 @@ def publish_thingspeak():
             print("module 02")
             thingspeak_channel = "255953"
             thingspeak_key = "IOF8CFV6JDP3DY8Q"
+        elif module["module"] == "03":
+            print("module 03")
+            thingspeak_channel = "256208"
+            thingspeak_key = "RCV2LDXRFWWU0NWV"
+        elif module["module"] == "04":
+            print("module 04")
+            thingspeak_channel = "256209"
+            thingspeak_key = "ITNOWFUYCS7ZVIQ3"
         publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
                         msg, hostname="mqtt.thingspeak.com", port=1883)
         mongo_update(module["_id"])
