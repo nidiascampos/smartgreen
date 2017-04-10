@@ -13,12 +13,17 @@ def mongo_read():
 
     for module in modules:
         # obter a ultima leitura do sensor
-        data = collection.find_one({"module": module, "published": "no" },sort=[("when",-1)])
-        payload.append(data)
+        data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
+        if data["published"] == False
+            payload.append(data)
     logging.info("Modules data: ")
     logging.info(payload)
 
     return payload
+
+
+def mongo_update(module_id):
+    collection.find_one_and_update({ "_id": module_id }, { $set: { "published": True } })
 
 
 def publish_thingspeak():
@@ -41,6 +46,7 @@ def publish_thingspeak():
             thingspeak_key = "IOF8CFV6JDP3DY8Q"
         publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
                         msg, hostname="mqtt.thingspeak.com", port=1883)
+        mongo_update(module["_id"])
         # msgs.append(msg)
 
     # print("Messages :", msgs)  # FIXME: DEBUG

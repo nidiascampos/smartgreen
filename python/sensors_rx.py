@@ -55,7 +55,7 @@ def mongo_add_message(module_id, module_vcc, sensor_15cm, sensor_15cm_bias, sens
         "75cm_bias": sensor_75cm_bias,
         "when": datetime.datetime.utcnow(),
         "battery": module_vcc,
-        "published": "no"
+        "published": False
     })
 
 
