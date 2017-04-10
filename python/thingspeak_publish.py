@@ -14,7 +14,7 @@ def mongo_read():
     for module in modules:
         # obter a ultima leitura do sensor
         data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
-        if data["published"] == False
+        if data["published"] == False:
             payload.append(data)
     logging.info("Modules data: ")
     logging.info(payload)
@@ -23,7 +23,7 @@ def mongo_read():
 
 
 def mongo_update(module_id):
-    collection.find_one_and_update({ "_id": module_id }, { $set: { "published": True } })
+    collection.find_one_and_update({ "_id": module_id }, { "$set": { "published": True } })
 
 
 def publish_thingspeak():
