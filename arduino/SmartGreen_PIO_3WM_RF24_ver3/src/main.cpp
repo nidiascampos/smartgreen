@@ -65,6 +65,13 @@ void setup(void)
   Serial.print(this_node);
   Serial.println(" ***");
 
+  // DEBUG
+  // if the analog input pin is unconnected, random analog
+  // noise will cause the call to randomSeed() to generate
+  // different seed numbers each time the sketch runs.
+  // randomSeed() will then shuffle the random function.
+  randomSeed(analogRead(4));
+
   //------------ SLEEP ------------
   // set sleep time in ms, max sleep time is 49.7 days
   sleepTime = 60000; // 1 minuto
@@ -126,7 +133,7 @@ void loop() {
   payload_t payload = { wm15.data, wm15.bias, wm45.data, wm45.bias, wm75.data, wm75.bias, batteryVoltage };
 
   // Debug info
-  Serial.print("Payload: ");
+  Serial.print("Payload:");
   Serial.print(" wm15: ");
   Serial.print(payload.wm15);
   Serial.print(" , bias: ");
@@ -181,7 +188,9 @@ wmdata_t wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input
   long sensor = (read1 + read2)/2; // sensor bias compensated value
   long bias = read1 - read2; // resistance bias
 
-  wmdata_t wmData = { bias, sensor };
+  // wmdata_t wmData = { bias, sensor };
+  // DEBUG: gerando numeros aleatorios para simular leitura
+  wmdata_t wmData = {random(10,20), random(100,10000)};
 
   return wmData;
 }
