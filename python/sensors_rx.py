@@ -46,7 +46,7 @@ db = clientMongo.SmartGreen
 def mongo_add_message(module_id, module_vcc, sensor_15cm, sensor_15cm_bias, sensor_45cm, sensor_45cm_bias, sensor_75cm, sensor_75cm_bias):
     # inserting data into mongodb
     db.teste07.insert({
-        "sensor": module_id,
+        "module": module_id,
         "15cm": sensor_15cm,
         "15cm_bias": sensor_15cm_bias,
         "45cm": sensor_45cm,
