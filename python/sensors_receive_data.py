@@ -64,11 +64,15 @@ while 1:
     network.update()
     while network.available():
         header, payload = network.read(28)
+        # verify payload length
         print("Payload length:", len(payload))
-        # ms, number = unpack('<LL', bytes(payload))
+        # unpack payload struct
         wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc = unpack('<llllllf', bytes(payload))
-        # print('Received payload ', number, ' at ', ms, ' from ', oct(header.from_node))
+        # print payload content
         print('Payload: ', oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
+        # output payload content to log file
+        logging.info("Payload:", oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
+        # add payload to mongoDB
         mongo_add_message(oct(header.from_node), vcc, wm15, wm15bias, wm45, wm45bias, wm75, wm75bias)
     time.sleep(1)
 
