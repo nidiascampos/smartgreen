@@ -16,8 +16,8 @@ def mongo_read():
         data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
         if data["published"] == False:
             payload.append(data)
-        else
-            logging.warning("!!! Data from module " + module["module"] + "already published, ignoring")
+        else:
+            logging.warning("!!! Data from module " + data["module"] + " already published, ignoring (id: " + str(data["_id"]) + ")")
     logging.info("Modules data: ")
     logging.info(payload)
 
