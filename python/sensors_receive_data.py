@@ -1,75 +1,70 @@
-import logging
-import paho.mqtt.client as mqtt
+#!/usr/bin/env python
+
+#
+# Simplest possible example of using RF24Network,
+#
+#  RECEIVER NODE
+#  Listens for messages from the transmitter and prints them out.
+#
+from __future__ import print_function
+import time
 import datetime
+import logging
 from pymongo import MongoClient
 from os.path import expanduser
+from struct import *
+from RF24 import *
+from RF24Network import *
 
-home = expanduser("~")
+# CE Pin, CSN Pin, SPI Speed
 
-def mqtt_connect(client, userdata, rc):
-    logging.info("Connected with result: "+str(rc))
-    client.subscribe("/#")
+radio = RF24(RPI_V2_GPIO_P1_15, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ)
+network = RF24Network(radio)
 
+# millis = lambda: int(round(time.time() * 1000))
+octlit = lambda n:int(n, 8)
 
-def mqtt_message(client, userdata, msg):
-    logging.info("Received message '" + str(msg.payload) + "' on topic '"
-                 + msg.topic + "' with QoS " + str(msg.qos))
-    # splitting topic info
-    topic_list = msg.topic.split('/')
-    sensor_id = topic_list[1]
-    sensor_depth = topic_list[2]
-    if sensor_depth != 'vcc':
-        # splitting sensor data
-        data_temp = str(msg.payload)
-        # data_list = msg.payload.split(b',')
-        data_list = data_temp.split(',')
-        data_average = data_list.pop(0)
-        data_std = data_list.pop(0)
-        # sending data do mongodb
-        mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list)
-    else:
-        # splitting sensor data
-        sensor_vcc = msg.payload
-        # sending data do mongodb
-        mongo_add_vcc(sensor_id, sensor_vcc)
+# Address of our node in Octal format (01, 021, etc)
+this_node = octlit("00")
 
+# Start radio
+radio.begin()
+time.sleep(0.1)
+# Format: channel, node address
+network.begin(90, this_node)    # channel 90
+# Print radio config
+radio.printDetails()
+packets_sent = 0
+last_sent = 0
 
-def mongo_add_message(sensor_id, sensor_depth, data_average, data_std, data_list):
-    # inserting data into mongodb
-    db.teste06.insert({
-        "sensor": sensor_id,
-        "depth": sensor_depth,
-        "when": datetime.datetime.utcnow(),
-        "average": data_average,
-        "STD": data_std,
-        "raw": tuple(data_list)
-    })
-
-
-def mongo_add_vcc(sensor_id, sensor_vcc):
-    db.teste06.insert({
-        "sensor": sensor_id,
-        "when": datetime.datetime.utcnow(),
-        "vcc": sensor_vcc
-    })
-
-
-# Basic config
-logging.basicConfig(filename=home+"/logs/sensors_receive_data.log",
-                    level=logging.DEBUG,
-                    format="%(asctime)s %(message)s")
-logging.info("====================")
-
-
-# DB
+# MongoDB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
 
+def mongo_add_message(module_id, module_vcc, sensor_15cm, sensor_15cm_bias, sensor_45cm, sensor_45cm_bias, sensor_75cm, sensor_75cm_bias):
+    # inserting data into mongodb
+    db.teste07.insert({
+        "sensor": module_id,
+        "15cm": sensor_15cm,
+        "15cm_bias": sensor_15cm_bias,
+        "45cm": sensor_45cm,
+        "45cm_bias": sensor_45cm_bias,
+        "75cm": sensor_75cm,
+        "75cm_bias": sensor_75cm_bias,
+        "when": datetime.datetime.utcnow(),
+        "battery": module_vcc,
+        "published": "no"
+    })
 
-# MQTT
-# Paho python docs: https://eclipse.org/paho/clients/python/docs/
-client_mqtt = mqtt.Client()
-client_mqtt.on_connect = mqtt_connect
-client_mqtt.on_message = mqtt_message
-client_mqtt.connect("localhost", 1883, 60)
-client_mqtt.loop_forever()
+while 1:
+    network.update()
+    while network.available():
+        header, payload = network.read(28)
+        print("payload length ", len(payload))
+        # ms, number = unpack('<LL', bytes(payload))
+        wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc = unpack('<llllllf', bytes(payload))
+        # print('Received payload ', number, ' at ', ms, ' from ', oct(header.from_node))
+        print('Payload: ', oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
+        mongo_add_message(oct(header.from_node), vcc, wm15, wm15bias, wm45, wm45bias, wm75, wm75bias)
+    time.sleep(1)
+
