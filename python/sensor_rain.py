@@ -7,7 +7,6 @@ from pymongo import MongoClient
 logging.basicConfig(filename="/var/log/smartgreen/sensor_rain.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-#logging.info("====================")
 
 
 # DB
@@ -17,21 +16,40 @@ db = clientMongo.SmartGreen
 
 # Pin configuration.
 GPIO.setmode(GPIO.BCM)
-pin = 23
+pin = 26
 
 
 # Rain Sensor
 GPIO.setup(pin, GPIO.IN)
-sensor_read = GPIO.input(pin)
+GPIO.add_event_detect(pin, GPIO.FALLING)
+# sensor_read = GPIO.input(pin)
+
+# if sensor_read == 0:
+#     rain = True
+# else:
+#     rain = False
+
+while 1:
+    if GPIO.event_detected(pin):
+        print("Chuva")
+        logging.info("Chuva")
+        rain = True
 
 
 # Save data
-logging.info(sensor_read)
+# logging.info(sensor_read)
 db.teste07.insert({
     "when": datetime.datetime.utcnow(),
-    "rain": sensor_read
+    "rain": rain
 })
 
 
 # Cleanup GPIO
 GPIO.cleanup(pin)
+
+# Exemplo
+# add rising edge detection on a channel
+# GPIO.add_event_detect(channel, GPIO.RISING)
+# do_something()
+# if GPIO.event_detected(channel):
+#     print('Button pressed')
