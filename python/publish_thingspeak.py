@@ -90,16 +90,28 @@ db = clientMongo.SmartGreen
 collection = db.teste07
 
 
-# Publish data
-logging.info("Connecting")
-# for i in range(0,3):
-#     while True:
-#         try:
-#             ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
+# Connect using PPP (3 attempts with 5 minutes interval)
+for i in range(0, 3):
+    connected = False
+    logging.info("Connecting...")
+    while True:
+        try:
+            logging.info("Attempt n. " + str(i))
+            ppp = PPPConnection(sudo=False, call='claro')
+        except:
+            logging.error("Failed to connect")
+            time.sleep(300)  # 5 min
+            break
+        else:
+            logging.info("Success")
+            connected = True
+            break
+    if connected is True:
+        break
+
 if ppp.connected():
-    logging.info("Connected")
     publish_thingspeak()
+    # wait 5s before closing ppp connection
     time.sleep(5)
     ppp.disconnect()
     logging.info("Disconnected")
-else:
