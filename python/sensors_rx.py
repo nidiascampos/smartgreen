@@ -80,12 +80,12 @@ while 1:
               wm45, wm45bias,
               wm75, wm75bias, vcc)
         # output payload content to log file
-    payload_log = "Payload: " + str(oct(header.from_node)) + ' '
-    + str(wm15) + ' ' + str(wm15bias) + ' '
-    + str(wm45) + ' ' + str(wm45bias) + ' '
-    + str(wm75) + ' ' + str(wm75bias) + ' '
-    + str(vcc)
-    logging.info(payload_log)
+        payload_log = "Payload: " + str(oct(header.from_node)) + ' '
+        + str(wm15) + ' ' + str(wm15bias) + ' '
+        + str(wm45) + ' ' + str(wm45bias) + ' '
+        + str(wm75) + ' ' + str(wm75bias) + ' '
+        + str(vcc)
+        logging.info(payload_log)
     # add payload to mongoDB
     mongo_add_message(oct(header.from_node), vcc,
                       wm15, wm15bias,
