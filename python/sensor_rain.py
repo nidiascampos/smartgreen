@@ -1,4 +1,5 @@
 import logging
+import time
 import datetime
 import RPi.GPIO as GPIO
 from pymongo import MongoClient
@@ -30,10 +31,13 @@ GPIO.add_event_detect(pin, GPIO.FALLING)
 #     rain = False
 
 while 1:
+    print "Loop iniciado"
     if GPIO.event_detected(pin):
         print("Chuva")
+        print("Saindo do loop")
         logging.info("Chuva")
         rain = True
+    break
 
 
 # Save data
@@ -43,6 +47,8 @@ db.teste07.insert({
     "rain": rain
 })
 
+
+time.sleep(10)
 
 # Cleanup GPIO
 GPIO.cleanup(pin)
