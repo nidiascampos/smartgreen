@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 from pymongo import MongoClient
 
 # Logging config
-logging.basicConfig(filename="/var/log/smartgreen/rain_sensor.log",
+logging.basicConfig(filename="/var/log/smartgreen/sensor_rain.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
 #logging.info("====================")
@@ -27,7 +27,7 @@ sensor_read = GPIO.input(pin)
 
 # Save data
 logging.info(sensor_read)
-db.coleta03.insert({
+db.teste07.insert({
     "when": datetime.datetime.utcnow(),
     "rain": sensor_read
 })
