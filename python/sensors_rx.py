@@ -7,7 +7,6 @@ import time
 import datetime
 import logging
 from pymongo import MongoClient
-from os.path import expanduser
 from struct import *
 from RF24 import *
 from RF24Network import *
@@ -43,7 +42,10 @@ clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
 
 
-def mongo_add_message(module_id, module_vcc, sensor_15cm, sensor_15cm_bias, sensor_45cm, sensor_45cm_bias, sensor_75cm, sensor_75cm_bias):
+def mongo_add_message(module_id, module_vcc,
+                      sensor_15cm, sensor_15cm_bias,
+                      sensor_45cm, sensor_45cm_bias,
+                      sensor_75cm, sensor_75cm_bias):
     # inserting data into mongodb
     db.teste07.insert({
         "module": module_id,
@@ -67,13 +69,25 @@ while 1:
         # verify payload length
         print("Payload length:", len(payload))
         # unpack payload struct
-        wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc = unpack('<llllllf', bytes(payload))
+        wm15, wm15bias,
+        wm45, wm45bias,
+        wm75, wm75bias,
+        vcc = unpack('<llllllf', bytes(payload))
         # print payload content
-        print('Payload: ', oct(header.from_node), wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc)
+        print('Payload: ', oct(header.from_node),
+              wm15, wm15bias,
+              wm45, wm45bias,
+              wm75, wm75bias, vcc)
         # output payload content to log file
-	payload_log = "Payload: " + str(oct(header.from_node)) + ' ' + str(wm15) + ' ' + str(wm15bias) + ' ' + str(wm45) + ' ' + str(wm45bias) + ' ' + str(wm75) + ' ' + str(wm75bias) + ' ' + str(vcc)
-	logging.info(payload_log);
-        # add payload to mongoDB
-        mongo_add_message(oct(header.from_node), vcc, wm15, wm15bias, wm45, wm45bias, wm75, wm75bias)
+    payload_log = "Payload: " + str(oct(header.from_node)) + ' '
+    + str(wm15) + ' ' + str(wm15bias) + ' '
+    + str(wm45) + ' ' + str(wm45bias) + ' '
+    + str(wm75) + ' ' + str(wm75bias) + ' '
+    + str(vcc)
+    logging.info(payload_log)
+    # add payload to mongoDB
+    mongo_add_message(oct(header.from_node), vcc,
+                      wm15, wm15bias,
+                      wm45, wm45bias,
+                      wm75, wm75bias)
     time.sleep(1)
-
