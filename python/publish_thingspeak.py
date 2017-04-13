@@ -1,8 +1,8 @@
 import logging
-import time
 import paho.mqtt.publish as publish
+import time
 from pymongo import MongoClient
-# from pppd import PPPConnection
+from pppd import PPPConnection
 
 
 def mongo_read():
@@ -13,13 +13,17 @@ def mongo_read():
 
     for module in modules:
         # get the latest module data
-        data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
+        data = collection.find_one({"module": module}, sort=[("when", -1)])
         # verify if the data has been published already
         # (that means that the module isn't sending data regularly correctly)
-        if data["published"] == False:
+        if data["published"] is False:
             payload.append(data)
         else:
-            logging.warning("!!! Data from module " + data["module"] + " already published, ignoring (id: " + str(data["_id"]) + ")")
+            logging.warning("!!! Data from module " +
+                            data["module"] +
+                            " already published, ignoring (id: " +
+                            str(data["_id"]) +
+                            ")")
     # logs data payload
     logging.info("Modules data: ")
     logging.info(payload)
@@ -29,7 +33,8 @@ def mongo_read():
 
 def mongo_update(module_id):
     # set data status as published
-    collection.find_one_and_update({ "_id": module_id }, { "$set": { "published": True } })
+    collection.find_one_and_update({"_id": module_id},
+                                   {"$set": {"published": True}})
 
 
 def publish_thingspeak():
@@ -37,12 +42,11 @@ def publish_thingspeak():
 
     # get data from mongodb
     modules_data = mongo_read()
-    msgs = []
 
     # split data and publish to thingspeak
     for module in modules_data:
         # string format required by thingspeak API
-        msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"],module["15cm"],module["15cm_bias"],module["45cm"],module["45cm_bias"],module["75cm"],module["75cm_bias"])
+        msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"], module["15cm"], module["15cm_bias"], module["45cm"], module["45cm_bias"], module["75cm"], module["75cm_bias"])
         # every module have its own channel, and its own API key
         if module["module"] == "01":
             logging.info("module 1 data ok")
@@ -61,8 +65,9 @@ def publish_thingspeak():
             thingspeak_channel = "256209"
             thingspeak_key = "ITNOWFUYCS7ZVIQ3"
         # publish each module data
-        publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
-                        msg, hostname="mqtt.thingspeak.com", port=1883)
+        publish.single("channels/" + thingspeak_channel +
+                       "/publish/" + thingspeak_key,
+                       msg, hostname="mqtt.thingspeak.com", port=1883)
         # update data status to published
         mongo_update(module["_id"])
 
@@ -75,7 +80,8 @@ def publish_thingspeak():
 logging.basicConfig(filename="/var/log/smartgreen/thingspeak_publish.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("THINGSPEAK PUBLISH ====================")  # String to separate logs
+# String to separate logs
+logging.info("THINGSPEAK PUBLISH ====================")
 
 
 # DB
@@ -85,14 +91,15 @@ collection = db.teste07
 
 
 # Publish data
-publish_thingspeak()
-
-# logging.info("Connecting")
-# ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
-# if ppp.connected():
-#     logging.info("Connected")
-#     publish_adafruit()
-#     time.sleep(5)
-#     ppp.disconnect()
-#     logging.info("Disconnected")
-    
+logging.info("Connecting")
+# for i in range(0,3):
+#     while True:
+#         try:
+#             ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
+if ppp.connected():
+    logging.info("Connected")
+    publish_thingspeak()
+    time.sleep(5)
+    ppp.disconnect()
+    logging.info("Disconnected")
+else:
