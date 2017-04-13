@@ -9,7 +9,7 @@ from w1thermsensor import W1ThermSensor
 logging.basicConfig(filename="/var/log/smartgreen/sensor_temperature.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-#logging.info("====================")
+# logging.info("====================")
 
 
 # DB
@@ -25,6 +25,8 @@ temp_celsius = sensor.get_temperature()
 # Save data
 logging.info(temp_celsius)
 db.teste07.insert({
+    "sensor": "temperature",
     "when": datetime.datetime.utcnow(),
-    "temperature": temp_celsius
+    "temperature": temp_celsius,
+    "published": False
 })

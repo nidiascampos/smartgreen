@@ -1,5 +1,4 @@
 import logging
-import time
 import datetime
 import RPi.GPIO as GPIO
 from pymongo import MongoClient
@@ -24,8 +23,10 @@ pin = 26
 def mongo_add_message(rain):
     # inserting data into mongodb
     db.teste07.insert({
+        "sensor": "rain",
         "when": datetime.datetime.utcnow(),
-        "rain": rain
+        "rain": rain,
+        "published": False
     })
 
 
