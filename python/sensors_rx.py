@@ -86,9 +86,9 @@ while 1:
         + str(wm75) + ' ' + str(wm75bias) + ' '
         + str(vcc)
         logging.info(payload_log)
-    # add payload to mongoDB
-    mongo_add_message(oct(header.from_node), vcc,
-                      wm15, wm15bias,
-                      wm45, wm45bias,
-                      wm75, wm75bias)
-    time.sleep(1)
+        # add payload to mongoDB
+        mongo_add_message(oct(header.from_node), vcc,
+                          wm15, wm15bias,
+                          wm45, wm45bias,
+                          wm75, wm75bias)
+        time.sleep(1)
