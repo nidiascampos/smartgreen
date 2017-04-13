@@ -23,6 +23,7 @@ pin = 26
 def mongo_add_message(rain):
     # inserting data into mongodb
     db.teste07.insert({
+        "type": "sensor",
         "sensor": "rain",
         "when": datetime.datetime.utcnow(),
         "rain": rain,

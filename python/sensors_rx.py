@@ -48,6 +48,7 @@ def mongo_add_message(module_id, module_vcc,
                       sensor_75cm, sensor_75cm_bias):
     # inserting data into mongodb
     db.teste07.insert({
+        "type": "module",
         "module": module_id,
         "15cm": sensor_15cm,
         "15cm_bias": sensor_15cm_bias,

@@ -25,6 +25,7 @@ temp_celsius = sensor.get_temperature()
 # Save data
 logging.info(temp_celsius)
 db.teste07.insert({
+    "type": "sensor",
     "sensor": "temperature",
     "when": datetime.datetime.utcnow(),
     "temperature": temp_celsius,

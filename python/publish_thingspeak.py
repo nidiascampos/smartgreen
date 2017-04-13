@@ -59,36 +59,36 @@ def publish_thingspeak():
     # split data and publish to thingspeak
     for item in payload_data:
         # every module have its own channel, and its own API key
-        if item["module"] == "01":
-            logging.info("module 1 data ok")
-            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
-            thingspeak_channel = "41313"
-            thingspeak_key = "6622XUT2PQOITIX4"
-        elif item["module"] == "02":
-            logging.info("module 2 data ok")
-            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
-            thingspeak_channel = "255953"
-            thingspeak_key = "IOF8CFV6JDP3DY8Q"
-        elif item["module"] == "03":
-            logging.info("module 3 data ok")
-            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
-            thingspeak_channel = "256208"
-            thingspeak_key = "RCV2LDXRFWWU0NWV"
-        elif item["module"] == "04":
-            logging.info("module 4 data ok")
-            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
-            thingspeak_channel = "256209"
-            thingspeak_key = "ITNOWFUYCS7ZVIQ3"
-        elif item["sensor"] == "temperature":
-            logging.info("rain sensor ok")
-            msg = "field1=%f" % (item["temperature"])
+        if item["type"] == "sensor":
             thingspeak_channel = "PELSB44E4BVOIHHQ"
             thingspeak_key = "258089"
-        elif item["sensor"] == "rain":
-            logging.info("rain sensor ok")
-            msg = "field2=%r" % (item["rain"])
-            thingspeak_channel = "PELSB44E4BVOIHHQ"
-            thingspeak_key = "258089"
+            if item["sensor"] == "rain":
+                logging.info("rain sensor ok")
+                msg = "field1=%f" % (item["rain"])
+            elif item["sensor"] == "temperature":
+                logging.info("rain sensor ok")
+                msg = "field2=%r" % (item["rain"])
+        elif item["type"] == "module":
+            if item["module"] == "01":
+                logging.info("module 1 data ok")
+                msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
+                thingspeak_channel = "41313"
+                thingspeak_key = "6622XUT2PQOITIX4"
+            elif item["module"] == "02":
+                logging.info("module 2 data ok")
+                msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
+                thingspeak_channel = "255953"
+                thingspeak_key = "IOF8CFV6JDP3DY8Q"
+            elif item["module"] == "03":
+                logging.info("module 3 data ok")
+                msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
+                thingspeak_channel = "256208"
+                thingspeak_key = "RCV2LDXRFWWU0NWV"
+            elif item["module"] == "04":
+                logging.info("module 4 data ok")
+                msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
+                thingspeak_channel = "256209"
+                thingspeak_key = "ITNOWFUYCS7ZVIQ3"
         # publish each module data
         publish.single("channels/" + thingspeak_channel +
                        "/publish/" + thingspeak_key,
@@ -102,7 +102,7 @@ def publish_thingspeak():
 
 
 # Basic config
-logging.basicConfig(filename="/var/log/smartgreen/thingspeak_publish.log",
+logging.basicConfig(filename="/var/log/smartgreen/publish_thingspeak.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
 # String to separate logs
