@@ -9,6 +9,7 @@ def mongo_read():
 
     # modules = ["01", "02", "03", "04"]
     modules = ["01", "02"]
+    sensors = ["rain", "temperature"]
     payload = []
 
     for module in modules:
@@ -24,6 +25,18 @@ def mongo_read():
                             " already published, ignoring (id: " +
                             str(data["_id"]) +
                             ")")
+
+    for sensor in sensors:
+        data = collection.find_one({"sensor": sensor}, sort=[("when", -1)])
+        if data["published"] is False:
+            payload.append(data)
+        else:
+            logging.warning("!!! Data from " +
+                            data["sensor"] +
+                            "sensor already published, ignoring (id: " +
+                            str(data["_id"]) +
+                            ")")
+
     # logs data payload
     logging.info("Modules data: ")
     logging.info(payload)
@@ -41,35 +54,47 @@ def publish_thingspeak():
     logging.info("Publishing...")
 
     # get data from mongodb
-    modules_data = mongo_read()
+    payload_data = mongo_read()
 
     # split data and publish to thingspeak
-    for module in modules_data:
-        # string format required by thingspeak API
-        msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"], module["15cm"], module["15cm_bias"], module["45cm"], module["45cm_bias"], module["75cm"], module["75cm_bias"])
+    for item in payload_data:
         # every module have its own channel, and its own API key
-        if module["module"] == "01":
+        if item["module"] == "01":
             logging.info("module 1 data ok")
+            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
             thingspeak_channel = "41313"
             thingspeak_key = "6622XUT2PQOITIX4"
-        elif module["module"] == "02":
+        elif item["module"] == "02":
             logging.info("module 2 data ok")
+            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
             thingspeak_channel = "255953"
             thingspeak_key = "IOF8CFV6JDP3DY8Q"
-        elif module["module"] == "03":
+        elif item["module"] == "03":
             logging.info("module 3 data ok")
+            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
             thingspeak_channel = "256208"
             thingspeak_key = "RCV2LDXRFWWU0NWV"
-        elif module["module"] == "04":
+        elif item["module"] == "04":
             logging.info("module 4 data ok")
+            msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"])
             thingspeak_channel = "256209"
             thingspeak_key = "ITNOWFUYCS7ZVIQ3"
+        elif item["sensor"] == "temperature":
+            logging.info("rain sensor ok")
+            msg = "field1=%f" % (item["temperature"])
+            thingspeak_channel = "PELSB44E4BVOIHHQ"
+            thingspeak_key = "258089"
+        elif item["sensor"] == "rain":
+            logging.info("rain sensor ok")
+            msg = "field2=%r" % (item["rain"])
+            thingspeak_channel = "PELSB44E4BVOIHHQ"
+            thingspeak_key = "258089"
         # publish each module data
         publish.single("channels/" + thingspeak_channel +
                        "/publish/" + thingspeak_key,
                        msg, hostname="mqtt.thingspeak.com", port=1883)
         # update data status to published
-        mongo_update(module["_id"])
+        mongo_update(item["_id"])
 
     logging.info("Published OK")
 
