@@ -12,3 +12,4 @@ noipdefault
 user "claro"
 remotename claro
 ipparam claro
+usepeerdns
