@@ -50,13 +50,14 @@ def mongo_add_message(module_id, module_vcc,
     db.teste07.insert({
         "type": "module",
         "module": module_id,
+        "channel": int(module_id),
+        "when": datetime.datetime.utcnow(),
         "15cm": sensor_15cm,
         "15cm_bias": sensor_15cm_bias,
         "45cm": sensor_45cm,
         "45cm_bias": sensor_45cm_bias,
         "75cm": sensor_75cm,
         "75cm_bias": sensor_75cm_bias,
-        "when": datetime.datetime.utcnow(),
         "battery": module_vcc,
         "published": False
     })
