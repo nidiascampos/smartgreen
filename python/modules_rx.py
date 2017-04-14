@@ -32,10 +32,10 @@ packets_sent = 0
 last_sent = 0
 
 # Logging config
-logging.basicConfig(filename="/var/log/smartgreen/sensors_rx.log",
+logging.basicConfig(filename="/var/log/smartgreen/modules_rx.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("SENSORS_RX STARTED ====================")
+logging.info("MODULES_RX STARTED ====================")
 
 # MongoDB
 clientMongo = MongoClient('localhost:27017')
