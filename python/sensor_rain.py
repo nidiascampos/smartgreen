@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 import datetime
 import RPi.GPIO as GPIO
@@ -26,6 +28,7 @@ def mongo_add_message(rain):
         "type": "sensor",
         "sensor": "rain",
         "when": datetime.datetime.utcnow(),
+        "channel": 0,
         "rain": rain,
         "published": False
     })
@@ -38,11 +41,11 @@ sensor_read = GPIO.input(pin)
 
 # Check if it's raining or not and save to MongoDB
 if sensor_read == 0:
-    rain = True
+    rain = 1
     print "Chuva"
     logging.info("Chuva")
 else:
-    rain = False
+    rain = 0
     print "Sem chuva"
     logging.info("Sem chuva")
 mongo_add_message(rain)
