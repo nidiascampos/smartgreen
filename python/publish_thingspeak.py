@@ -90,7 +90,11 @@ def publish_thingspeak():
                 "/publish/" + thingspeak[channel][1]
         print "topic: " + topic
         # publish each module data
-        publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
+        if msg:
+            print "publishing now"
+            publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
+        else:
+            print "empty msg data"
 
         # update data status to published
         # mongo_update(item["_id"])
