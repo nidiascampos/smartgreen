@@ -138,11 +138,15 @@ collection = db.teste07
 #    if connected is True:
 #        break
 
-#if ppp.connected():
-#    publish_thingspeak()
-#    # wait 5s before closing ppp connection
-#    time.sleep(5)
-#    ppp.disconnect()
-#    logging.info("Disconnected")
+ppp = PPPConnection(sudo=False, call='claro')
+if ppp.connected():
+    print "Connected"
+    time.sleep(10)
+    publish_thingspeak()
+    # wait 5s before closing ppp connection
+    time.sleep(5)
+    print "Disconnecting"
+    ppp.disconnect()
+    logging.info("Disconnected")
 
-publish_thingspeak()
+# publish_thingspeak()
