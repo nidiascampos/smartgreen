@@ -67,22 +67,37 @@ def mongo_add_message(module_id, module_vcc,
 while 1:
     network.update()
     while network.available():
+        # read data from network (expecting 28 bytes)
         header, payload = network.read(28)
+
         # verify payload length
-        print("Payload length:", len(payload))
-        # unpack payload struct
-        wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc = unpack('<llllllf', bytes(payload))
-        # print payload content
-        print('Payload: ', oct(header.from_node),
-              wm15, wm15bias,
-              wm45, wm45bias,
-              wm75, wm75bias, vcc)
-        # output payload content to log file
-        payload_log = "Payload: " + str(oct(header.from_node)) + ' ' + str(wm15) + ' ' + str(wm15bias) + ' ' + str(wm45) + ' ' + str(wm45bias) + ' ' + str(wm75) + ' ' + str(wm75bias) + ' ' + str(vcc)
-        logging.info(payload_log)
-        # add payload to mongoDB
-        mongo_add_message(oct(header.from_node), vcc,
-                          wm15, wm15bias,
-                          wm45, wm45bias,
-                          wm75, wm75bias)
-        time.sleep(1)
+        # print("Payload length:", len(payload))
+        if len(payload) == 28:
+            # unpack payload struct
+            wm15, wm15bias, wm45, wm45bias, wm75, wm75bias, vcc = unpack('<llllllf', bytes(payload))
+
+            # print payload content
+            # print('Payload: ', oct(header.from_node),
+            #      wm15, wm15bias,
+            #      wm45, wm45bias,
+            #      wm75, wm75bias, vcc)
+
+            # output payload content to log file
+            payload_log = "Payload from module ID " + str(oct(header.from_node)) + ': ' + str(wm15) + ' ' + str(wm15bias) + ' ' + str(wm45) + ' ' + str(wm45bias) + ' ' + str(wm75) + ' ' + str(wm75bias) + ' ' + str(vcc)
+            print(payload_log)
+            logging.info(payload_log)
+
+            # add payload to mongoDB
+            mongo_add_message(oct(header.from_node), vcc,
+                              wm15, wm15bias,
+                              wm45, wm45bias,
+                              wm75, wm75bias)
+            time.sleep(1)
+        else:
+            # log payload wrong size and module id
+            payload_log = "!!! Wrong payload size from module ID " + str(oct(header.from_node)) + ": " + str(len(payload)) + " bytes"
+            # payload_log = "!!! Wrong payload size from : " + str(len(payload)) + ". Expected 28 bytes. Module ID: " + str(oct(header.from_node))
+            # print('!!! Wrong payload size: expected 28 bytes. Module ID: ', oct(header.from_node))
+            print(payload_log)
+            logging.warn(payload_log)
+            time.sleep(1)
