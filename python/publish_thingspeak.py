@@ -115,30 +115,30 @@ collection = db.teste07
 
 
 # Connect using PPP (3 attempts with 5 minutes interval)
-#for i in range(1, 4):
-#    connected = False
-#    logging.info("Connecting...")
-#    print "Connecting"
-#    while True:
-#        try:
-#            logging.info("Attempt n. " + str(i))
-#            print "Attempt n. " + str(i)
-#            ppp = PPPConnection(sudo=False, call='claro')
-#        except:
-#            logging.error("Failed to connect")
-#            print "Failed to connect"
-#            time.sleep(30)
-#            # time.sleep(300)  # 5 min
-#            break
-#        else:
-#            logging.info("Success")
-#            print "Success"
-#            connected = True
-#            break
-#    if connected is True:
-#        break
+for i in range(1, 4):
+    connected = False
+    logging.info("Connecting...")
+    print "Connecting"
+    while True:
+        try:
+            logging.info("Attempt n. " + str(i))
+            print "Attempt n. " + str(i)
+            ppp = PPPConnection(sudo=False, call='claro')
+        except:
+            logging.error("Failed to connect")
+            print "Failed to connect"
+            time.sleep(30)
+            # time.sleep(300)  # 5 min
+            break
+        else:
+            logging.info("Success")
+            print "Success"
+            connected = True
+            break
+    if connected is True:
+        break
 
-ppp = PPPConnection(sudo=False, call='claro')
+# ppp = PPPConnection(sudo=False, call='claro')
 if ppp.connected():
     print "Connected"
     time.sleep(10)
