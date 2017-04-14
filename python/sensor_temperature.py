@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 import w1thermsensor
 import datetime
@@ -29,5 +31,6 @@ db.teste07.insert({
     "sensor": "temperature",
     "when": datetime.datetime.utcnow(),
     "temperature": temp_celsius,
+    "channel": 0,
     "published": False
 })
