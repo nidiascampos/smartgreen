@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 import w1thermsensor
 import datetime
@@ -6,10 +8,10 @@ from w1thermsensor import W1ThermSensor
 
 
 # Logging config
-logging.basicConfig(filename="/var/log/smartgreen/temperature_sensor.log",
+logging.basicConfig(filename="/var/log/smartgreen/sensor_temperature.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-#logging.info("====================")
+# logging.info("====================")
 
 
 # DB
@@ -24,7 +26,11 @@ temp_celsius = sensor.get_temperature()
 
 # Save data
 logging.info(temp_celsius)
-db.coleta02.insert({
+db.teste07.insert({
+    "type": "sensor",
+    "sensor": "temperature",
     "when": datetime.datetime.utcnow(),
-    "temperature": temp_celsius
+    "temperature": temp_celsius,
+    "channel": 0,
+    "published": False
 })

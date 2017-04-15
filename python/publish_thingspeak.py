@@ -1,25 +1,44 @@
+#!/usr/bin/env python
+
 import logging
-import time
 import paho.mqtt.publish as publish
+import time
 from pymongo import MongoClient
-# from pppd import PPPConnection
+from pppd import PPPConnection
 
 
 def mongo_read():
+    logging.info("Reading data from MongoDB")
+    print "MongoDB"
 
     # modules = ["01", "02", "03", "04"]
     modules = ["01", "02"]
+    sensors = ["rain", "temperature"]
     payload = []
 
     for module in modules:
         # get the latest module data
-        data = collection.find_one({ "module": module }, sort=[ ("when",-1) ])
+        data = collection.find_one({"module": module}, sort=[("when", -1)])
         # verify if the data has been published already
         # (that means that the module isn't sending data regularly correctly)
-        if data["published"] == False:
+        if data["published"] is False:
             payload.append(data)
+            logging.info("Adding data to payload")
+            print "Adding data to payload"
         else:
             logging.warning("!!! Data from module " + data["module"] + " already published, ignoring (id: " + str(data["_id"]) + ")")
+            print "Data already published"
+
+    for sensor in sensors:
+        data = collection.find_one({"sensor": sensor}, sort=[("when", -1)])
+        if data["published"] is False:
+            payload.append(data)
+            logging.info("Adding data to payload")
+            print "Adding data to payload"
+        else:
+            logging.warning("!!! Data from " + data["sensor"] + "sensor already published, ignoring (id: " + str(data["_id"]) + ")")
+            print "Data already published"
+
     # logs data payload
     logging.info("Modules data: ")
     logging.info(payload)
@@ -28,54 +47,69 @@ def mongo_read():
 
 
 def mongo_update(module_id):
+    logging.info("Setting payload data as published")
+    print "Setting payload data as published"
     # set data status as published
-    collection.find_one_and_update({ "_id": module_id }, { "$set": { "published": True } })
+    collection.find_one_and_update({"_id": module_id}, {"$set": {"published": True}})
 
 
 def publish_thingspeak():
     logging.info("Publishing...")
 
     # get data from mongodb
-    modules_data = mongo_read()
-    msgs = []
+    payload = mongo_read()
+    
+    # setting thingspeak channels and keys
+    thingspeak = [["258089", "PELSB44E4BVOIHHQ"],
+                  ["41313", "6622XUT2PQOITIX4"],
+                  ["255953", "IOF8CFV6JDP3DY8Q"]]
 
-    # split data and publish to thingspeak
-    for module in modules_data:
-        # string format required by thingspeak API
-        msg = "field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (module["battery"],module["15cm"],module["15cm_bias"],module["45cm"],module["45cm_bias"],module["75cm"],module["75cm_bias"])
-        # every module have its own channel, and its own API key
-        if module["module"] == "01":
-            logging.info("module 1 data ok")
-            thingspeak_channel = "41313"
-            thingspeak_key = "6622XUT2PQOITIX4"
-        elif module["module"] == "02":
-            logging.info("module 2 data ok")
-            thingspeak_channel = "255953"
-            thingspeak_key = "IOF8CFV6JDP3DY8Q"
-        elif module["module"] == "03":
-            logging.info("module 3 data ok")
-            thingspeak_channel = "256208"
-            thingspeak_key = "RCV2LDXRFWWU0NWV"
-        elif module["module"] == "04":
-            logging.info("module 4 data ok")
-            thingspeak_channel = "256209"
-            thingspeak_key = "ITNOWFUYCS7ZVIQ3"
+    # organize data by channel and publish to thingspeak
+    for channel in range(0, 3):
+        print channel
+        data = []
+        msg = ""
+        for item in payload:
+            if int(item["channel"]) == channel:
+                print item
+                print "channel: " + str(channel)
+                if item["type"] == "sensor":
+                    # raspberry sensors data (channel 0)
+                    if item["sensor"] == "temperature":
+                        data.append("field1=%f" % (item["temperature"]))
+                    elif item["sensor"] == "rain":
+                        data.append("field2=%i" % (item["rain"]))
+                # modules sensors data (other channels)
+                else:
+                    data.append("field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"]))
+        msg = "&".join(data)
+        print "msg: " + msg
+        print "thing chan: " + thingspeak[channel][0]
+        print "thing key: " + thingspeak[channel][1]
+        topic = "channels/" + thingspeak[channel][0] + \
+                "/publish/" + thingspeak[channel][1]
+        print "topic: " + topic
         # publish each module data
-        publish.single("channels/" + thingspeak_channel + "/publish/" + thingspeak_key,
-                        msg, hostname="mqtt.thingspeak.com", port=1883)
-        # update data status to published
-        mongo_update(module["_id"])
+        if msg:
+            print "publishing now"
+            publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
+        else:
+            print "empty msg data"
 
+        # update data status to published
+        # mongo_update(item["_id"])
+                     
     logging.info("Published OK")
 
     return True
 
 
 # Basic config
-logging.basicConfig(filename="/var/log/smartgreen/thingspeak_publish.log",
+logging.basicConfig(filename="/var/log/smartgreen/publish_thingspeak.log",
                     level=logging.DEBUG,
                     format="%(asctime)s %(message)s")
-logging.info("THINGSPEAK PUBLISH ====================")  # String to separate logs
+# String to separate logs
+logging.info("THINGSPEAK PUBLISH ====================")
 
 
 # DB
@@ -84,15 +118,39 @@ db = clientMongo.SmartGreen
 collection = db.teste07
 
 
-# Publish data
-publish_thingspeak()
+# Connect using PPP (3 attempts with 5 minutes interval)
+for i in range(1, 4):
+    connected = False
+    logging.info("Connecting...")
+    print "Connecting"
+    while True:
+        try:
+            logging.info("Attempt n. " + str(i))
+            print "Attempt n. " + str(i)
+            ppp = PPPConnection(sudo=False, call='claro')
+        except:
+            logging.error("Failed to connect")
+            print "Failed to connect"
+            time.sleep(30)
+            # time.sleep(300)  # 5 min
+            break
+        else:
+            logging.info("Success")
+            print "Success"
+            connected = True
+            break
+    if connected is True:
+        break
 
-# logging.info("Connecting")
-# ppp = PPPConnection(sudo=False, call='claro')  # activate PPP connection
-# if ppp.connected():
-#     logging.info("Connected")
-#     publish_adafruit()
-#     time.sleep(5)
-#     ppp.disconnect()
-#     logging.info("Disconnected")
-    
+# ppp = PPPConnection(sudo=False, call='claro')
+if ppp.connected():
+    print "Connected"
+    time.sleep(10)
+    publish_thingspeak()
+    # wait 5s before closing ppp connection
+    time.sleep(5)
+    print "Disconnecting"
+    ppp.disconnect()
+    logging.info("Disconnected")
+
+# publish_thingspeak()
