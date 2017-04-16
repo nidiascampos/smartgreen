@@ -4,6 +4,7 @@ import logging
 import paho.mqtt.publish as publish
 import time
 import subprocess
+import sys
 from pymongo import MongoClient
 from pppd import PPPConnection
 
@@ -13,16 +14,20 @@ def usb_enable():
   try:
     bashCommand = "/home/pi/smartgreen/shell_scripts/usb_enable.sh"
     process = subprocess.check_output(['sudo', bashCommand])
+    logging.info("USB enabled")
     print "USB enabled"
   except subprocess.CalledProcessError:
+    logging.info("!!! Error: USB already enabled?")
     print "!!! Error: USB already enabled?"
 
 def usb_disable():
   try:
     bashCommand = "/home/pi/smartgreen/shell_scripts/usb_disable.sh"
     process = subprocess.check_output(['sudo', bashCommand])
+    logging.info("USB disabled")
     print "USB disabled"
   except subprocess.CalledProcessError:
+    logging.info("!!! Error: USB already disabled?")
     print "!!! Error: USB already disabled?"
 
 def mongo_read():
@@ -30,7 +35,8 @@ def mongo_read():
     print "MongoDB"
 
     # modules = ["01", "02", "03", "04"]
-    modules = ["01", "02"]
+    # modules = ["01", "02"]
+    modules = ["01"]
     sensors = ["rain", "temperature"]
     payload = []
 
@@ -110,11 +116,13 @@ def publish_thingspeak():
         print "topic: " + topic
         # publish each module data
         if msg:
+            logging.info("Publishing now")
             print "publishing now"
             publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
             # update data status to published
             mongo_update(item["_id"])
         else:
+            logging.info("Empty msg data")
             print "empty msg data"
 
     logging.info("Published OK")
@@ -133,7 +141,7 @@ logging.info("THINGSPEAK PUBLISH ====================")
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste07
+collection = db.teste08
 
 
 # Enable USB port
@@ -153,9 +161,15 @@ for i in range(1, 4):
         except:
             logging.error("Failed to connect")
             print "Failed to connect"
-            time.sleep(30)
-            # time.sleep(300)  # 5 min
-            break
+            usb_disable()
+            if i is 3:
+                logging.error("!!! Unable to connect after 3 attempts, exiting")
+                sys.exit("Unable to connect, exiting")
+            else:
+                time.sleep(30)
+                # time.sleep(300)  # 5 min
+                usb_enable()
+                break
         else:
             logging.info("Success")
             print "Success"
@@ -166,6 +180,7 @@ for i in range(1, 4):
 
 # ppp = PPPConnection(sudo=False, call='claro')
 if ppp.connected():
+    logging.info("PPP: connected")
     print "Connected"
     time.sleep(10)
     publish_thingspeak()
@@ -173,10 +188,9 @@ if ppp.connected():
     time.sleep(5)
     print "Disconnecting"
     ppp.disconnect()
-    logging.info("Disconnected")
+    logging.info("PPP: Disconnected")
 
 # publish_thingspeak()
 
 # Disable USB port
 usb_disable()
-

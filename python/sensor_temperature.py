@@ -17,7 +17,7 @@ logging.basicConfig(filename="/var/log/smartgreen/sensor_temperature.log",
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-
+collection = db.teste08
 
 # Temperature Sensor
 sensor = W1ThermSensor()
@@ -26,7 +26,7 @@ temp_celsius = sensor.get_temperature()
 
 # Save data
 logging.info(temp_celsius)
-db.teste07.insert({
+collection.insert({
     "type": "sensor",
     "sensor": "temperature",
     "when": datetime.datetime.utcnow(),

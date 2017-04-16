@@ -40,6 +40,7 @@ logging.info("MODULES_RX STARTED ====================")
 # MongoDB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
+collection = db.teste08
 
 
 def mongo_add_message(module_id, module_vcc,
@@ -47,7 +48,7 @@ def mongo_add_message(module_id, module_vcc,
                       sensor_45cm, sensor_45cm_bias,
                       sensor_75cm, sensor_75cm_bias):
     # inserting data into mongodb
-    db.teste07.insert({
+    collection.insert({
         "type": "module",
         "module": module_id,
         "channel": int(module_id),
