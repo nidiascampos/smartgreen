@@ -3,9 +3,27 @@
 import logging
 import paho.mqtt.publish as publish
 import time
+import subprocess
 from pymongo import MongoClient
 from pppd import PPPConnection
 
+
+# enable USB port
+def usb_enable():
+  try:
+    bashCommand = "/home/pi/smartgreen/shell_scripts/usb_enable.sh"
+    process = subprocess.check_output(['sudo', bashCommand])
+    print "USB enabled"
+  except subprocess.CalledProcessError:
+    print "!!! Error: USB already enabled?"
+
+def usb_disable():
+  try:
+    bashCommand = "/home/pi/smartgreen/shell_scripts/usb_disable.sh"
+    process = subprocess.check_output(['sudo', bashCommand])
+    print "USB disabled"
+  except subprocess.CalledProcessError:
+    print "!!! Error: USB already disabled?"
 
 def mongo_read():
     logging.info("Reading data from MongoDB")
@@ -58,6 +76,7 @@ def publish_thingspeak():
 
     # get data from mongodb
     payload = mongo_read()
+    print payload
     
     # setting thingspeak channels and keys
     thingspeak = [["258089", "PELSB44E4BVOIHHQ"],
@@ -93,12 +112,11 @@ def publish_thingspeak():
         if msg:
             print "publishing now"
             publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
+            # update data status to published
+            mongo_update(item["_id"])
         else:
             print "empty msg data"
 
-        # update data status to published
-        # mongo_update(item["_id"])
-                     
     logging.info("Published OK")
 
     return True
@@ -117,6 +135,10 @@ clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
 collection = db.teste07
 
+
+# Enable USB port
+usb_enable()
+time.sleep(5)
 
 # Connect using PPP (3 attempts with 5 minutes interval)
 for i in range(1, 4):
@@ -154,3 +176,7 @@ if ppp.connected():
     logging.info("Disconnected")
 
 # publish_thingspeak()
+
+# Disable USB port
+usb_disable()
+
