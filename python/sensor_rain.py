@@ -14,7 +14,7 @@ logging.basicConfig(filename="/var/log/smartgreen/sensor_rain.log",
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-
+collection = db.teste08
 
 # Pin configuration
 GPIO.setmode(GPIO.BCM)
@@ -24,7 +24,7 @@ pin = 26
 # Save data to MongoDB
 def mongo_add_message(rain):
     # inserting data into mongodb
-    db.teste07.insert({
+    collection.insert({
         "type": "sensor",
         "sensor": "rain",
         "when": datetime.datetime.utcnow(),
