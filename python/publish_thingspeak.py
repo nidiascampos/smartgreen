@@ -14,16 +14,20 @@ def usb_enable():
   try:
     bashCommand = "/home/pi/smartgreen/shell_scripts/usb_enable.sh"
     process = subprocess.check_output(['sudo', bashCommand])
+    logging.info("USB enabled")
     print "USB enabled"
   except subprocess.CalledProcessError:
+    logging.info("!!! Error: USB already enabled?")
     print "!!! Error: USB already enabled?"
 
 def usb_disable():
   try:
     bashCommand = "/home/pi/smartgreen/shell_scripts/usb_disable.sh"
     process = subprocess.check_output(['sudo', bashCommand])
+    logging.info("USB disabled")
     print "USB disabled"
   except subprocess.CalledProcessError:
+    logging.info("!!! Error: USB already disabled?")
     print "!!! Error: USB already disabled?"
 
 def mongo_read():
@@ -112,11 +116,13 @@ def publish_thingspeak():
         print "topic: " + topic
         # publish each module data
         if msg:
+            logging.info("Publishing now")
             print "publishing now"
             publish.single(topic, msg, hostname="mqtt.thingspeak.com", port=1883)
             # update data status to published
             mongo_update(item["_id"])
         else:
+            logging.info("Empty msg data")
             print "empty msg data"
 
     logging.info("Published OK")
@@ -174,6 +180,7 @@ for i in range(1, 4):
 
 # ppp = PPPConnection(sudo=False, call='claro')
 if ppp.connected():
+    logging.info("PPP: connected")
     print "Connected"
     time.sleep(10)
     publish_thingspeak()
@@ -181,10 +188,9 @@ if ppp.connected():
     time.sleep(5)
     print "Disconnecting"
     ppp.disconnect()
-    logging.info("Disconnected")
+    logging.info("PPP: Disconnected")
 
 # publish_thingspeak()
 
 # Disable USB port
 usb_disable()
-
