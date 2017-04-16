@@ -17,6 +17,11 @@ http://api.mongodb.com/python/current/api/pymongo/cursor.html
 http://api.mongodb.com/python/current/tutorial.html
 http://api.mongodb.com/python/current/api/pymongo/collection.html
 
+# Shell script
+https://www.linux.com/blog/disable-enable-usb-terminal
+https://lwn.net/Articles/143397/
+http://stackoverflow.com/questions/18765725/turning-off-a-single-usb-device-again
+
 # ThingSpeak
 https://www.mathworks.com/help/thingspeak/mqtt-api.html
 https://www.mathworks.com/help/thingspeak/use-desktop-mqtt-client-to-publish-to-a-channel.html
