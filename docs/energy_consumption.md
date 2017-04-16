@@ -1,5 +1,15 @@
 SMARTGREEN
-# unmodified
+# raspberry pi zero
+- pi zero only: 0.06 ~ 0.08A
+- pi zero + usb hub: 0.06 ~ 0.08A
+- pi zero + usb hub + usb 3g modem: 0.20 ~ 0.25A
+    + usb disabled: 0.10 ~ 0.15A
+    + usb disabled and rf24 active: ~0.30A
+    + 3g connection on: up to 0.35A
+    + 3g connection on + rf24 active: FIXME (0.40A ?)
+
+# arduino pro mini
+## unmodified
 - fullboard:
     + initial run: 12.5mA
     + sequential runs: 11.5mA
@@ -7,7 +17,7 @@ SMARTGREEN
 - arduino only:
     + 3.05mA
 
-# modified
+## modified
 - full board:
     + initial run: 7.4mA
     + sequential run: 7.4mA
@@ -34,10 +44,9 @@ SMARTGREEN
     + transmitting: 14 a 21mA
     + sequential run: 2.2mA
 
-# modified (arduino only)
+## modified (arduino only)
 - 0.01mA or lower (display shows 0.00)
 
---
-SLEEP
-# test sleep code
+# arduino pro mini: sleep
+## test sleep code
 - 0.03mA
