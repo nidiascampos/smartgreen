@@ -4,6 +4,7 @@ import logging
 import paho.mqtt.publish as publish
 import time
 import subprocess
+import sys
 from pymongo import MongoClient
 from pppd import PPPConnection
 
@@ -30,7 +31,8 @@ def mongo_read():
     print "MongoDB"
 
     # modules = ["01", "02", "03", "04"]
-    modules = ["01", "02"]
+    # modules = ["01", "02"]
+    modules = ["01"]
     sensors = ["rain", "temperature"]
     payload = []
 
@@ -133,7 +135,7 @@ logging.info("THINGSPEAK PUBLISH ====================")
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste07
+collection = db.teste08
 
 
 # Enable USB port
@@ -153,9 +155,15 @@ for i in range(1, 4):
         except:
             logging.error("Failed to connect")
             print "Failed to connect"
-            time.sleep(30)
-            # time.sleep(300)  # 5 min
-            break
+            usb_disable()
+            if i is 3:
+                logging.error("!!! Unable to connect after 3 attempts, exiting")
+                sys.exit("Unable to connect, exiting")
+            else:
+                time.sleep(30)
+                # time.sleep(300)  # 5 min
+                usb_enable()
+                break
         else:
             logging.info("Success")
             print "Success"
