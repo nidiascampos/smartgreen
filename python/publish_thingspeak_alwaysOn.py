@@ -11,14 +11,20 @@ from pymongo import MongoClient
 
 def is_connected():  # verify internet connection
     REMOTE_SERVER = "www.google.com"
+    logging.info("Verifying connection")
+    print "Verifying connection"
     try:
         # see if we can resolve the host name
         host = socket.gethostbyname(REMOTE_SERVER)
         # connect to the host
         socket.create_connection((host, 80), 2)
+        logging.info("Connection OK")
+        print "Connection OK"
         return True
     except:
         pass
+    logging.info("Not connected")
+    print "Not connected"
     return False
 
 
@@ -27,6 +33,7 @@ def connect_3g():
         logging.info("Connecting...")
         print "Connecting..."
         pppd.PPPConnection(sudo=False, call='claro')
+        logging.info("Connected")
         print "Connected"
         return True
     except pppd.PPPConnectionError:
