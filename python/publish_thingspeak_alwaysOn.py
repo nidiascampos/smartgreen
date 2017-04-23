@@ -3,19 +3,23 @@
 import logging
 import paho.mqtt.publish as publish
 import time
-import urllib2
+import socket
 import pppd
+from subprocess import call
 from pymongo import MongoClient
 
 
-def internet_on():  # verify internet connection
+def is_connected():  # verify internet connection
+    REMOTE_SERVER = "www.google.com"
     try:
-        # urllib2.urlopen('http://216.58.192.142', timeout=1) # google
-        urllib2.urlopen('http://93.184.216.34', timeout=1)  # example.com
+        # see if we can resolve the host name
+        host = socket.gethostbyname(REMOTE_SERVER)
+        # connect to the host
+        socket.create_connection((host, 80), 2)
         return True
-    except urllib2.URLError as err:
-        print err
-        return False
+    except:
+        pass
+    return False
 
 
 def connect_3g():
@@ -29,6 +33,10 @@ def connect_3g():
         logging.error("Failed to connect")
         print "Failed to connect"
         return False
+
+
+def disconnect_3g():
+    call(["poff"])
 
 
 def mongo_read():
@@ -145,22 +153,21 @@ db = clientMongo.SmartGreen
 collection = db.teste08
 
 
-if internet_on() is False:
-    connected = connect_3g()
-    print "Connection status: " + str(connected)
+if is_connected() is False:
+    print "Not connected"
+    disconnect_3g()  # stopping pppd just in case
+    for i in range(1, 4):
+        print "Attempt n. " + str(i)
+        if connect_3g() is True:
+            print "Yay"
+            break
+        elif i is 3:
+            logging.error("!!! Failed to connect. Giving up.")
+            print "Giving up connecting"
+        else:
+            print "Retrying in 10 seg"
+            logging.warning("!!! Failed to connect. Retrying later.")
+            time.sleep(30)
+            continue
 else:
     publish_thingspeak()
-
-for i in range(1, 4):
-    print "Attempt n. " + str(i)
-    if connect_3g() is True:
-        print "Yay"
-        break
-    elif i is 3:
-        logging.error("!!! Failed to connect. Giving up.")
-        print "Giving up connecting"
-    else:
-        print "Retrying in 10 seg"
-        logging.warning("!!! Failed to connect. Retrying later.")
-        time.sleep(30)
-        continue
