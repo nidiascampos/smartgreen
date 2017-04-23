@@ -5,6 +5,7 @@ import paho.mqtt.publish as publish
 import time
 import socket
 import pppd
+import sys
 from subprocess import call
 from pymongo import MongoClient
 
@@ -161,20 +162,21 @@ collection = db.teste08
 
 
 if is_connected() is False:
-    print "Not connected"
     disconnect_3g()  # stopping pppd just in case
     for i in range(1, 4):
         print "Attempt n. " + str(i)
         if connect_3g() is True:
-            print "Yay"
+            logging.info("Connected :D")
+            print "Connected :D"
             break
         elif i is 3:
-            logging.error("!!! Failed to connect. Giving up.")
-            print "Giving up connecting"
+            logging.error("!!! Unable to connect after 3 attempts, exiting")
+            print "!!! Unable to connect after 3 attempts, exiting"
+            sys.exit("Unable to connect, exiting")
         else:
-            print "Retrying in 10 seg"
             logging.warning("!!! Failed to connect. Retrying later.")
+            print "Retrying in 10 seg"
             time.sleep(30)
             continue
-else:
-    publish_thingspeak()
+
+publish_thingspeak()
