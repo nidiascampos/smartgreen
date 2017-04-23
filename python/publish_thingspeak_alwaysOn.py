@@ -166,15 +166,12 @@ if is_connected() is False:
     for i in range(1, 4):
         print "Attempt n. " + str(i)
         if connect_3g() is True:
-            logging.info("Connected :D")
-            print "Connected :D"
             break
         elif i is 3:
             logging.error("!!! Unable to connect after 3 attempts, exiting")
             print "!!! Unable to connect after 3 attempts, exiting"
             sys.exit("Unable to connect, exiting")
         else:
-            logging.warning("!!! Failed to connect. Retrying later.")
             print "Retrying in 10 seg"
             time.sleep(30)
             continue
