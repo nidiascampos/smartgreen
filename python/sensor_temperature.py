@@ -17,7 +17,7 @@ logging.basicConfig(filename="/var/log/smartgreen/sensor_temperature.log",
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste08
+collection = db.coleta03
 
 # Temperature Sensor
 sensor = W1ThermSensor()

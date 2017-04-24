@@ -40,7 +40,7 @@ logging.info("MODULES_RX STARTED ====================")
 # MongoDB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste08
+collection = db.coleta03
 
 
 def mongo_add_message(module_id, module_vcc,

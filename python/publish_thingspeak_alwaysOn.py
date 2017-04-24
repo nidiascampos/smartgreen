@@ -158,7 +158,7 @@ logging.info("THINGSPEAK PUBLISH ====================")
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste08
+collection = db.coleta03
 
 
 if is_connected() is False:

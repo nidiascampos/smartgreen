@@ -2,7 +2,11 @@
 
 const float VccMin   = 0.0;             // Minimum expected Vcc level, in Volts.
 const float VccMax   = 5.0;             // Maximum expected Vcc level, in Volts.
-// FIXME: é necessario ajustar/verificar o valor do VCC para cada arduino
-const float VccCorrection = 4.91/5.00;  // Measured Vcc by multimeter divided by reported Vcc
+// NOTE: é necessario ajustar/verificar o valor do VCC para cada arduino
+// Measured Vcc by multimeter divided by reported Vcc
+// const float VccCorrection = 5.14/5.26;  // Module 01
+const float VccCorrection = 5.15/5.0918;  // Module 02
+// const float VccCorrection = 5.00/5.00;  // Module 03
+// const float VccCorrection = 5.00/5.00;  // Module 04
 
 Vcc vcc(VccCorrection);
