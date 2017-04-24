@@ -51,10 +51,9 @@ def mongo_read():
     logging.info("Reading data from MongoDB")
     print "MongoDB"
 
-    # modules = ["01", "02", "03", "04"]
-    # modules = ["01", "02"]
-    modules = ["02"]
-    sensors = ["rain", "temperature"]
+    # modules = ["01", "02", "03", "04", "05"]
+    modules = ["02", "05"]
+    # sensors = ["rain", "temperature"]
     payload = []
 
     for module in modules:
@@ -70,15 +69,15 @@ def mongo_read():
             logging.warning("!!! Data from module " + data["module"] + " already published, ignoring (id: " + str(data["_id"]) + ")")
             print "Data already published"
 
-    for sensor in sensors:
-        data = collection.find_one({"sensor": sensor}, sort=[("when", -1)])
-        if data["published"] is False:
-            payload.append(data)
-            logging.info("Adding data to payload")
-            print "Adding data to payload"
-        else:
-            logging.warning("!!! Data from " + data["sensor"] + "sensor already published, ignoring (id: " + str(data["_id"]) + ")")
-            print "Data already published"
+    # for sensor in sensors:
+    #     data = collection.find_one({"sensor": sensor}, sort=[("when", -1)])
+    #     if data["published"] is False:
+    #         payload.append(data)
+    #         logging.info("Adding data to payload")
+    #         print "Adding data to payload"
+    #     else:
+    #         logging.warning("!!! Data from " + data["sensor"] + "sensor already published, ignoring (id: " + str(data["_id"]) + ")")
+    #         print "Data already published"
 
     # logs data payload
     logging.info("Modules data: ")
@@ -116,14 +115,11 @@ def publish_thingspeak():
             if int(item["channel"]) == channel:
                 print item
                 print "channel: " + str(channel)
-                if item["type"] == "sensor":
-                    # raspberry sensors data (channel 0)
-                    if item["sensor"] == "temperature":
-                        data.append("field1=%f" % (item["temperature"]))
-                    elif item["sensor"] == "rain":
-                        data.append("field2=%i" % (item["rain"]))
-                # modules sensors data (other channels)
+                if item["module"] is "05":
+                    # special module: temperature and rain
+                    data.append("field1=%f&field2=%f&field3=%d&field4=%b" % (item["battery"], item["temperature"], item["rain"], item["raining"]))
                 else:
+                    # regular modules
                     data.append("field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"]))
         msg = "&".join(data)
         print "msg: " + msg
