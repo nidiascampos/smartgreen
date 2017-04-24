@@ -52,8 +52,8 @@ def mongo_read():
     print "MongoDB"
 
     # modules = ["01", "02", "03", "04"]
-    modules = ["01", "02"]
-    # modules = ["01"]
+    # modules = ["01", "02"]
+    modules = ["02"]
     sensors = ["rain", "temperature"]
     payload = []
 
@@ -91,7 +91,8 @@ def mongo_update(module_id):
     logging.info("Setting payload data as published")
     print "Setting payload data as published"
     # set data status as published
-    collection.find_one_and_update({"_id": module_id}, {"$set": {"published": True}})
+    collection.update_one({"_id": module_id}, {"$set": {"published": True}})
+    time.sleep(1)
 
 
 def publish_thingspeak():
@@ -175,6 +176,9 @@ if is_connected() is False:
             print "Retrying in 10 seg"
             time.sleep(30)
             continue
+else:
+    logging.info("Connection OK")
+    print "Connection OK" 
 
 publish_thingspeak()
 
