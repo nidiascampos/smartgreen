@@ -94,6 +94,14 @@ while 1:
                               wm45, wm45bias,
                               wm75, wm75bias)
             time.sleep(1)
+        elif len(payload) == 13:
+            # unpack payload struct
+            vcc, temperature, rain_analog, rain_digital = unpack('<ffi?', bytes(payload))
+
+            # output payload content to log file
+            payload_log = "Payload from module ID " + str(oct(header.from_node)) + ': ' + str(rain_analog) + ' ' + str(rain_digital) + ' ' + str(temperature) + str(vcc)
+            print(payload_log)
+            logging.info(payload_log)
         else:
             # log payload wrong size and module id
             payload_log = "!!! Wrong payload size from module ID " + str(oct(header.from_node)) + ": " + str(len(payload)) + " bytes"
