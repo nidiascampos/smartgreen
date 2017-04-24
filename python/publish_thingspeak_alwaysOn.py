@@ -52,8 +52,8 @@ def mongo_read():
     print "MongoDB"
 
     # modules = ["01", "02", "03", "04"]
-    # modules = ["01", "02"]
-    modules = ["01"]
+    modules = ["01", "02"]
+    # modules = ["01"]
     sensors = ["rain", "temperature"]
     payload = []
 
