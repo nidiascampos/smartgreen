@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import logging
-import w1thermsensor
 import datetime
 from pymongo import MongoClient
 from w1thermsensor import W1ThermSensor
