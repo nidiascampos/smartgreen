@@ -64,6 +64,23 @@ def mongo_add_message(module_id, module_vcc,
     })
 
 
+def mongo_add_message_alt(module_id, module_vcc,
+                          sensor_rain_analog, sensor_rain_digital,
+                          sensor_temperature):
+    # inserting data into mongodb
+    collection.insert({
+        "type": "module",
+        "module": module_id,
+        "channel": 0,
+        "when": datetime.datetime.utcnow(),
+        "temperature": sensor_temperature,
+        "raining": sensor_rain_digital,
+        "rain": sensor_rain_analog,
+        "battery": module_vcc,
+        "published": False
+    })
+
+
 # Loop
 while 1:
     network.update()
@@ -102,6 +119,12 @@ while 1:
             payload_log = "Payload from module ID " + str(oct(header.from_node)) + ': ' + str(rain_analog) + ' ' + str(rain_digital) + ' ' + str(temperature) + ' ' +  str(vcc)
             print(payload_log)
             logging.info(payload_log)
+
+            # add payload to mongoDB
+            mongo_add_message_alt(oct(header.from_node), vcc,
+                                  rain_analog, rain_digital,
+                                  temperature)
+            time.sleep(1)
         else:
             # log payload wrong size and module id
             payload_log = "!!! Wrong payload size from module ID " + str(oct(header.from_node)) + ": " + str(len(payload)) + " bytes"
