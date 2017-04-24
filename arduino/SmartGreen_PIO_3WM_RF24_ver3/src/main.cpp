@@ -15,6 +15,7 @@
 #include <SPI.h>
 #include "Sleep.h"
 #include "batteryMonitor.h"
+#include <printf.h>
 
 // Structs --------------------------------------------------------------------
 struct payload_t { // Payload data structure
@@ -95,6 +96,8 @@ void setup(void)
   //------------ RADIO ------------
   SPI.begin();
   radio.begin();
+  // printf_begin();
+  // radio.printDetails();
   // Format: channel, node address
   network.begin(90, this_node);
 }
