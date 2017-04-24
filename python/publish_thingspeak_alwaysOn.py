@@ -177,3 +177,5 @@ if is_connected() is False:
             continue
 
 publish_thingspeak()
+
+disconnect_3g()  # stopping pppd just in case
