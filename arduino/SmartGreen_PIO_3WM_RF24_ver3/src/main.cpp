@@ -191,9 +191,9 @@ wmdata_t wm_check(int phase_b, int phase_a, int analog_input_a, int analog_input
   long sensor = (read1 + read2)/2; // sensor bias compensated value
   long bias = read1 - read2; // resistance bias
 
-  // wmdata_t wmData = { bias, sensor };
+  wmdata_t wmData = { bias, sensor };
   // DEBUG: gerando numeros aleatorios para simular leitura
-  wmdata_t wmData = {random(10,20), random(100,10000)};
+  // wmdata_t wmData = {random(10,20), random(100,10000)};
 
   return wmData;
 }

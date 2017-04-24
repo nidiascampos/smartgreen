@@ -14,7 +14,7 @@ logging.basicConfig(filename="/var/log/smartgreen/sensor_rain.log",
 # DB
 clientMongo = MongoClient('localhost:27017')
 db = clientMongo.SmartGreen
-collection = db.teste08
+collection = db.coleta03
 
 # Pin configuration
 GPIO.setmode(GPIO.BCM)
