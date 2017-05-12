@@ -65,10 +65,6 @@ filtering = figure;
 plot(dateRange,sensor,'DisplayName','ESD','LineStyle','-.','Visible','on');
 hold on;
 
-% WRKF
-% plot(dateRange,wrkf,'DisplayName','ESD+WRKF','Marker','square','Visible','on');
-plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices',1:7:length(wrkf));
-
 % KALMAN + ESD
 plot(dateRange,sensorKAF,'-x','DisplayName','ESD+Kalman','MarkerIndices',1:7:length(sensorKAF),'MarkerSize',15);
 
