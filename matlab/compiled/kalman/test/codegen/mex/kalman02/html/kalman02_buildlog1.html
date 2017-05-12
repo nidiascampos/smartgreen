@@ -1,0 +1,57 @@
+<html>
+<head>
+<div class="baselog">
+<link rel="stylesheet" href="resources/matlab-report-styles.css" type="text/css" />
+<style type="text/css" media="screen">
+div.treeview { white-space: nowrap; }
+.treeview img { border: 0px; vertical-align: middle; }
+.trigger { cursor: pointer; }
+.branch { display: none; margin-left: 22px; }
+span.lnnolink { cursor: pointer; color: blue; text-decoration: underline; padding: 1 }
+span.lnnonorm { color: grey; padding: 1 }
+span.textnorm { color: black; padding: 1 }
+span.textcmnt { color: green; padding: 1 }
+span.msglink { cursor: pointer; color: blue; text-decoration: underline }
+span.treelink { cursor: pointer; color: blue; text-decoration: underline }
+.error { color: red; }
+.fcflink { cursor: pointer; color: blue; text-decoration: underline }
+div.tooltip { visibility: hidden; position: fixed;
+  background-color: lightyellow; border: 1px solid black; }
+.td-linebottomrt-gray {border-bottom:1px solid #BBB; border-right:1px solid #BBB;background-color:#F0F0F0;}
+.td-linebottomrt-link {border-bottom:1px solid #BBB; border-right:1px solid #BBB;color:Blue;}
+</style>
+</div>
+<title>Code Generation Report For 'kalman02'</title>
+</head>
+<body>
+<div class="report-head">MATLAB Coder Build Log</div><p/>
+<div class="baselog">
+<div class="grayline"></div>
+<table cellpadding="4" cellspacing="1"><tr>
+<td align="left" class="td-linebottomrt-gray" colspan="2">Build Parameters</td>
+</tr>
+<tr><td align="left" valign="top" class="td-linebottomrt">Build directory</td>
+<td align="left" valign="top" class="td-linebottomrt-link"><a href="matlab: cd('/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02')">/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02</a></td></tr>
+<tr><td align="left" valign="top" class="td-linebottomrt">Make wrapper</td>
+<td align="left" valign="top" class="td-linebottomrt-link">sh kalman02_mex.sh</td></tr>
+</table>
+<br/>
+<table border="1" cellpadding="4" cellspacing="1" width="100%">
+<tr><td align="left" class="td-linebottomrt-gray">Build Log</td></tr>
+<tr><td valign="top" class="td-script">
+<pre>
+<span class="td-line-number">    1   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "kalman02_data.c"</span>
+<span class="td-line-number">    2   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "kalman02_initialize.c"</span>
+<span class="td-line-number">    3   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "kalman02_terminate.c"</span>
+<span class="td-line-number">    4   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "kalman02.c"</span>
+<span class="td-line-number">    5   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "warning.c"</span>
+<span class="td-line-number">    6   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "interface/_coder_kalman02_info.c"</span>
+<span class="td-line-number">    7   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "interface/_coder_kalman02_api.c"</span>
+<span class="td-line-number">    8   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "interface/_coder_kalman02_mex.c"</span>
+<span class="td-line-number">    9   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -c -fno-common -arch x86_64 -mmacosx-version-min=10.9 -fexceptions -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -DTARGET_API_VERSION=700   -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG    -I "/Applications/MATLAB_R2017a.app/simulink/include" -I "/Applications/MATLAB_R2017a.app/toolbox/shared/simtargets" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test/codegen/mex/kalman02" -I "/Users/andreibosco/Devel/git/smartgreen/matlab/compiled/kalman/test" -I "./interface" -I "/Applications/MATLAB_R2017a.app/extern/include" -I "." "/Applications/MATLAB_R2017a.app/extern/version/c_mexapi_version.c"</span>
+<span class="td-line-number">   10   </span><span class="td-line-normal">/usr/bin/xcrun -sdk macosx10.12 clang -Wl,-exported_symbols_list,kalman02_mex_mex.map kalman02_data.o kalman02_initialize.o kalman02_terminate.o kalman02.o warning.o _coder_kalman02_info.o _coder_kalman02_api.o _coder_kalman02_mex.o c_mexapi_version.o -Wl,-twolevel_namespace -undefined error -arch x86_64 -mmacosx-version-min=10.9 -Wl,-syslibroot,/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -bundle -L/Applications/MATLAB_R2017a.app/bin/maci64 -lmx -lmex -lmat -lc++ -Wl,-rpath,@loader_path   -o kalman02_mex.mexmaci64    -lemlrt -lcovrt -lut -lmwmathutil </span>
+</pre>
+</td></tr></table>
+</div>
+</body>
+</html>
