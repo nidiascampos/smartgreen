@@ -115,9 +115,9 @@ def publish_thingspeak():
             if int(item["channel"]) == channel:
                 print item
                 print "channel: " + str(channel)
-                if item["module"] is "05":
+                if item["module"] == "05":
                     # special module: temperature and rain
-                    data.append("field1=%f&field2=%f&field3=%d&field4=%b" % (item["battery"], item["temperature"], item["rain"], item["raining"]))
+                    data.append("field1=%f&field2=%f&field3=%d&field4=%i" % (item["battery"], item["temperature"], item["rain"], item["raining"]))
                 else:
                     # regular modules
                     data.append("field1=%f&field2=%d&field3=%d&field4=%d&field5=%d&field6=%d&field7=%d" % (item["battery"], item["15cm"], item["15cm_bias"], item["45cm"], item["45cm_bias"], item["75cm"], item["75cm_bias"]))

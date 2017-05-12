@@ -5,6 +5,7 @@ http://www.cplusplus.com/reference/cstdio/sprintf/
 http://www.cplusplus.com/reference/cstdio/fprintf/
 http://www.cplusplus.com/doc/tutorial/structures/
 
+https://www.tutorialspoint.com/cprogramming/c_data_types.htm
 https://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
 http://stackoverflow.com/questions/20737176/how-are-struct-members-allocated-in-memory/20737216#20737216
 http://fresh2refresh.com/c-programming/c-struct-memory-allocation/

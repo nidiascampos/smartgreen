@@ -71,14 +71,14 @@ void setup(void)
   // noise will cause the call to randomSeed() to generate
   // different seed numbers each time the sketch runs.
   // randomSeed() will then shuffle the random function.
-  randomSeed(analogRead(4));
+  // randomSeed(analogRead(4));
 
   //------------ SLEEP ------------
   // set sleep time in ms, max sleep time is 49.7 days
-  sleepTime = 60000; // 1 minuto
+  // sleepTime = 60000; // 1 minuto
   // sleepTime = 300000; // 5 minutos
   // sleepTime = 900000; // 15 minutos
-  // sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
+  sleepTime = 1800000; // 30 minutos (1000 * 60 * 30)
   // sleepTime = 3600000; // 1 hora
 
   //------------ PINS -------------
@@ -96,10 +96,13 @@ void setup(void)
   //------------ RADIO ------------
   SPI.begin();
   radio.begin();
-  // printf_begin();
-  // radio.printDetails();
+
   // Format: channel, node address
   network.begin(90, this_node);
+
+  // DEBUG
+  // printf_begin();
+  // radio.printDetails();
 }
 
 void loop() {
