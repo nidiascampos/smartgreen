@@ -4,10 +4,18 @@ clear;
 
 %% CARREGAR DADOS
 load('logs/coleta03_watermarks');
+load('logs/coleta03_watermarks_thingspeak');
 load('logs/coleta03_tensiometros');
 load('logs/coleta03_estacao_paraipaba');
 load('logs/coleta03_estacao_itapipoca');
 load('logs/coleta03_estacao_fazgranjeiro_2017');
+
+%% Removendo dados antes dos sensores estarem conectados
+modulo1(1:4,:) = [];
+modulo2(1:9,:) = [];
+modulo1(1:4,:) = [];
+modulo3(1:6,:) = [];
+modulo4(1:7,:) = [];
 
 %% Converter tabelas em timetables
 modulo1 = table2timetable(modulo1);
@@ -22,7 +30,12 @@ tensiometro5 = table2timetable(tensiometro5);
 estacao_itapipoca = table2timetable(estacao_itapipoca);
 estacao_paraipaba = table2timetable(estacao_paraipaba);
 
-%% ordenar dados da estacao de itapipoca
+%% ordenar dados
+modulo1 = sortrows(modulo1);
+modulo2 = sortrows(modulo2);
+modulo3 = sortrows(modulo3);
+modulo4 = sortrows(modulo4);
+modulo5 = sortrows(modulo5);
 estacao_itapipoca = sortrows(estacao_itapipoca);
 
 %% modulo5: substituir -127 por NaN
@@ -42,6 +55,27 @@ tensiometro4 = tensiometro4(range,:);
 tensiometro5 = tensiometro5(range,:);
 estacao_itapipoca = estacao_itapipoca(range,:);
 estacao_paraipaba = estacao_paraipaba(range,:);
+
+%% Remover dados redundantes do thingspeak
+modulo1_thingspeak(1:23,:) = [];
+modulo2_thingspeak(1:24,:) = [];
+modulo3_thingspeak(1:19,:) = [];
+modulo4_thingspeak(1:13,:) = [];
+modulo5_thingspeak(1:12,:) = [];
+
+%% Remover coluna desnecessaria
+modulo1.module = [];
+modulo2.module = [];
+modulo3.module = [];
+modulo4.module = [];
+modulo5.module = [];
+
+%% Unir tabelas dos watermarks
+modulo1 = [modulo1; modulo1_thingspeak];
+modulo2 = [modulo2; modulo2_thingspeak];
+modulo3 = [modulo3; modulo3_thingspeak];
+modulo4 = [modulo4; modulo4_thingspeak];
+modulo5 = [modulo5; modulo5_thingspeak];
 
 %% Converter Ohm para kPa
 modulo1.d15cm_kPa = (3.213*(modulo1.d15cm./1000)+4.093)./(1-0.009733*(modulo1.d15cm./1000)-0.01205*28);
