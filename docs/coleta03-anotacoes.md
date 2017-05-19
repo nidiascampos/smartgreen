@@ -82,4 +82,22 @@
 - repetidor wifi instalado na administração para fazer o sinal chegar ao raspberry
 - apesar do sinal ser fraco/instável, raspberry tem conseguido transmitir os dados por wifi para o thingspeak
 - OBS: melhorar a robustez do código de publicação de dados em caso de queda de conexão durante a transmissão, e para fazer novas tentativas (o código antigo de tentativas foi feito para o modem 3g)
-- 
+
+# visita 2017-05-18
+- status raspberry pi:
+  > uptime:  09:16:18 up 8 days, 23:19,  1 user,  load average: 1.02, 1.01, 1.00
+- todos os modulos aparentemente descarregaram
+- ultimas mensagens:
+  + modulo 01:
+    > 2017-05-11 05:31:56,169 Payload from module ID 01: 1352 -544 525 235 641 200 3.49164104462
+  + modulo 02:
+    > 2017-05-15 23:07:37,650 Payload from module ID 02: 1490 -239 560 127 5897 -457 3.62472105026
+  + modulo 03:
+    > 2017-05-10 19:24:47,382 Payload from module ID 03: 1238 340 739 -216 3165 734 3.79213929176
+  + modulo 05:
+    > 2017-05-15 19:20:35,135 Payload from module ID 05: 1023 False -127.0 2.74038338661
+- dados do mongodb foram copiados
+- pilhas dos modulos 01, 02, 03 e 05 foram substituidas
+- modulo 02 não funcionou (case das pilhas envergou e não faz contato corretamente, pilhas foram retiradas)
+- modulo 03 não funcionou (não sei qual o problema, permaneceu ligado)
+- modulo 04 foi reinstalado (nova placa)

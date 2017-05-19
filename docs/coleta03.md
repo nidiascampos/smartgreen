@@ -28,6 +28,7 @@
   + bateria: 5.62v (reportado 5.437 pelo arduino)
 - modulo 04:
   + arduino pro mini 5v 16mhz: COM regulador de voltagem e COM led
+  + 2017-05-18: a placa foi refeita e agora a entrada de energia é pelo RAW e não pelo VCC
   + adaptador rf24: SEM led
   + antena rf24
   + bateria: 5.64v (reportado 5.34 pelo arduino)
