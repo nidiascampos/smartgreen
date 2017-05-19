@@ -42,7 +42,7 @@ estacao_itapipoca = sortrows(estacao_itapipoca);
 modulo5.temperature(modulo5.temperature == -127) = NaN;
 
 %% Determinar período de tempo a ser utilizado e filtrar tabelas
-range = timerange('2017-04-25', '2017-05-09');
+range = timerange('2017-04-25', '2017-05-16');
 % periodoComparacao = datetime({'27/04/2017' '09/05/2017'});
 
 modulo1_filtrado = modulo1(range,:);
@@ -77,21 +77,37 @@ modulo3 = [modulo3; modulo3_thingspeak];
 modulo4 = [modulo4; modulo4_thingspeak];
 modulo5 = [modulo5; modulo5_thingspeak];
 
-%% Converter Ohm para kPa
-modulo1.d15cm_kPa = (3.213*(modulo1.d15cm./1000)+4.093)./(1-0.009733*(modulo1.d15cm./1000)-0.01205*28);
-modulo2.d15cm_kPa = (3.213*(modulo2.d15cm./1000)+4.093)./(1-0.009733*(modulo2.d15cm./1000)-0.01205*28);
-modulo3.d15cm_kPa = (3.213*(modulo3.d15cm./1000)+4.093)./(1-0.009733*(modulo3.d15cm./1000)-0.01205*28);
-modulo4.d15cm_kPa = (3.213*(modulo4.d15cm./1000)+4.093)./(1-0.009733*(modulo4.d15cm./1000)-0.01205*28);
+%% Converter Ohm para kPa (metodo com temperatura)
+% modulo1.d15cm_kPa = (3.213*(modulo1.d15cm./1000)+4.093)./(1-0.009733*(modulo1.d15cm./1000)-0.01205*28);
+% modulo2.d15cm_kPa = (3.213*(modulo2.d15cm./1000)+4.093)./(1-0.009733*(modulo2.d15cm./1000)-0.01205*28);
+% modulo3.d15cm_kPa = (3.213*(modulo3.d15cm./1000)+4.093)./(1-0.009733*(modulo3.d15cm./1000)-0.01205*28);
+% modulo4.d15cm_kPa = (3.213*(modulo4.d15cm./1000)+4.093)./(1-0.009733*(modulo4.d15cm./1000)-0.01205*28);
+% 
+% modulo1.d45cm_kPa = (3.213*(modulo1.d45cm./1000)+4.093)./(1-0.009733*(modulo1.d45cm./1000)-0.01205*28);
+% modulo2.d45cm_kPa = (3.213*(modulo2.d45cm./1000)+4.093)./(1-0.009733*(modulo2.d45cm./1000)-0.01205*28);
+% modulo3.d45cm_kPa = (3.213*(modulo3.d45cm./1000)+4.093)./(1-0.009733*(modulo3.d45cm./1000)-0.01205*28);
+% modulo4.d45cm_kPa = (3.213*(modulo4.d45cm./1000)+4.093)./(1-0.009733*(modulo4.d45cm./1000)-0.01205*28);
+% 
+% modulo1.d75cm_kPa = (3.213*(modulo1.d75cm./1000)+4.093)./(1-0.009733*(modulo1.d75cm./1000)-0.01205*28);
+% modulo2.d75cm_kPa = (3.213*(modulo2.d75cm./1000)+4.093)./(1-0.009733*(modulo2.d75cm./1000)-0.01205*28);
+% modulo3.d75cm_kPa = (3.213*(modulo3.d75cm./1000)+4.093)./(1-0.009733*(modulo3.d75cm./1000)-0.01205*28);
+% modulo4.d75cm_kPa = (3.213*(modulo4.d75cm./1000)+4.093)./(1-0.009733*(modulo4.d75cm./1000)-0.01205*28);
 
-modulo1.d45cm_kPa = (3.213*(modulo1.d45cm./1000)+4.093)./(1-0.009733*(modulo1.d45cm./1000)-0.01205*28);
-modulo2.d45cm_kPa = (3.213*(modulo2.d45cm./1000)+4.093)./(1-0.009733*(modulo2.d45cm./1000)-0.01205*28);
-modulo3.d45cm_kPa = (3.213*(modulo3.d45cm./1000)+4.093)./(1-0.009733*(modulo3.d45cm./1000)-0.01205*28);
-modulo4.d45cm_kPa = (3.213*(modulo4.d45cm./1000)+4.093)./(1-0.009733*(modulo4.d45cm./1000)-0.01205*28);
+%% Converter Ohm para kPa (metodo sem temperatura)
+modulo1.d15cm_kPa = (modulo1.d15cm-550)./137.5;
+modulo2.d15cm_kPa = (modulo2.d15cm-550)./137.5;
+modulo3.d15cm_kPa = (modulo3.d15cm-550)./137.5;
+modulo4.d15cm_kPa = (modulo4.d15cm-550)./137.5;
 
-modulo1.d75cm_kPa = (3.213*(modulo1.d75cm./1000)+4.093)./(1-0.009733*(modulo1.d75cm./1000)-0.01205*28);
-modulo2.d75cm_kPa = (3.213*(modulo2.d75cm./1000)+4.093)./(1-0.009733*(modulo2.d75cm./1000)-0.01205*28);
-modulo3.d75cm_kPa = (3.213*(modulo3.d75cm./1000)+4.093)./(1-0.009733*(modulo3.d75cm./1000)-0.01205*28);
-modulo4.d75cm_kPa = (3.213*(modulo4.d75cm./1000)+4.093)./(1-0.009733*(modulo4.d75cm./1000)-0.01205*28);
+modulo1.d45cm_kPa = (modulo1.d45cm-550)./137.5;
+modulo2.d45cm_kPa = (modulo2.d45cm-550)./137.5;
+modulo3.d45cm_kPa = (modulo3.d45cm-550)./137.5;
+modulo4.d45cm_kPa = (modulo4.d45cm-550)./137.5;
+
+modulo1.d75cm_kPa = (modulo1.d75cm-550)./137.5;
+modulo2.d75cm_kPa = (modulo2.d75cm-550)./137.5;
+modulo3.d75cm_kPa = (modulo3.d75cm-550)./137.5;
+modulo4.d75cm_kPa = (modulo4.d75cm-550)./137.5;
 
 %% Resample dos dados para horas homogeneas
 % teste1 = retime(modulo1,'hourly','linear');
@@ -103,94 +119,161 @@ modulo4.d75cm_kPa = (3.213*(modulo4.d75cm./1000)+4.093)./(1-0.009733*(modulo4.d7
 % modulo4 = retime(modulo4,'hourly','pchip');
 % modulo5 = retime(modulo5,'hourly','pchip');
 
-%% Plotar
-% plot(modulo2.when,modulo2.d15cm,'DisplayName','modulo2.d15cm');
-% hold on;
-% plot(modulo2.when,modulo2.d45cm,'DisplayName','modulo2.d45cm');
-% plot(modulo2.when,modulo2.d75cm,'DisplayName','modulo2.d75cm');
-% hold off;
-
-%% 15cm (Ohm)
-% plot(modulo1.when,modulo1.d15cm,'DisplayName','modulo1.d15cm');
-% hold on;
-% plot(modulo2.when,modulo2.d15cm,'DisplayName','modulo2.d15cm');
-% plot(modulo3.when,modulo3.d15cm,'DisplayName','modulo3.d15cm');
-% plot(modulo4.when,modulo4.d15cm,'DisplayName','modulo4.d15cm');
-% hold off;
-
-%% 15cm (kPa)
-% plot(modulo1.when,modulo1.d15cm_kPa,'DisplayName','modulo1.d15cm');
-% hold on;
-% plot(modulo2.when,modulo2.d15cm_kPa,'DisplayName','modulo2.d15cm');
-% plot(modulo3.when,modulo3.d15cm_kPa,'DisplayName','modulo3.d15cm');
-% plot(modulo4.when,modulo4.d15cm_kPa,'DisplayName','modulo4.d15cm');
-% plot(tensiometro1.when,tensiometro1.d15cm,'--','DisplayName','tensiometro1.d15cm');
-% plot(tensiometro2.when,tensiometro2.d15cm,'--','DisplayName','tensiometro2.d15cm');
-% plot(tensiometro4.when,tensiometro4.d15cm,'--','DisplayName','tensiometro4.d15cm');
-% plot(tensiometro5.when,tensiometro5.d15cm,'--','DisplayName','tensiometro5.d15cm');
-% hold off;
-
-%% 45cm (kPa)
-% plot(modulo1.when,modulo1.d45cm_kPa,'DisplayName','modulo1.d45cm');
-% hold on;
-% plot(modulo2.when,modulo2.d45cm_kPa,'DisplayName','modulo2.d45cm');
-% plot(modulo3.when,modulo3.d45cm_kPa,'DisplayName','modulo3.d45cm');
-% plot(modulo4.when,modulo4.d45cm_kPa,'DisplayName','modulo4.d45cm');
-% plot(tensiometro1.when,tensiometro1.d45cm,'DisplayName','tensiometro1.d45cm');
-% plot(tensiometro2.when,tensiometro2.d45cm,'DisplayName','tensiometro2.d45cm');
-% plot(tensiometro4.when,tensiometro4.d45cm,'DisplayName','tensiometro4.d45cm');
-% plot(tensiometro5.when,tensiometro5.d45cm,'DisplayName','tensiometro5.d45cm');
-% hold off;
-
-%% 75cm (kPa)
-% plot(modulo1.when,modulo1.d75cm_kPa,'DisplayName','modulo1.d75cm');
-% hold on;
-% plot(modulo2.when,modulo2.d75cm_kPa,'DisplayName','modulo2.d75cm');
-% plot(modulo3.when,modulo3.d75cm_kPa,'DisplayName','modulo3.d75cm');
-% plot(modulo4.when,modulo4.d75cm_kPa,'DisplayName','modulo4.d75cm');
-% plot(tensiometro1.when,tensiometro1.d75cm,'DisplayName','tensiometro1.d75cm');
-% plot(tensiometro2.when,tensiometro2.d75cm,'DisplayName','tensiometro2.d75cm');
-% plot(tensiometro4.when,tensiometro4.d75cm,'DisplayName','tensiometro4.d75cm');
-% plot(tensiometro5.when,tensiometro5.d75cm,'DisplayName','tensiometro5.d75cm');
-% hold off;
-
 %% plotar graficos
-% Watermarks
+%% Watermarks
 % 15cm
-plotar_grafico_coleta03(modulo1.when,modulo1.d15cm,'modulo1_15cm','Modulo 1: wm à 15cm','Ohm','off');
-plotar_grafico_coleta03(modulo2.when,modulo2.d15cm,'modulo2_15cm','Modulo 2: wm à 15cm','Ohm','off');
-plotar_grafico_coleta03(modulo3.when,modulo3.d15cm,'modulo3_15cm','Modulo 3: wm à 15cm','Ohm','off');
-plotar_grafico_coleta03(modulo4.when,modulo4.d15cm,'modulo4_15cm','Modulo 4: wm à 15cm','Ohm','off');
-% 45cm
-plotar_grafico_coleta03(modulo1.when,modulo1.d45cm,'modulo1_45cm','Modulo 1: wm à 45cm','Ohm','off');
-plotar_grafico_coleta03(modulo2.when,modulo2.d45cm,'modulo2_45cm','Modulo 2: wm à 45cm','Ohm','off');
-plotar_grafico_coleta03(modulo3.when,modulo3.d45cm,'modulo3_45cm','Modulo 3: wm à 45cm','Ohm','off');
-plotar_grafico_coleta03(modulo4.when,modulo4.d45cm,'modulo4_45cm','Modulo 4: wm à 45cm','Ohm','off');
-% 75cm
-plotar_grafico_coleta03(modulo1.when,modulo1.d75cm,'modulo1_75cm','Modulo 1: wm à 75cm','Ohm','off');
-plotar_grafico_coleta03(modulo2.when,modulo2.d75cm,'modulo2_75cm','Modulo 2: wm à 75cm','Ohm','off');
-plotar_grafico_coleta03(modulo3.when,modulo3.d75cm,'modulo3_75cm','Modulo 3: wm à 75cm','Ohm','off');
-plotar_grafico_coleta03(modulo4.when,modulo4.d75cm,'modulo4_75cm','Modulo 4: wm à 75cm','Ohm','off');
-
-% Tensiometros
-% 15cm
-plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d15cm,'tensiometro1_15cm','Tensiometro 1 à 15cm','kPa','off');
-plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d15cm,'tensiometro2_15cm','Tensiometro 2 à 15cm','kPa','off');
-plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d15cm,'tensiometro3_15cm','Tensiometro 3 à 15cm','kPa','off');
-plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d15cm,'tensiometro4_15cm','Tensiometro 4 à 15cm','kPa','off');
+plotar_grafico_coleta03(modulo1.when,modulo1.d15cm,'separados/15cm_watermark_modulo1','Modulo 1: wm à 15cm','Ohm','off');
+plotar_grafico_coleta03(modulo2.when,modulo2.d15cm,'separados/15cm_watermark_modulo2','Modulo 2: wm à 15cm','Ohm','off');
+plotar_grafico_coleta03(modulo3.when,modulo3.d15cm,'separados/15cm_watermark_modulo3','Modulo 3: wm à 15cm','Ohm','off');
+plotar_grafico_coleta03(modulo4.when,modulo4.d15cm,'separados/15cm_watermark_modulo4','Modulo 4: wm à 15cm','Ohm','off');
+% 15cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(modulo1.when,modulo1.d15cm,'o-','DisplayName','modulo 1');
+plot(modulo2.when,modulo2.d15cm,'o-','DisplayName','modulo 2');
+plot(modulo3.when,modulo3.d15cm,'o-','DisplayName','modulo 3');
+plot(modulo4.when,modulo4.d15cm,'o-','DisplayName','modulo 4');
+title('Watermark: 15cm');
+legend('show');
+saveas(grafico,'graphs/coleta03/15cm_watermark_unificado','png');
 
 % 45cm
-plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d45cm,'tensiometro1_45cm','Tensiometro 1 à 45cm','kPa','off');
-plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d45cm,'tensiometro2_45cm','Tensiometro 2 à 45cm','kPa','off');
-plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d45cm,'tensiometro3_45cm','Tensiometro 3 à 45cm','kPa','off');
-plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d45cm,'tensiometro4_45cm','Tensiometro 4 à 45cm','kPa','off');
-% 75cm
-plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d75cm,'tensiometro1_75cm','Tensiometro 1 à 75cm','kPa','off');
-plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d75cm,'tensiometro2_75cm','Tensiometro 2 à 75cm','kPa','off');
-plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d75cm,'tensiometro3_75cm','Tensiometro 3 à 75cm','kPa','off');
-plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d75cm,'tensiometro4_75cm','Tensiometro 4 à 75cm','kPa','off');
+plotar_grafico_coleta03(modulo1.when,modulo1.d45cm,'separados/45cm_watermark_modulo1','Modulo 1: wm à 45cm','Ohm','off');
+plotar_grafico_coleta03(modulo2.when,modulo2.d45cm,'separados/45cm_watermark_modulo2','Modulo 2: wm à 45cm','Ohm','off');
+plotar_grafico_coleta03(modulo3.when,modulo3.d45cm,'separados/45cm_watermark_modulo3','Modulo 3: wm à 45cm','Ohm','off');
+plotar_grafico_coleta03(modulo4.when,modulo4.d45cm,'separados/45cm_watermark_modulo4','Modulo 4: wm à 45cm','Ohm','off');
+% 45cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(modulo1.when,modulo1.d45cm,'o-','DisplayName','modulo 1');
+plot(modulo2.when,modulo2.d45cm,'o-','DisplayName','modulo 2');
+plot(modulo3.when,modulo3.d45cm,'o-','DisplayName','modulo 3');
+plot(modulo4.when,modulo4.d45cm,'o-','DisplayName','modulo 4');
+title('Watermark: 45cm');
+legend('show');
+saveas(grafico,'graphs/coleta03/45cm_watermark_unificado','png');
 
-% estacao itapipoca
+% 75cm
+plotar_grafico_coleta03(modulo1.when,modulo1.d75cm,'separados/75cm_watermark_modulo1','Modulo 1: wm à 75cm','Ohm','off');
+plotar_grafico_coleta03(modulo2.when,modulo2.d75cm,'separados/75cm_watermark_modulo2','Modulo 2: wm à 75cm','Ohm','off');
+plotar_grafico_coleta03(modulo3.when,modulo3.d75cm,'separados/75cm_watermark_modulo3','Modulo 3: wm à 75cm','Ohm','off');
+plotar_grafico_coleta03(modulo4.when,modulo4.d75cm,'separados/75cm_watermark_modulo4','Modulo 4: wm à 75cm','Ohm','off');
+% 75cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(modulo1.when,modulo1.d75cm,'o-','DisplayName','modulo 1');
+plot(modulo2.when,modulo2.d75cm,'o-','DisplayName','modulo 2');
+plot(modulo3.when,modulo3.d75cm,'o-','DisplayName','modulo 3');
+plot(modulo4.when,modulo4.d75cm,'o-','DisplayName','modulo 4');
+title('Watermark: 75cm');
+legend('show');
+saveas(grafico,'graphs/coleta03/75cm_watermark_unificado','png');
+
+%% Tensiometros
+% 15cm
+plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d15cm,'separados/15cm_tensiometro1','Tensiometro 1 à 15cm','kPa','off');
+plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d15cm,'separados/15cm_tensiometro2','Tensiometro 2 à 15cm','kPa','off');
+plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d15cm,'separados/15cm_tensiometro3','Tensiometro 4 à 15cm','kPa','off');
+plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d15cm,'separados/15cm_tensiometro4','Tensiometro 5 à 15cm','kPa','off');
+% 15cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d15cm,'o-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d15cm,'o-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d15cm,'o-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d15cm,'o-','DisplayName','tensiometro 5');
+title('Tensiometros: 15cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/15cm_tensiometro_unificado','png');
+
+% 45cm
+plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d45cm,'separados/45cm_tensiometro1','Tensiometro 1 à 45cm','kPa','off');
+plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d45cm,'separados/45cm_tensiometro2','Tensiometro 2 à 45cm','kPa','off');
+plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d45cm,'separados/45cm_tensiometro3','Tensiometro 4 à 45cm','kPa','off');
+plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d45cm,'separados/45cm_tensiometro4','Tensiometro 5 à 45cm','kPa','off');
+% 45cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d45cm,'o-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d45cm,'o-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d45cm,'o-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d45cm,'o-','DisplayName','tensiometro 5');
+title('Tensiometros: 45cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/45cm_tensiometro_unificado','png');
+
+% 75cm
+plotar_grafico_coleta03(tensiometro1.when,tensiometro1.d75cm,'separados/75cm_tensiometro1','Tensiometro 1 à 75cm','kPa','off');
+plotar_grafico_coleta03(tensiometro2.when,tensiometro2.d75cm,'separados/75cm_tensiometro2','Tensiometro 2 à 75cm','kPa','off');
+plotar_grafico_coleta03(tensiometro4.when,tensiometro4.d75cm,'separados/75cm_tensiometro3','Tensiometro 4 à 75cm','kPa','off');
+plotar_grafico_coleta03(tensiometro5.when,tensiometro5.d75cm,'separados/75cm_tensiometro4','Tensiometro 5 à 75cm','kPa','off');
+% 75cm unificado
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d75cm,'o-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d75cm,'o-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d75cm,'o-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d75cm,'o-','DisplayName','tensiometro 5');
+title('Tensiometros: 75cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/75cm_tensiometro_unificado','png');
+
+%% watermarks + tensiometros
+% 15cm
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d15cm,'x-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d15cm,'x-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d15cm,'x-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d15cm,'x-','DisplayName','tensiometro 5');
+plot(modulo1.when,modulo1.d15cm_kPa,'o-','DisplayName','watermark 1');
+plot(modulo2.when,modulo2.d15cm_kPa,'o-','DisplayName','watermark 2');
+plot(modulo3.when,modulo3.d15cm_kPa,'o-','DisplayName','watermark 3');
+plot(modulo4.when,modulo4.d15cm_kPa,'o-','DisplayName','watermark 4');
+title('Watermarks e Tensiometros: 15cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/15cm_unificado','png');
+
+% 15cm
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d45cm,'x-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d45cm,'x-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d45cm,'x-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d45cm,'x-','DisplayName','tensiometro 5');
+plot(modulo1.when,modulo1.d45cm_kPa,'o-','DisplayName','watermark 1');
+plot(modulo2.when,modulo2.d45cm_kPa,'o-','DisplayName','watermark 2');
+plot(modulo3.when,modulo3.d45cm_kPa,'o-','DisplayName','watermark 3');
+plot(modulo4.when,modulo4.d45cm_kPa,'o-','DisplayName','watermark 4');
+title('Watermarks e Tensiometros: 45cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/45cm_unificado','png');
+
+% 75cm
+grafico = figure('visible','off');
+hold on;
+grid on;
+plot(tensiometro1.when,tensiometro1.d75cm,'x-','DisplayName','tensiometro 1');
+plot(tensiometro2.when,tensiometro2.d75cm,'x-','DisplayName','tensiometro 2');
+plot(tensiometro4.when,tensiometro4.d75cm,'x-','DisplayName','tensiometro 4');
+plot(tensiometro5.when,tensiometro5.d75cm,'x-','DisplayName','tensiometro 5');
+plot(modulo1.when,modulo1.d75cm_kPa,'o-','DisplayName','watermark 1');
+plot(modulo2.when,modulo2.d75cm_kPa,'o-','DisplayName','watermark 2');
+plot(modulo3.when,modulo3.d75cm_kPa,'o-','DisplayName','watermark 3');
+plot(modulo4.when,modulo4.d75cm_kPa,'o-','DisplayName','watermark 4');
+title('Watermarks e Tensiometros: 75cm');
+legend('show','Location','best');
+saveas(grafico,'graphs/coleta03/75cm_unificado','png');
+
+%% estacao itapipoca
 plotar_grafico_coleta03(estacao_itapipoca.data,estacao_itapipoca.precipitacao,'estacao_itapipoca_precipitacao','Estação Itapipoca: Precipitação','mm','off');
 plotar_grafico_coleta03(estacao_itapipoca.data,estacao_itapipoca.pressao,'estacao_itapipoca_pressao','Estação Itapipoca: Pressão (Instantanea)','hPa','off');
 plotar_grafico_coleta03(estacao_itapipoca.data,estacao_itapipoca.pressao_max,'estacao_itapipoca_pressao_max','Estação Itapipoca: Pressão (Máxima)','hPa','off');
