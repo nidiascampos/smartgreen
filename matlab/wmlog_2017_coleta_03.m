@@ -42,7 +42,7 @@ estacao_itapipoca = sortrows(estacao_itapipoca);
 modulo5.temperature(modulo5.temperature == -127) = NaN;
 
 %% Determinar período de tempo a ser utilizado e filtrar tabelas
-range = timerange('2017-04-25', '2017-05-16');
+range = timerange('2017-04-25', '2017-05-10');
 % periodoComparacao = datetime({'27/04/2017' '09/05/2017'});
 
 modulo1_filtrado = modulo1(range,:);
@@ -113,11 +113,11 @@ modulo4.d75cm_kPa = (modulo4.d75cm-550)./137.5;
 % teste1 = retime(modulo1,'hourly','linear');
 % teste2 = retime(modulo1,'hourly','spline');
 
-% modulo1 = retime(modulo1,'hourly','pchip'); % 'pchip' foi a interpolacao mais interessante, depois do linear
-% modulo2 = retime(modulo2,'hourly','pchip');
-% modulo3 = retime(modulo3,'hourly','pchip');
-% modulo4 = retime(modulo4,'hourly','pchip');
-% modulo5 = retime(modulo5,'hourly','pchip');
+modulo1 = retime(modulo1,'hourly','pchip'); % 'pchip' foi a interpolacao mais interessante, depois do linear
+modulo2 = retime(modulo2,'hourly','pchip');
+modulo3 = retime(modulo3,'hourly','pchip');
+modulo4 = retime(modulo4,'hourly','pchip');
+modulo5 = retime(modulo5,'hourly','pchip');
 
 %% plotar graficos
 %% Watermarks
