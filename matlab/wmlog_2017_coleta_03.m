@@ -38,24 +38,6 @@ modulo4 = sortrows(modulo4);
 modulo5 = sortrows(modulo5);
 estacao_itapipoca = sortrows(estacao_itapipoca);
 
-%% modulo5: substituir -127 por NaN
-modulo5.temperature(modulo5.temperature == -127) = NaN;
-
-%% Determinar período de tempo a ser utilizado e filtrar tabelas
-range = timerange('2017-04-25', '2017-05-10');
-% periodoComparacao = datetime({'27/04/2017' '09/05/2017'});
-
-modulo1_filtrado = modulo1(range,:);
-modulo2_filtrado = modulo2(range,:);
-modulo3_filtrado = modulo3(range,:);
-modulo4_filtrado = modulo4(range,:);
-tensiometro1 = tensiometro1(range,:);
-tensiometro2 = tensiometro2(range,:);
-tensiometro4 = tensiometro4(range,:);
-tensiometro5 = tensiometro5(range,:);
-estacao_itapipoca = estacao_itapipoca(range,:);
-estacao_paraipaba = estacao_paraipaba(range,:);
-
 %% Remover dados redundantes do thingspeak
 modulo1_thingspeak(1:23,:) = [];
 modulo2_thingspeak(1:24,:) = [];
@@ -76,6 +58,48 @@ modulo2 = [modulo2; modulo2_thingspeak];
 modulo3 = [modulo3; modulo3_thingspeak];
 modulo4 = [modulo4; modulo4_thingspeak];
 modulo5 = [modulo5; modulo5_thingspeak];
+
+%% FILTRAGEM: removendo leituras erroneas
+modulo1(229:233,:) = [];
+modulo2(197:200,:) = [];
+modulo3(202:208,:) = [];
+
+modulo5.temperature(modulo5.temperature == -127) = NaN;
+modulo5.temperature(modulo5.temperature == 0) = NaN;
+modulo5.rain(modulo5.rain < 1 & modulo5.rain > 0) = NaN;
+
+%% Resample dos dados para horas homogeneas (interpolação das medições)
+% 'pchip' foi a interpolacao mais interessante, depois do linear
+% mas decidi usar o linear para não introduzir nenhuma leitura foda do
+% esperado
+% teste1 = retime(modulo1,'hourly','linear');
+% teste2 = retime(modulo1,'hourly','spline');
+% teste3 = retime(modulo1,'hourly','spline');
+
+modulo1 = retime(modulo1,'hourly','linear');
+modulo2 = retime(modulo2,'hourly','linear');
+modulo3 = retime(modulo3,'hourly','linear');
+modulo4 = retime(modulo4,'hourly','linear');
+modulo5 = retime(modulo5,'hourly','linear');
+
+%% Determinar período de tempo a ser utilizado e filtrar tabelas
+range = timerange('2017-04-25 16:00', '2017-05-09 11:00');
+% periodoComparacao = datetime({'27/04/2017' '09/05/2017'});
+
+modulo1 = modulo1(range,:);
+modulo2 = modulo2(range,:);
+modulo3 = modulo3(range,:);
+modulo4 = modulo4(range,:);
+modulo5 = modulo5(range,:);
+tensiometro1 = tensiometro1(range,:);
+tensiometro2 = tensiometro2(range,:);
+tensiometro4 = tensiometro4(range,:);
+tensiometro5 = tensiometro5(range,:);
+estacao_itapipoca = estacao_itapipoca(range,:);
+estacao_paraipaba = estacao_paraipaba(range,:);
+
+%% criando array de tempo para facilitar a plotagem
+dateRange = modulo1.when;
 
 %% Converter Ohm para kPa (metodo com temperatura)
 % modulo1.d15cm_kPa = (3.213*(modulo1.d15cm./1000)+4.093)./(1-0.009733*(modulo1.d15cm./1000)-0.01205*28);
@@ -108,16 +132,6 @@ modulo1.d75cm_kPa = (modulo1.d75cm-550)./137.5;
 modulo2.d75cm_kPa = (modulo2.d75cm-550)./137.5;
 modulo3.d75cm_kPa = (modulo3.d75cm-550)./137.5;
 modulo4.d75cm_kPa = (modulo4.d75cm-550)./137.5;
-
-%% Resample dos dados para horas homogeneas
-% teste1 = retime(modulo1,'hourly','linear');
-% teste2 = retime(modulo1,'hourly','spline');
-
-modulo1 = retime(modulo1,'hourly','pchip'); % 'pchip' foi a interpolacao mais interessante, depois do linear
-modulo2 = retime(modulo2,'hourly','pchip');
-modulo3 = retime(modulo3,'hourly','pchip');
-modulo4 = retime(modulo4,'hourly','pchip');
-modulo5 = retime(modulo5,'hourly','pchip');
 
 %% plotar graficos
 %% Watermarks
