@@ -1,6 +1,6 @@
 %% LIMPAR WORKSPACE
 clear;
-% clf;
+clf;
 
 %% CARREGAR DADOS
 load('logs/coleta03_watermarks');

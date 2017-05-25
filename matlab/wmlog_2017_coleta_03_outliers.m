@@ -7,8 +7,8 @@ sensor75cm = [modulo1.d75cm modulo2.d75cm modulo3.d75cm modulo4.d75cm];
 %% ESD
 [sensor1fusedESD, sensor1ESDOutliersIndex, sensor1ESDOutliersTotal] = gesdFusion(sensor15cm,dateRangeString,3);
 
-plotar_metodo_alt(dateRange,sensor15cm,sensor1fusedESD,...
-    '15cm_fusao_ESD','Generalized ESD (15cm)',sensor1ESDOutliersTotal,'northwest',sensor1ESDOutliersIndex);
+% plotar_metodo_alt(dateRange,sensor15cm,sensor1fusedESD,...
+%     '15cm_fusao_ESD','Generalized ESD (15cm)',sensor1ESDOutliersTotal,'northwest',sensor1ESDOutliersIndex);
 
 %% WRKF
 Yn = sensor1fusedESD;
@@ -47,26 +47,22 @@ plot(dateRange,wrkf,'-or','DisplayName','ESD+WRKF','LineWidth',1,'MarkerIndices'
 % 25/04 a 09/05
 
 % april25 = table(sensor1fusedESD(1:8)
-plotar_scatter_dia('2017-04-25 00:00', '2017-04-25 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-04-26 00:00', '2017-04-26 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-04-27 00:00', '2017-04-27 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-04-28 00:00', '2017-04-28 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-04-29 00:00', '2017-04-29 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-04-30 00:00', '2017-04-30 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd45cm', modulo2, 'd45cm', 'Dispersão: Modulo 1 e Modulo 2, 45cm', '45cm_mod1_mod2','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd75cm', modulo2, 'd75cm', 'Dispersão: Modulo 1 e Modulo 2, 75cm', '75cm_mod1_mod2','off');
 
-plotar_scatter_dia('2017-05-01 00:00', '2017-05-01 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-02 00:00', '2017-05-02 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-03 00:00', '2017-05-03 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-04 00:00', '2017-05-04 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-05 00:00', '2017-05-05 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-06 00:00', '2017-05-06 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-07 00:00', '2017-05-07 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-08 00:00', '2017-05-08 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-09 00:00', '2017-05-09 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-10 00:00', '2017-05-10 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-11 00:00', '2017-05-11 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-12 00:00', '2017-05-12 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-13 00:00', '2017-05-13 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-14 00:00', '2017-05-14 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-15 00:00', '2017-05-15 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
-plotar_scatter_dia('2017-05-16 00:00', '2017-05-16 23:59', modulo1, 'd15cm', modulo2, 'd15cm', 'Dispersão: Modulo 1 e Modulo 2, 15cm', '15cm_mod1_mod2','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd15cm', modulo3, 'd15cm', 'Dispersão: Modulo 1 e Modulo 3, 15cm', '15cm_mod1_mod3','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd45cm', modulo3, 'd45cm', 'Dispersão: Modulo 1 e Modulo 3, 45cm', '45cm_mod1_mod3','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd75cm', modulo3, 'd75cm', 'Dispersão: Modulo 1 e Modulo 3, 75cm', '75cm_mod1_mod3','off');
+
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd15cm', modulo4, 'd15cm', 'Dispersão: Modulo 1 e Modulo 4, 15cm', '15cm_mod1_mod4','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd45cm', modulo4, 'd45cm', 'Dispersão: Modulo 1 e Modulo 4, 45cm', '45cm_mod1_mod4','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo1, 'd75cm', modulo4, 'd75cm', 'Dispersão: Modulo 1 e Modulo 4, 75cm', '75cm_mod1_mod4','off');
+
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd15cm', modulo3, 'd15cm', 'Dispersão: Modulo 2 e Modulo 3, 15cm', '15cm_mod2_mod3','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd45cm', modulo3, 'd45cm', 'Dispersão: Modulo 2 e Modulo 3, 45cm', '45cm_mod2_mod3','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd75cm', modulo3, 'd75cm', 'Dispersão: Modulo 2 e Modulo 3, 75cm', '75cm_mod2_mod3','off');
+
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd15cm', modulo4, 'd15cm', 'Dispersão: Modulo 2 e Modulo 4, 15cm', '15cm_mod2_mod4','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd45cm', modulo4, 'd45cm', 'Dispersão: Modulo 2 e Modulo 4, 45cm', '45cm_mod2_mod4','off');
+plotar_scatter_periodo(datetime('2017-04-25'), datetime('2017-05-10'), modulo2, 'd75cm', modulo4, 'd75cm', 'Dispersão: Modulo 2 e Modulo 4, 75cm', '75cm_mod2_mod4','off');
