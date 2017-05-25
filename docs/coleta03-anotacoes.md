@@ -99,5 +99,29 @@
 - dados do mongodb foram copiados
 - pilhas dos modulos 01, 02, 03 e 05 foram substituidas
 - modulo 02 não funcionou (case das pilhas envergou e não faz contato corretamente, pilhas foram retiradas)
-- modulo 03 não funcionou (não sei qual o problema, permaneceu ligado)
+- modulo 03 funcionou
 - modulo 04 foi reinstalado (nova placa)
+
+# visita 2017-05-23
+- status raspberry pi:
+  > uptime: 09:28:13 up 4 days, 23:44,  1 user,  load average: 1.05, 1.04, 1.00
+- ultimas mensagens:
+  + modulo 01:
+    > 2017-05-18 12:46:18,241 Payload from module ID 01: 2764 -532 604 185 1722 470 5.23746156693
+  + modulo 02:
+    > desligado desde a ultima visita
+  + modulo 03:
+    > 2017-05-23 09:03:53,872 Payload from module ID 03: 558 181 482 -164 3018 765 4.64842891693
+  + modulo 04:
+    > 2017-05-23 09:07:31,064 Payload from module ID 04: 546 -1067 406079 821559 -1 -13 5.0743303299
+  + modulo 05:
+    > 2017-05-23 09:12:21,258 Payload from module ID 05: 1023 False 27.5625 4.74922370911
+- aparentemente alguma das pilhas do modulo 01 pararam de funcionar após a visita do dia 18, apesar de terem sido substituidas e acusar ~5.24v na troca
+- pilhas do modulo 01 foram substituidas (5,51v)
+- case de pilhas do modulo 02 foi substituido (5,8v)
+- modulo 2 ainda não funciona
+- retirei o arduino do modulo 2 e conectei ao notebook e ele aparentemente funcionou ok, não sei qual o problema
+- recoloquei o arduino do modulo 2 e o deixei ligado, esperando que ele volte a se comunicar
+- pilhas do modulo 03 foram substituidas (5,85v)
+- pilhas do modulo 04 foram substituidas (6,46v)
+- pilhas do modulo 05 foram substituidas (6,46v)
