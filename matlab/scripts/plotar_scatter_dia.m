@@ -12,6 +12,7 @@ hold on;
 scatter(item_A,item_B);
 lsline;
 clear title;
-title({dia_inicial,titulo});
+dias = [dia_inicial ' a ' dia_final];
+title({dias,titulo});
 nome_arquivo = sprintf('graphs/coleta03/scatter/%s',nome_arquivo);
 saveas(grafico_scatter,nome_arquivo,'png');
