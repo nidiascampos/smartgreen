@@ -1,21 +1,35 @@
+%% PASSO 2 / 4
+
 modulo1.d15cm_bias = [];
 modulo1.d45cm_bias = [];
 modulo1.d75cm_bias = [];
+modulo1.d15cm_kPa = [];
+modulo1.d45cm_kPa = [];
+modulo1.d75cm_kPa = [];
 modulo1.battery = [];
 
 modulo2.d15cm_bias = [];
 modulo2.d45cm_bias = [];
 modulo2.d75cm_bias = [];
+modulo2.d15cm_kPa = [];
+modulo2.d45cm_kPa = [];
+modulo2.d75cm_kPa = [];
 modulo2.battery = [];
 
 modulo3.d15cm_bias = [];
 modulo3.d45cm_bias = [];
 modulo3.d75cm_bias = [];
+modulo3.d15cm_kPa = [];
+modulo3.d45cm_kPa = [];
+modulo3.d75cm_kPa = [];
 modulo3.battery = [];
 
 modulo4.d15cm_bias = [];
 modulo4.d45cm_bias = [];
 modulo4.d75cm_bias = [];
+modulo4.d15cm_kPa = [];
+modulo4.d45cm_kPa = [];
+modulo4.d75cm_kPa = [];
 modulo4.battery = [];
 
 modulo5.Properties.VariableNames{2} = 'wetness_modulo5';
@@ -26,14 +40,15 @@ modulo5.rain = [];
 total12 = outerjoin(modulo1,modulo2);
 total34 = outerjoin(modulo3,modulo4);
 
-total = outerjoin(total12,total34);
-total = outerjoin(total,modulo5);
-total = outerjoin(total,estacao_itapipoca);
+total_modulos = outerjoin(total12,total34);
+total_modulos = outerjoin(total_modulos,modulo5);
+% total = outerjoin(total,estacao_itapipoca);
 
 % EToPM = table(estacao_itapipoca_filtrada.data,estacao_itapipoca_filtrada.EToPM);
 % EToPM = table2timetable(EToPM);
 % total = outerjoin(total,EToPM);
 
-total = timetable2table(total)
+%% gravar dados
+total_modulos = timetable2table(total_modulos);
 % csvwrite('graphs/coleta03/total.csv',total)
-writetable(total,'logs/csv/coleta03/filtrados/total.csv')
+writetable(total_modulos,'logs/csv/coleta03/filtrados/modulos_total.csv');
