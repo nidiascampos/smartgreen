@@ -41,7 +41,7 @@ estacao_itapipoca_filtrada.Properties.VariableNames{5} = 'umid_med';
 estacao_itapipoca_filtrada.Properties.VariableNames{8} = 'pto_orvalho_med';
 
 %% removendo atributo desnecessario
-estacao_itapipoca_filtrada(:,'codigo_estacao') = [];
+% estacao_itapipoca_filtrada(:,'codigo_estacao') = [];
 
 %% Calculo de EToPM
 estacao_itapipoca_filtrada.radiacao = estacao_itapipoca_filtrada.radiacao./1000; % converter de kJ/m^2 para MJ^2
