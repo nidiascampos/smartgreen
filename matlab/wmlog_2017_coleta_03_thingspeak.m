@@ -1,5 +1,8 @@
 %% Periodo de dados a obter
-range = datetime({'27/04/2017' '17/05/2017'});
+% a partir do dia 18/05 o modulo1 não funcionou mais corretamente (sempre
+% envia o mesmo valor) e o modulo4 passou a passar dados erráticos
+range = datetime({'27/04/2017' '30/05/2017'});
+
 
 %% Modulo 1
 % Channel ID to read data from

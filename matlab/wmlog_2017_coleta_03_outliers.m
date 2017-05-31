@@ -7,6 +7,7 @@ dateRangeString = cellstr(dateRange);
 % sensor15cm = [modulo1.d15cm modulo2.d15cm modulo3.d15cm modulo4.d15cm];
 % sensor45cm = [modulo1.d45cm modulo2.d45cm modulo3.d45cm modulo4.d45cm];
 % sensor75cm = [modulo1.d75cm modulo2.d75cm modulo3.d75cm modulo4.d75cm];
+
 sensor15cm = [total_modulos.d15cm_modulo1 total_modulos.d15cm_modulo2 total_modulos.d15cm_modulo3 total_modulos.d15cm_modulo4];
 sensor45cm = [total_modulos.d45cm_modulo1 total_modulos.d45cm_modulo2 total_modulos.d45cm_modulo3 total_modulos.d45cm_modulo4];
 sensor75cm = [total_modulos.d75cm_modulo1 total_modulos.d75cm_modulo2 total_modulos.d75cm_modulo3 total_modulos.d75cm_modulo4];
@@ -83,9 +84,9 @@ ss_wrKF.sum_Exxold = 0;
 sensor75cmWRKF(1,1) = NaN;
 
 %% gerar tabela completa dos dados
-total_WRKF = table(modulo1.when,sensor15cmWRKF,sensor45cmWRKF,sensor75cmWRKF,...
+total_WRKF = table(total_modulos.when,sensor15cmWRKF,sensor45cmWRKF,sensor75cmWRKF,...
     'VariableNames',{'Date' 'd15cm_unified' 'd45cm_unified' 'd75cm_unified'});
-writetable(total_WRKF,'logs/csv/coleta03/filtrados/modulos_unificados.csv');
+% writetable(total_WRKF,'logs/csv/coleta03/filtrados/modulos_unificados.csv');
 
 %% plot ESD+WRKF
 % clf;

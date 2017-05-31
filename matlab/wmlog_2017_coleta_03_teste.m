@@ -1,24 +1,35 @@
-%% PASSO 1b / 4
+%% PASSO 1c / 4
 
 %% LIMPAR WORKSPACE
 clear;
 % clf;
 
 %% CARREGAR DADOS
-% load('logs/coleta03_watermarks');
 load('logs/coleta03_watermarks_alt');
-load('logs/coleta03_watermarks_thingspeak');
+load('logs/coleta03_watermarks_thingspeak_30may');
 load('logs/coleta03_tensiometros');
 load('logs/coleta03_estacao_paraipaba');
 load('logs/coleta03_estacao_itapipoca');
 load('logs/coleta03_estacao_fazgranjeiro_2017');
+
+%% ordenar dados
+modulo1 = sortrows(modulo1);
+modulo2 = sortrows(modulo2);
+modulo3 = sortrows(modulo3);
+modulo4 = sortrows(modulo4);
+% modulo5 = sortrows(modulo5);
+estacao_itapipoca = sortrows(estacao_itapipoca);
 
 %% Removendo dados antes dos sensores estarem conectados
 % FIXME: utilizar apenas com o arquivo 'coleta03_watermarks'
 % modulo1(1:4,:) = [];
 % modulo2(1:9,:) = [];
 % modulo3(1:6,:) = [];
-% modulo4(1:7,:) = [];
+% modulo4(1:6,:) = [];
+
+%% Removendo dados de modulos travados
+% modulo1(232:end,:) = [];
+modulo1_thingspeak(162:end,:) = [];
 
 %% Converter tabelas em timetables
 modulo1 = table2timetable(modulo1);
@@ -34,16 +45,6 @@ tensiometro4 = table2timetable(tensiometro4);
 tensiometro5 = table2timetable(tensiometro5);
 estacao_itapipoca = table2timetable(estacao_itapipoca);
 estacao_paraipaba = table2timetable(estacao_paraipaba);
-
-%% ordenar dados
-modulo1 = sortrows(modulo1);
-modulo2 = sortrows(modulo2);
-modulo3 = sortrows(modulo3);
-modulo4 = sortrows(modulo4);
-% modulo5 = sortrows(modulo5);
-modulo5_1 = sortrows(modulo5_1);
-modulo5_2 = sortrows(modulo5_2);
-estacao_itapipoca = sortrows(estacao_itapipoca);
 
 %% Remover dados redundantes do thingspeak
 modulo1_thingspeak(1:23,:) = [];
@@ -61,41 +62,21 @@ modulo4.module = [];
 modulo5_1.module = [];
 modulo5_2.module = [];
 
-%% remocao inicial de leituras erroneas do modulo5
-% modulo5_1.temperature(modulo5_1.temperature == -127) = NaN;
-% modulo5_2.temperature(modulo5_2.temperature == -127) = NaN;
-% modulo5_thingspeak.temperature(modulo5_thingspeak.temperature == -127) = NaN;
-% modulo5_1.temperature(modulo5_1.temperature == 0) = NaN;
-% modulo5_2.temperature(modulo5_2.temperature == 0) = NaN;
-% modulo5_thingspeak.temperature(modulo5_thingspeak.temperature == 0) = NaN;
-% modulo5_1.rain(modulo5_1.rain < 1 & modulo5_1.rain > 0) = NaN;
-% modulo5_2.rain(modulo5_2.rain < 1 & modulo5_2.rain > 0) = NaN;
-% modulo5_thingspeak.rain(modulo5_thingspeak.rain < 1 & modulo5_thingspeak.rain > 0) = NaN;
-
 %% FILTRAGEM: removendo leituras erroneas
-% modulo1(229,:) = [];
-% modulo2(192:193,:) = [];
-% modulo3(197,:) = [];
+% modulo1(233:237,:) = [];
+% modulo2(197:200,:) = [];
+% modulo3(202:208,:) = [];
+% modulo4(87:88,:) = [];
 
-% modulo 1
-modulo1(274:end,:) = []; % modulo travado e repetindo valores
-
-% modulos 1 a 4
-modulo1.d15cm(modulo1.d15cm < 0) = NaN;
-modulo1.d45cm(modulo1.d45cm < 0) = NaN;
-modulo1.d75cm(modulo1.d75cm < 0) = NaN;
-
-modulo2.d15cm(modulo2.d15cm < 0) = NaN;
-modulo2.d45cm(modulo2.d45cm < 0) = NaN;
-modulo2.d75cm(modulo2.d75cm < 0) = NaN;
-
-modulo3.d15cm(modulo3.d15cm < 0) = NaN;
-modulo3.d45cm(modulo3.d45cm < 0) = NaN;
-modulo3.d75cm(modulo3.d75cm < 0) = NaN;
-
-modulo4.d15cm(modulo4.d15cm < 0) = NaN;
-modulo4.d45cm(modulo4.d45cm < 0) = NaN;
-modulo4.d75cm(modulo4.d75cm < 0) = NaN;
+% substituindo valores nulos por NaN
+modulo1 = standardizeMissing(modulo1,-1);
+modulo2 = standardizeMissing(modulo2,-1);
+modulo3 = standardizeMissing(modulo3,-1);
+modulo4 = standardizeMissing(modulo4,-1);
+% modulo5 = standardizeMissing(modulo5,-1);
+modulo5_1 = standardizeMissing(modulo5_1,-1);
+modulo5_2 = standardizeMissing(modulo5_2,-1);
+modulo5_thingspeak = standardizeMissing(modulo5_thingspeak,-1);
 
 % modulo 5
 modulo5_1(1:133,:) = []; % removendo por serem leituras estranhas fora do padrão
@@ -140,24 +121,14 @@ modulo5 = [modulo5; modulo5_thingspeak];
 modulo5.rain(modulo5.rain > 0.5) = 1;
 modulo5.rain(modulo5.rain <= 0.5) = 0;
 
-%% Resample dos dados para horas homogeneas (interpolação das medições)
-
-% modulo1 = retime(modulo1,'hourly','linear');
-% modulo2 = unique(modulo2);
-% modulo2 = retime(modulo2,'hourly','linear');
-% modulo3 = retime(modulo3,'hourly','linear');
-% modulo4 = retime(modulo4,'hourly','linear');
-% modulo5 = unique(modulo5);
-% modulo5 = retime(modulo5,'hourly','linear');
-
 %% removendo valores do modulo 4 (parou de funcionar varias vezes)
-% modulo4.battery(139:end) = NaN;
-% modulo4.d15cm(139:end) = NaN;
-% modulo4.d15cm_bias(139:end) = NaN;
-% modulo4.d45cm(139:end) = NaN;
-% modulo4.d45cm_bias(139:end) = NaN;
-% modulo4.d75cm(139:end) = NaN;
-% modulo4.d75cm_bias(139:end) = NaN;
+% modulo4.battery(141:333,:) = NaN;
+% modulo4.d15cm(141:333,:) = NaN;
+% modulo4.d15cm_bias(141:333,:) = NaN;
+% modulo4.d45cm(141:333,:) = NaN;
+% modulo4.d45cm_bias(141:333,:) = NaN;
+% modulo4.d75cm(141:333,:) = NaN;
+% modulo4.d75cm_bias(141:333,:) = NaN;
 
 %% Determinar período de tempo a ser utilizado e filtrar tabelas
 range = timerange('2017-04-25 16:00', '2017-05-16 23:30');

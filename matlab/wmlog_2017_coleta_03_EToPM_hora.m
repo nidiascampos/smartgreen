@@ -41,15 +41,33 @@ estacao_itapipoca_total_EToPM_hora = outerjoin(modulo5,estacao_itapipoca_total_E
 total1234 = outerjoin(total12,total34);
 estacao_itapipoca_total_EToPM_hora = outerjoin(total1234,estacao_itapipoca_total_EToPM_hora);
 
-% convertendo timetable em table e gerando CSV
+%% SE for coleta03_alt
+% linhas removidas por falta de dados dos modulos
+estacao_itapipoca_total_EToPM_hora(50:74,:) = [];
+estacao_itapipoca_total_EToPM_hora(113:188,:) = [];
+estacao_itapipoca_total_EToPM_hora(396:end,:) = [];
+
+estacao_itapipoca_total_EToPM_hora(75:79,:) = [];
+estacao_itapipoca_total_EToPM_hora(384:386,:) = [];
 estacao_itapipoca_total_EToPM_hora = timetable2table(estacao_itapipoca_total_EToPM_hora);
-estacao_itapipoca_total_EToPM_hora(100:104,:) = [];
 writetable(estacao_itapipoca_total_EToPM_hora,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora.csv');
+
+%% convertendo timetable em table e gerando CSV
+% estacao_itapipoca_total_EToPM_hora = timetable2table(estacao_itapipoca_total_EToPM_hora);
+% estacao_itapipoca_total_EToPM_hora(100:104,:) = [];
+% writetable(estacao_itapipoca_total_EToPM_hora,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora.csv');
 
 %% gerando versão com dados dos modulos após fusão
 total_WRKF_timetable = table2timetable(total_WRKF);
 estacao_itapipoca_total_EToPM_hora_fusao = outerjoin(modulo5,estacao_itapipoca_total_EToPM_hora);
 estacao_itapipoca_total_EToPM_hora_fusao = outerjoin(total_WRKF_timetable,estacao_itapipoca_total_EToPM_hora_fusao);
 estacao_itapipoca_total_EToPM_hora_fusao = timetable2table(estacao_itapipoca_total_EToPM_hora_fusao);
-estacao_itapipoca_total_EToPM_hora_fusao(100:104,:) = []; % remover linhan NaN causadas por falta de dados da estacao
+% remover linhan NaN causadas por falta de dados da estacao
+estacao_itapipoca_total_EToPM_hora_fusao(100:104,:) = [];
+estacao_itapipoca_total_EToPM_hora_fusao(495:497,:) = [];
+% remover linhan NaN causadas por falta de dados dos modulos
+estacao_itapipoca_total_EToPM_hora_fusao(50:73,:) = [];
+estacao_itapipoca_total_EToPM_hora_fusao(109:171,:) = [];
+estacao_itapipoca_total_EToPM_hora_fusao(110:121,:) = [];
+estacao_itapipoca_total_EToPM_hora_fusao(400:end,:) = [];
 writetable(estacao_itapipoca_total_EToPM_hora_fusao,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora_fused.csv');

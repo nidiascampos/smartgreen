@@ -6,7 +6,7 @@ clear;
 
 %% CARREGAR DADOS
 load('logs/coleta03_watermarks');
-load('logs/coleta03_watermarks_thingspeak');
+load('logs/coleta03_watermarks_thingspeak_30may');
 load('logs/coleta03_tensiometros');
 load('logs/coleta03_estacao_paraipaba');
 load('logs/coleta03_estacao_itapipoca');

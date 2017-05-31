@@ -44,11 +44,14 @@ total_modulos = outerjoin(total12,total34);
 total_modulos = outerjoin(total_modulos,modulo5);
 % total = outerjoin(total,estacao_itapipoca);
 
+% removendo linhas que contem apenas NaN
+total_modulos(115,:) = [];
+
 % EToPM = table(estacao_itapipoca_filtrada.data,estacao_itapipoca_filtrada.EToPM);
 % EToPM = table2timetable(EToPM);
 % total = outerjoin(total,EToPM);
+total_modulos = timetable2table(total_modulos);
 
 %% gravar dados
-total_modulos = timetable2table(total_modulos);
 % csvwrite('graphs/coleta03/total.csv',total)
-writetable(total_modulos,'logs/csv/coleta03/filtrados/modulos_total.csv');
+% writetable(total_modulos,'logs/csv/coleta03/filtrados/modulos_total.csv');
