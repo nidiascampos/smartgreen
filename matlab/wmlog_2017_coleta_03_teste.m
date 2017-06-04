@@ -14,6 +14,9 @@ load('logs/coleta03_tensiometros');
 load('logs/coleta03_estacao_itapipoca_29may'); % estacao do INMET
 %load('logs/coleta03_estacao_fazgranjeiro_2017'); % estacao local
 
+%% removendo atributo desnecessario
+estacao_itapipoca(:,'codigo_estacao') = [];
+
 %% ajustando manualmente dados do modulo 5
 modulo5_1(1:15,:) = [];
 modulo5_1(2:72,:) = [];
@@ -326,9 +329,11 @@ modulo5.Properties.VariableNames{2} = 'soil_temperature';
 %% unificando dados
 coleta03_total_12 = outerjoin(modulo1,modulo2);
 coleta03_total_34 = outerjoin(modulo3,modulo4);
-% coleta03_total_5_estacao = outerjoin(modulo5,estacao_itapipoca);
 coleta03_total_1234 = outerjoin(coleta03_total_12,coleta03_total_34);
 coleta03_total = outerjoin(coleta03_total_1234,modulo5);
 
 %% removendo duas primeiras horas para começar com todos os modulos funcionando
 coleta03_total(1:2,:) = [];
+
+%% substituindo NaN de temperatura do solo com as leituras anteriores
+coleta03_total.soil_temperature = fillmissing(coleta03_total.soil_temperature,'previous');

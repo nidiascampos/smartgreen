@@ -1,8 +1,5 @@
 %% PASSO 4b / 4
 
-%% removendo atributo desnecessario
-estacao_itapipoca(:,'codigo_estacao') = [];
-
 %% Calculo de EToPM
 estacao_itapipoca_total_EToPM_hora = estacao_itapipoca;
 
@@ -41,38 +38,73 @@ for i = 1:size(estacao_itapipoca_total_EToPM_hora,1)
         (estacao_itapipoca_total_EToPM_hora.temp_inst(i)+273)))./(ETdelta(i)+ETcoefPsic(i).*(1+Cd.*estacao_itapipoca_total_EToPM_hora.vento_vel(i)));
 end
 
-%% unificando todos os parametros em uma mesma tabela
-% estacao_itapipoca_total_EToPM_hora = outerjoin(modulo5,estacao_itapipoca_total_EToPM_hora);
-% total1234 = outerjoin(total12,total34);
-% estacao_itapipoca_total_EToPM_hora = outerjoin(total1234,estacao_itapipoca_total_EToPM_hora);
-
 %% SE for coleta03_teste ( ESSE É O QUE ESTOU UTILIZANDO )
 % unindo dados
-coleta03_total = outerjoin(coleta03_total, estacao_itapipoca_total_EToPM_hora);
+coleta03_total_semfusao = outerjoin(coleta03_total, estacao_itapipoca_total_EToPM_hora);
 
 % removendo linhas sem EToPM por falha de sensor da estação
-coleta03_total(116:120,:) = [];
-coleta03_total(492:494,:) = [];
-coleta03_total(774,:) = [];
+coleta03_total_semfusao(116:120,:) = [];
+coleta03_total_semfusao(492:494,:) = [];
+coleta03_total_semfusao(774,:) = [];
 
 % filtrando o periodo desejado
 range = timerange('2017-04-25 15:00', '2017-05-29 23:00');
-coleta03_total = coleta03_total(range,:);
+coleta03_total_semfusao = coleta03_total_semfusao(range,:);
 
 % removendo linhas sem leitura de pelo menos um dos modulos
-coleta03_total(50:75,:) = [];
-coleta03_total(108:184,:) = [];
-coleta03_total(378:438,:) = [];
+coleta03_total_semfusao(50:75,:) = [];
+coleta03_total_semfusao(108:184,:) = [];
+coleta03_total_semfusao(378:438,:) = [];
+
+%% convertendo de Ohm para kPa pelo metodo basico
+coleta03_total_semfusao_kPa_basico = coleta03_total_semfusao;
+
+coleta03_total_semfusao_kPa_basico.d15cm_modulo1 = (coleta03_total_semfusao_kPa_basico.d15cm_modulo1-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d15cm_modulo2 = (coleta03_total_semfusao_kPa_basico.d15cm_modulo2-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d15cm_modulo3 = (coleta03_total_semfusao_kPa_basico.d15cm_modulo3-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d15cm_modulo4 = (coleta03_total_semfusao_kPa_basico.d15cm_modulo4-550)./137.5;
+
+coleta03_total_semfusao_kPa_basico.d45cm_modulo1 = (coleta03_total_semfusao_kPa_basico.d45cm_modulo1-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d45cm_modulo2 = (coleta03_total_semfusao_kPa_basico.d45cm_modulo2-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d45cm_modulo3 = (coleta03_total_semfusao_kPa_basico.d45cm_modulo3-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d45cm_modulo4 = (coleta03_total_semfusao_kPa_basico.d45cm_modulo4-550)./137.5;
+
+coleta03_total_semfusao_kPa_basico.d75cm_modulo1 = (coleta03_total_semfusao_kPa_basico.d75cm_modulo1-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d75cm_modulo2 = (coleta03_total_semfusao_kPa_basico.d75cm_modulo2-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d75cm_modulo3 = (coleta03_total_semfusao_kPa_basico.d75cm_modulo3-550)./137.5;
+coleta03_total_semfusao_kPa_basico.d75cm_modulo4 = (coleta03_total_semfusao_kPa_basico.d75cm_modulo4-550)./137.5;
 
 % gravando dados em csv
-coleta03_total = timetable2table(coleta03_total);
-writetable(coleta03_total,'logs/csv/coleta03/filtrados/coleta03_total_semfusao.csv');
+coleta03_total_semfusao_kPa_basico = timetable2table(coleta03_total_semfusao_kPa_basico);
+writetable(coleta03_total_semfusao_kPa_basico,'logs/csv/coleta03/filtrados/coleta03_total_semfusao_basico.csv');
+
+%% convertendo de Ohm para kPa utilizando a temperatura do solo
+coleta03_total_semfusao_kPa_avancado = coleta03_total_semfusao;
+
+coleta03_total_semfusao_kPa_avancado.d15cm_modulo1 = (3.213*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo1./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo1./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d15cm_modulo2 = (3.213*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo2./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo2./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d15cm_modulo3 = (3.213*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo3./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo3./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d15cm_modulo4 = (3.213*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo4./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d15cm_modulo4./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+
+coleta03_total_semfusao_kPa_avancado.d45cm_modulo1 = (3.213*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo1./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo1./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d45cm_modulo2 = (3.213*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo2./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo2./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d45cm_modulo3 = (3.213*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo3./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo3./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d45cm_modulo4 = (3.213*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo4./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d45cm_modulo4./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+
+coleta03_total_semfusao_kPa_avancado.d75cm_modulo1 = (3.213*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo1./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo1./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d75cm_modulo2 = (3.213*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo2./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo2./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d75cm_modulo3 = (3.213*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo3./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo3./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+coleta03_total_semfusao_kPa_avancado.d75cm_modulo4 = (3.213*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo4./1000)+4.093)./(1-0.009733*(coleta03_total_semfusao_kPa_avancado.d75cm_modulo4./1000)-0.01205*coleta03_total_semfusao_kPa_avancado.soil_temperature);
+% gravando dados em csv
+coleta03_total_semfusao_kPa_avancado = timetable2table(coleta03_total_semfusao_kPa_avancado);
+writetable(coleta03_total_semfusao_kPa_avancado,'logs/csv/coleta03/filtrados/coleta03_total_semfusao_avancado.csv');
 
 %% SE for coleta03_teste 
 % gerando versão com dados dos modulos após fusão
-
-coleta03_total_fusao = outerjoin(modulo5,estacao_itapipoca_total_EToPM_hora);
-coleta03_total_fusao = outerjoin(total_WRKF,coleta03_total_fusao);
+coleta03_total_fusao = coleta03_total;
+coleta03_total_fusao(:,1:12) = [];
+coleta03_total_fusao = outerjoin(coleta03_total_fusao,estacao_itapipoca_total_EToPM_hora);
+coleta03_total_fusao = outerjoin(total_fused,coleta03_total_fusao);
 
 % removendo linhas sem EToPM por falha de sensor da estação
 coleta03_total_fusao(116:120,:) = [];
@@ -83,38 +115,14 @@ coleta03_total_fusao(774,:) = [];
 range = timerange('2017-04-25 15:00', '2017-05-23 10:00');
 coleta03_total_fusao = coleta03_total_fusao(range,:);
 
+% removendo linhas sem leitura de pelo menos um dos modulos
+coleta03_total_fusao(50:75,:) = [];
+coleta03_total_fusao(108:184,:) = [];
+coleta03_total_fusao(378:438,:) = [];
+
 % gravando dados em csv
+% coleta03_total_fusao = timetable2table(coleta03_total_fusao);
+% writetable(coleta03_total_fusao,'logs/csv/coleta03/filtrados/coleta03_total_fusao_basico.csv');
+
 coleta03_total_fusao = timetable2table(coleta03_total_fusao);
-writetable(coleta03_total_fusao,'logs/csv/coleta03/filtrados/coleta03_total_fusao.csv');
-
-%% SE for coleta03_alt
-% linhas removidas por falta de dados dos modulos
-% estacao_itapipoca_total_EToPM_hora(50:74,:) = [];
-% estacao_itapipoca_total_EToPM_hora(113:188,:) = [];
-% estacao_itapipoca_total_EToPM_hora(396:end,:) = [];
-% 
-% estacao_itapipoca_total_EToPM_hora(75:79,:) = [];
-% estacao_itapipoca_total_EToPM_hora(384:386,:) = [];
-% estacao_itapipoca_total_EToPM_hora = timetable2table(estacao_itapipoca_total_EToPM_hora);
-% writetable(estacao_itapipoca_total_EToPM_hora,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora.csv');
-
-%% convertendo timetable em table e gerando CSV
-% estacao_itapipoca_total_EToPM_hora = timetable2table(estacao_itapipoca_total_EToPM_hora);
-% estacao_itapipoca_total_EToPM_hora(100:104,:) = [];
-% writetable(estacao_itapipoca_total_EToPM_hora,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora.csv');
-
-%% gerando versão com dados dos modulos após fusão
-
-% total_WRKF_timetable = table2timetable(total_WRKF);
-% estacao_itapipoca_total_EToPM_hora_fusao = outerjoin(modulo5,estacao_itapipoca_total_EToPM_hora);
-% estacao_itapipoca_total_EToPM_hora_fusao = outerjoin(total_WRKF_timetable,estacao_itapipoca_total_EToPM_hora_fusao);
-% estacao_itapipoca_total_EToPM_hora_fusao = timetable2table(estacao_itapipoca_total_EToPM_hora_fusao);
-% % remover linhan NaN causadas por falta de dados da estacao
-% estacao_itapipoca_total_EToPM_hora_fusao(100:104,:) = [];
-% estacao_itapipoca_total_EToPM_hora_fusao(495:497,:) = [];
-% % remover linhan NaN causadas por falta de dados dos modulos
-% estacao_itapipoca_total_EToPM_hora_fusao(50:73,:) = [];
-% estacao_itapipoca_total_EToPM_hora_fusao(109:171,:) = [];
-% estacao_itapipoca_total_EToPM_hora_fusao(110:121,:) = [];
-% estacao_itapipoca_total_EToPM_hora_fusao(400:end,:) = [];
-% writetable(estacao_itapipoca_total_EToPM_hora_fusao,'logs/csv/coleta03/filtrados/estacao_itapipoca_total_EToPM_hora_fused.csv');
+writetable(coleta03_total_fusao,'logs/csv/coleta03/filtrados/coleta03_total_fusao_avancado_alt.csv'); % alt = esd + wrkf
