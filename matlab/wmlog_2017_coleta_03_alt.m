@@ -72,48 +72,25 @@ modulo5_2.module = [];
 % modulo5_2.rain(modulo5_2.rain < 1 & modulo5_2.rain > 0) = NaN;
 % modulo5_thingspeak.rain(modulo5_thingspeak.rain < 1 & modulo5_thingspeak.rain > 0) = NaN;
 
-%% FILTRAGEM: removendo leituras erroneas
-% modulo1(229,:) = [];
-% modulo2(192:193,:) = [];
-% modulo3(197,:) = [];
-
-% modulo 1
-modulo1(274:end,:) = []; % modulo travado e repetindo valores
-
-% modulos 1 a 4
-modulo1.d15cm(modulo1.d15cm < 0) = NaN;
-modulo1.d45cm(modulo1.d45cm < 0) = NaN;
-modulo1.d75cm(modulo1.d75cm < 0) = NaN;
-
-modulo2.d15cm(modulo2.d15cm < 0) = NaN;
-modulo2.d45cm(modulo2.d45cm < 0) = NaN;
-modulo2.d75cm(modulo2.d75cm < 0) = NaN;
-
-modulo3.d15cm(modulo3.d15cm < 0) = NaN;
-modulo3.d45cm(modulo3.d45cm < 0) = NaN;
-modulo3.d75cm(modulo3.d75cm < 0) = NaN;
-
-modulo4.d15cm(modulo4.d15cm < 0) = NaN;
-modulo4.d45cm(modulo4.d45cm < 0) = NaN;
-modulo4.d75cm(modulo4.d75cm < 0) = NaN;
+%% FILTRAGEM: removendo leituras erroneas (parte 1)
 
 % modulo 5
-modulo5_1(1:133,:) = []; % removendo por serem leituras estranhas fora do padrão
-modulo5_1(3320:end,:) = []; % removendo por serem leituras estranhas fora do padrão
+% modulo5_1(1:133,:) = []; % removendo por serem leituras estranhas fora do padrão
+% modulo5_1(3320:end,:) = []; % removendo por serem leituras estranhas fora do padrão
 
 % FIXME: dados de wetness e rain do modulo5_1 não estão batendo, um dos
 % dois está errado
-modulo5_1.temperature(modulo5_1.temperature < 22 | modulo5_1.temperature > 32) = NaN;
+modulo5_1.temperature(modulo5_1.temperature < 20 | modulo5_1.temperature > 32) = NaN;
 modulo5_1.rain(modulo5_1.rain ~= 0 & modulo5_1.rain ~= 1) = NaN;
 modulo5_1.wetness(modulo5_1.wetness > 1023 | modulo5_1.wetness < 0) = NaN;
-modulo5_1.battery(modulo5_1.battery > 6.6 | modulo5_1.battery < 0) = NaN;
+modulo5_1.battery(modulo5_1.battery > 4.6 | modulo5_1.battery < 0) = NaN;
 
-modulo5_2.temperature(modulo5_2.temperature < 22 | modulo5_2.temperature > 32) = NaN;
+modulo5_2.temperature(modulo5_2.temperature < 20 | modulo5_2.temperature > 32) = NaN;
 modulo5_2.rain(modulo5_2.rain ~= 0 & modulo5_2.rain ~= 1) = NaN;
 modulo5_2.wetness(modulo5_2.wetness > 1023 | modulo5_2.wetness < 0) = NaN;
 modulo5_2.battery(modulo5_2.battery > 6.6 | modulo5_2.battery < 0) = NaN;
 
-modulo5_thingspeak.temperature(modulo5_thingspeak.temperature < 22 | modulo5_thingspeak.temperature > 32) = NaN;
+modulo5_thingspeak.temperature(modulo5_thingspeak.temperature < 20 | modulo5_thingspeak.temperature > 32) = NaN;
 modulo5_thingspeak.rain(modulo5_thingspeak.rain ~= 0 & modulo5_thingspeak.rain ~= 1) = NaN;
 modulo5_thingspeak.wetness(modulo5_thingspeak.wetness > 1023 | modulo5_thingspeak.wetness < 0) = NaN;
 modulo5_thingspeak.battery(modulo5_thingspeak.battery > 6.6 | modulo5_thingspeak.battery < 0) = NaN;
@@ -136,9 +113,36 @@ modulo3 = [modulo3; modulo3_thingspeak];
 modulo4 = [modulo4; modulo4_thingspeak];
 modulo5 = [modulo5; modulo5_thingspeak];
 
-%% ajuste de rain do modulo 5
+%% FILTRAGEM: removendo leituras erroneas (parte 2)
+
+% modulo 1
+modulo1(276:end,:) = []; % modulo travado e repetindo valores
+
+% modulos 1 a 4
+modulo1.d15cm(modulo1.d15cm < 0) = NaN;
+modulo1.d45cm(modulo1.d45cm < 0) = NaN;
+modulo1.d75cm(modulo1.d75cm < 0) = NaN;
+
+modulo2.d15cm(modulo2.d15cm < 0) = NaN;
+modulo2.d45cm(modulo2.d45cm < 0) = NaN;
+modulo2.d75cm(modulo2.d75cm < 0) = NaN;
+
+modulo3.d15cm(modulo3.d15cm < 0) = NaN;
+modulo3.d45cm(modulo3.d45cm < 0) = NaN;
+modulo3.d75cm(modulo3.d75cm < 0) = NaN;
+
+modulo4.d15cm(modulo4.d15cm < 0) = NaN;
+modulo4.d45cm(modulo4.d45cm < 0) = NaN;
+modulo4.d75cm(modulo4.d75cm < 0) = NaN;
+
+% ajuste de rain do modulo 5
 modulo5.rain(modulo5.rain > 0.5) = 1;
 modulo5.rain(modulo5.rain <= 0.5) = 0;
+
+modulo5.temperature(modulo5.temperature < 20 | modulo5.temperature > 32) = NaN;
+modulo5.rain(modulo5.rain ~= 0 & modulo5.rain ~= 1) = NaN;
+modulo5.wetness(modulo5.wetness > 1023 | modulo5.wetness < 0) = NaN;
+modulo5.battery(modulo5.battery > 5.6 | modulo5.battery < 0) = NaN;
 
 %% Resample dos dados para horas homogeneas (interpolação das medições)
 
