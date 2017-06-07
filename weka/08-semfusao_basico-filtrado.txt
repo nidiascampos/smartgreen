@@ -1,0 +1,327 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.M5P -M 4.0
+Relation:     coleta03_total_semfusao_basico-weka.filters.unsupervised.attribute.Remove-R1,16,20,29-30
+Instances:    651
+Attributes:   28
+              d15cm_modulo1
+              d45cm_modulo1
+              d75cm_modulo1
+              d15cm_modulo2
+              d45cm_modulo2
+              d75cm_modulo2
+              d15cm_modulo3
+              d45cm_modulo3
+              d75cm_modulo3
+              d15cm_modulo4
+              d45cm_modulo4
+              d75cm_modulo4
+              wetness
+              soil_temperature
+              temp_max
+              temp_min
+              umid_inst
+              umid_min
+              pto_orvalho_inst
+              pto_orvalho_max
+              pto_orvalho_min
+              pressao
+              pressao_max
+              pressao_min
+              vento_vel
+              radiacao
+              precipitacao
+              EToPM
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+radiacao <= 0.645 : 
+|   radiacao <= 0.036 : LM1 (338/3.122%)
+|   radiacao >  0.036 : 
+|   |   radiacao <= 0.221 : LM2 (26/3.683%)
+|   |   radiacao >  0.221 : 
+|   |   |   umid_inst <= 71.5 : LM3 (16/5.586%)
+|   |   |   umid_inst >  71.5 : 
+|   |   |   |   d45cm_modulo3 <= 7.898 : 
+|   |   |   |   |   soil_temperature <= 28.063 : 
+|   |   |   |   |   |   umid_inst <= 78.5 : LM4 (10/2.914%)
+|   |   |   |   |   |   umid_inst >  78.5 : LM5 (5/1.97%)
+|   |   |   |   |   soil_temperature >  28.063 : LM6 (11/3.138%)
+|   |   |   |   d45cm_modulo3 >  7.898 : LM7 (17/4.293%)
+radiacao >  0.645 : 
+|   radiacao <= 2.327 : 
+|   |   radiacao <= 1.686 : LM8 (74/9.968%)
+|   |   radiacao >  1.686 : 
+|   |   |   pressao_max <= 100.035 : LM9 (27/21.511%)
+|   |   |   pressao_max >  100.035 : LM10 (36/1.825%)
+|   radiacao >  2.327 : LM11 (91/2.186%)
+
+LM num: 1
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0002 * d75cm_modulo1 
+	- 0.0003 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0004 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.001 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0058 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0123 * vento_vel 
+	+ 0.0198 * radiacao 
+	+ 0.0259
+
+LM num: 2
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0001 * d15cm_modulo3 
+	- 0.0006 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0058 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.001 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0031 * vento_vel 
+	+ 0.1084 * radiacao 
+	+ 0.1009
+
+LM num: 3
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0001 * d75cm_modulo2 
+	- 0.0001 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0141 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.0014 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0106 * vento_vel 
+	+ 0.1233 * radiacao 
+	+ 0.3971
+
+LM num: 4
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0001 * d75cm_modulo2 
+	- 0.0001 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0113 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.0025 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0032 * vento_vel 
+	+ 0.1295 * radiacao 
+	+ 0.4107
+
+LM num: 5
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0001 * d75cm_modulo2 
+	- 0.0001 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0113 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.0027 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0032 * vento_vel 
+	+ 0.1295 * radiacao 
+	+ 0.4182
+
+LM num: 6
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0001 * d75cm_modulo2 
+	- 0.0001 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.0115 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.0021 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0032 * vento_vel 
+	+ 0.1295 * radiacao 
+	+ 0.3793
+
+LM num: 7
+EToPM = 
+	0.0002 * d45cm_modulo1 
+	+ 0.0007 * d75cm_modulo1 
+	- 0.0004 * d75cm_modulo2 
+	- 0.0001 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0001 * d45cm_modulo4 
+	- 0.011 * soil_temperature 
+	- 0.0005 * temp_max 
+	- 0.0003 * temp_min 
+	- 0.0017 * umid_inst 
+	- 0.0001 * umid_min 
+	- 0.0008 * pto_orvalho_inst 
+	- 0.0005 * pto_orvalho_max 
+	+ 0.0007 * pto_orvalho_min 
+	- 0.0134 * pressao 
+	+ 0.0157 * pressao_max 
+	+ 0.0032 * vento_vel 
+	+ 0.2122 * radiacao 
+	+ 0.3085
+
+LM num: 8
+EToPM = 
+	0.0304 * d45cm_modulo1 
+	- 0.0017 * d15cm_modulo2 
+	- 0.0003 * d15cm_modulo3 
+	- 0.0029 * d45cm_modulo3 
+	- 0.0018 * d75cm_modulo3 
+	- 0.0007 * d15cm_modulo4 
+	- 0.0005 * d45cm_modulo4 
+	- 0.0003 * soil_temperature 
+	- 0.0094 * temp_max 
+	- 0.0034 * temp_min 
+	- 0.001 * umid_inst 
+	- 0.0005 * umid_min 
+	+ 0.0003 * pto_orvalho_inst 
+	- 0.0009 * pto_orvalho_max 
+	+ 0.0052 * pto_orvalho_min 
+	- 0.0008 * pressao 
+	+ 0.2202 * pressao_max 
+	+ 0.0018 * vento_vel 
+	+ 0.2663 * radiacao 
+	- 21.4451
+
+LM num: 9
+EToPM = 
+	0.0074 * d45cm_modulo1 
+	- 0.0018 * d15cm_modulo2 
+	- 0.0003 * d15cm_modulo3 
+	- 0.0004 * d45cm_modulo3 
+	- 0.0004 * d75cm_modulo3 
+	- 0.0007 * d15cm_modulo4 
+	- 0.0005 * d45cm_modulo4 
+	- 0.0003 * soil_temperature 
+	- 0.0017 * temp_max 
+	- 0.0214 * temp_min 
+	- 0.0023 * umid_inst 
+	- 0.0005 * umid_min 
+	+ 0.0003 * pto_orvalho_inst 
+	+ 0.0036 * pto_orvalho_max 
+	- 0.0063 * pto_orvalho_min 
+	- 0.1535 * pressao 
+	+ 0.309 * pressao_max 
+	+ 0.002 * vento_vel 
+	+ 0.144 * radiacao 
+	- 14.3458
+
+LM num: 10
+EToPM = 
+	0.0074 * d45cm_modulo1 
+	- 0.0018 * d15cm_modulo2 
+	- 0.0003 * d15cm_modulo3 
+	- 0.0004 * d45cm_modulo3 
+	- 0.0004 * d75cm_modulo3 
+	- 0.0007 * d15cm_modulo4 
+	- 0.0005 * d45cm_modulo4 
+	- 0.0003 * soil_temperature 
+	- 0.0017 * temp_max 
+	- 0.0081 * temp_min 
+	- 0.0049 * umid_inst 
+	- 0.0005 * umid_min 
+	+ 0.0003 * pto_orvalho_inst 
+	+ 0.0069 * pto_orvalho_max 
+	+ 0.0055 * pto_orvalho_min 
+	- 0.1535 * pressao 
+	+ 0.2958 * pressao_max 
+	+ 0.002 * vento_vel 
+	+ 0.259 * radiacao 
+	- 13.7544
+
+LM num: 11
+EToPM = 
+	0.0023 * d45cm_modulo1 
+	- 0.0011 * d15cm_modulo2 
+	- 0.0001 * d75cm_modulo2 
+	- 0.0003 * d15cm_modulo3 
+	- 0.0002 * d45cm_modulo3 
+	- 0.0005 * d15cm_modulo4 
+	- 0.0007 * d45cm_modulo4 
+	- 0.0003 * soil_temperature 
+	+ 0.0065 * temp_max 
+	- 0.0005 * temp_min 
+	- 0.0051 * umid_inst 
+	+ 0.0005 * umid_min 
+	+ 0.0003 * pto_orvalho_inst 
+	- 0.0009 * pto_orvalho_max 
+	+ 0.0029 * pto_orvalho_min 
+	- 0.1254 * pressao 
+	+ 0.1613 * pressao_max 
+	+ 0.0032 * vento_vel 
+	+ 0.2799 * radiacao 
+	- 3.4327
+
+Number of Rules : 11
+
+Time taken to build model: 0.03 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9963
+Mean absolute error                      0.0158
+Root mean squared error                  0.0281
+Relative absolute error                  5.7299 %
+Root relative squared error              8.5689 %
+Total Number of Instances              651     
+

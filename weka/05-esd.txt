@@ -1,0 +1,403 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.M5P -M 4.0
+Relation:     coleta03_total_fusao_avancado_esd-weka.filters.unsupervised.attribute.Remove-R1
+Instances:    651
+Attributes:   23
+              d15cm_fused
+              d45cm_fused
+              d75cm_fused
+              wetness
+              soil_temperature
+              temp_inst
+              temp_max
+              temp_min
+              umid_inst
+              umid_max
+              umid_min
+              pto_orvalho_inst
+              pto_orvalho_max
+              pto_orvalho_min
+              pressao
+              pressao_max
+              pressao_min
+              vento_vel
+              vento_direcao
+              vento_rajada
+              radiacao
+              precipitacao
+              EToPM
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+radiacao <= 0.645 : LM1 (423/3.504%)
+radiacao >  0.645 : 
+|   radiacao <= 2.327 : 
+|   |   radiacao <= 1.686 : 
+|   |   |   radiacao <= 1.135 : LM2 (23/5.733%)
+|   |   |   radiacao >  1.135 : 
+|   |   |   |   pressao_max <= 99.965 : 
+|   |   |   |   |   umid_max <= 64.5 : LM3 (7/2.296%)
+|   |   |   |   |   umid_max >  64.5 : 
+|   |   |   |   |   |   vento_direcao <= 82 : LM4 (4/3.084%)
+|   |   |   |   |   |   vento_direcao >  82 : 
+|   |   |   |   |   |   |   umid_max <= 74 : 
+|   |   |   |   |   |   |   |   temp_inst <= 29.85 : LM5 (4/1.884%)
+|   |   |   |   |   |   |   |   temp_inst >  29.85 : LM6 (3/2.284%)
+|   |   |   |   |   |   |   umid_max >  74 : LM7 (4/1.915%)
+|   |   |   |   pressao_max >  99.965 : 
+|   |   |   |   |   d15cm_fused <= 12.132 : LM8 (21/2.101%)
+|   |   |   |   |   d15cm_fused >  12.132 : LM9 (8/11.832%)
+|   |   radiacao >  1.686 : 
+|   |   |   pressao_max <= 100.035 : 
+|   |   |   |   temp_min <= 29.05 : LM10 (12/15.524%)
+|   |   |   |   temp_min >  29.05 : 
+|   |   |   |   |   soil_temperature <= 28.938 : LM11 (8/9.16%)
+|   |   |   |   |   soil_temperature >  28.938 : LM12 (7/2.622%)
+|   |   |   pressao_max >  100.035 : LM13 (36/1.271%)
+|   radiacao >  2.327 : LM14 (91/1.607%)
+
+LM num: 1
+EToPM = 
+	-0.0002 * d15cm_fused 
+	- 0.0016 * d45cm_fused 
+	- 0 * wetness 
+	- 0.0046 * soil_temperature 
+	+ 0.0198 * temp_inst 
+	- 0.0031 * temp_max 
+	- 0.0006 * temp_min 
+	- 0.0005 * umid_inst 
+	+ 0.0032 * umid_max 
+	- 0.0002 * umid_min 
+	- 0.0108 * pto_orvalho_inst 
+	- 0.016 * pto_orvalho_max 
+	+ 0.0036 * pto_orvalho_min 
+	- 0.011 * pressao 
+	+ 0.0138 * pressao_max 
+	+ 0.0087 * vento_vel 
+	+ 0.0019 * vento_rajada 
+	+ 0.2321 * radiacao 
+	- 0.2231
+
+LM num: 2
+EToPM = 
+	-0.0062 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0179 * temp_inst 
+	- 0.0182 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.0015 * umid_inst 
+	- 0.0001 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.0745 * pressao 
+	+ 0.243 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.008 * vento_rajada 
+	+ 0.2266 * radiacao 
+	- 16.5286
+
+LM num: 3
+EToPM = 
+	-0.0078 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0006 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.002 * umid_inst 
+	- 0.0006 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2567 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0003 * vento_direcao 
+	+ 0.0037 * vento_rajada 
+	+ 0.1559 * radiacao 
+	- 12.7559
+
+LM num: 4
+EToPM = 
+	-0.0078 * d15cm_fused 
+	- 0.0012 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0033 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.002 * umid_inst 
+	+ 0.0001 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2567 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0004 * vento_direcao 
+	+ 0.0037 * vento_rajada 
+	+ 0.1559 * radiacao 
+	- 12.9274
+
+LM num: 5
+EToPM = 
+	-0.0078 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0029 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.002 * umid_inst 
+	- 0.0001 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2567 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0003 * vento_direcao 
+	+ 0.0037 * vento_rajada 
+	+ 0.1559 * radiacao 
+	- 12.882
+
+LM num: 6
+EToPM = 
+	-0.0078 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0029 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.002 * umid_inst 
+	- 0.0001 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2567 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0003 * vento_direcao 
+	+ 0.0037 * vento_rajada 
+	+ 0.1559 * radiacao 
+	- 12.8824
+
+LM num: 7
+EToPM = 
+	-0.0078 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0026 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.002 * umid_inst 
+	- 0.0001 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2567 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0003 * vento_direcao 
+	+ 0.0037 * vento_rajada 
+	+ 0.1559 * radiacao 
+	- 12.8717
+
+LM num: 8
+EToPM = 
+	-0.01 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0014 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.0028 * umid_inst 
+	- 0.0003 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2497 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0037 * vento_rajada 
+	+ 0.2369 * radiacao 
+	- 12.0779
+
+LM num: 9
+EToPM = 
+	-0.0115 * d15cm_fused 
+	- 0.0028 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0023 * soil_temperature 
+	+ 0.0014 * temp_inst 
+	- 0.0072 * temp_max 
+	- 0.0054 * temp_min 
+	- 0.0018 * umid_inst 
+	- 0.0003 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0008 * pto_orvalho_max 
+	+ 0.0046 * pto_orvalho_min 
+	- 0.1224 * pressao 
+	+ 0.2497 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0037 * vento_rajada 
+	+ 0.1964 * radiacao 
+	- 12.0817
+
+LM num: 10
+EToPM = 
+	-0.0242 * d15cm_fused 
+	- 0.0093 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0064 * soil_temperature 
+	+ 0.0112 * temp_inst 
+	- 0.0055 * temp_max 
+	- 0.0216 * temp_min 
+	- 0.0004 * umid_inst 
+	- 0.0005 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.001 * pto_orvalho_max 
+	- 0.0206 * pto_orvalho_min 
+	- 0.1154 * pressao 
+	+ 0.2431 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0026 * vento_rajada 
+	+ 0.1402 * radiacao 
+	- 11.2629
+
+LM num: 11
+EToPM = 
+	-0.0158 * d15cm_fused 
+	- 0.0093 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0064 * soil_temperature 
+	+ 0.0112 * temp_inst 
+	- 0.0055 * temp_max 
+	- 0.0113 * temp_min 
+	- 0.0004 * umid_inst 
+	- 0.0005 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.001 * pto_orvalho_max 
+	- 0.0038 * pto_orvalho_min 
+	- 0.1154 * pressao 
+	+ 0.2431 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0026 * vento_rajada 
+	+ 0.1402 * radiacao 
+	- 12.0728
+
+LM num: 12
+EToPM = 
+	-0.0158 * d15cm_fused 
+	- 0.0093 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0064 * soil_temperature 
+	+ 0.0112 * temp_inst 
+	- 0.0055 * temp_max 
+	- 0.0159 * temp_min 
+	- 0.0004 * umid_inst 
+	- 0.0005 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.001 * pto_orvalho_max 
+	- 0.0038 * pto_orvalho_min 
+	- 0.1154 * pressao 
+	+ 0.2431 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0026 * vento_rajada 
+	+ 0.1402 * radiacao 
+	- 11.9309
+
+LM num: 13
+EToPM = 
+	-0.0092 * d15cm_fused 
+	- 0.0093 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0058 * soil_temperature 
+	+ 0.0142 * temp_inst 
+	- 0.0055 * temp_max 
+	- 0.0122 * temp_min 
+	- 0.0023 * umid_inst 
+	- 0.0005 * umid_max 
+	- 0.0007 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	+ 0.0019 * pto_orvalho_max 
+	+ 0.0048 * pto_orvalho_min 
+	- 0.1154 * pressao 
+	+ 0.2321 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0026 * vento_rajada 
+	+ 0.257 * radiacao 
+	- 11.3373
+
+LM num: 14
+EToPM = 
+	-0.0044 * d15cm_fused 
+	+ 0.001 * d45cm_fused 
+	+ 0.0003 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0013 * soil_temperature 
+	+ 0.0162 * temp_inst 
+	- 0.0011 * temp_max 
+	- 0.0055 * temp_min 
+	- 0.0028 * umid_inst 
+	- 0.0004 * umid_max 
+	- 0.0011 * umid_min 
+	- 0.0018 * pto_orvalho_inst 
+	- 0.0003 * pto_orvalho_max 
+	+ 0.0035 * pto_orvalho_min 
+	- 0.1102 * pressao 
+	+ 0.1414 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0028 * vento_rajada 
+	+ 0.274 * radiacao 
+	- 3.096
+
+Number of Rules : 14
+
+Time taken to build model: 0.03 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9966
+Mean absolute error                      0.0152
+Root mean squared error                  0.027 
+Relative absolute error                  5.5229 %
+Root relative squared error              8.2139 %
+Total Number of Instances              651     
+

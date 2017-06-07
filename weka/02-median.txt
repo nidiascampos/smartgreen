@@ -1,0 +1,125 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.M5P -M 4.0
+Relation:     coleta03_total_fusao_avancado_median-weka.filters.unsupervised.attribute.Remove-R1
+Instances:    651
+Attributes:   23
+              d15cm_fused
+              d45cm_fused
+              d75cm_fused
+              wetness
+              soil_temperature
+              temp_inst
+              temp_max
+              temp_min
+              umid_inst
+              umid_max
+              umid_min
+              pto_orvalho_inst
+              pto_orvalho_max
+              pto_orvalho_min
+              pressao
+              pressao_max
+              pressao_min
+              vento_vel
+              vento_direcao
+              vento_rajada
+              radiacao
+              precipitacao
+              EToPM
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+radiacao <= 0.645 : LM1 (423/3.473%)
+radiacao >  0.645 : 
+|   radiacao <= 2.327 : LM2 (137/13.564%)
+|   radiacao >  2.327 : LM3 (91/1.666%)
+
+LM num: 1
+EToPM = 
+	-0.0018 * d15cm_fused 
+	- 0.0041 * d45cm_fused 
+	- 0 * wetness 
+	- 0.0045 * soil_temperature 
+	+ 0.0193 * temp_inst 
+	- 0.0031 * temp_max 
+	- 0.0006 * temp_min 
+	- 0.0003 * umid_inst 
+	+ 0.003 * umid_max 
+	- 0.0001 * umid_min 
+	- 0.0115 * pto_orvalho_inst 
+	- 0.0159 * pto_orvalho_max 
+	+ 0.0039 * pto_orvalho_min 
+	- 0.0111 * pressao 
+	+ 0.0138 * pressao_max 
+	+ 0.0087 * vento_vel 
+	+ 0.0019 * vento_rajada 
+	+ 0.2359 * radiacao 
+	- 0.1665
+
+LM num: 2
+EToPM = 
+	-0.0217 * d15cm_fused 
+	- 0.0161 * d45cm_fused 
+	+ 0.0002 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0122 * soil_temperature 
+	+ 0.0035 * temp_inst 
+	- 0.0035 * temp_max 
+	- 0.0315 * temp_min 
+	- 0.0037 * umid_inst 
+	- 0.0027 * umid_max 
+	- 0.0005 * umid_min 
+	- 0.0017 * pto_orvalho_inst 
+	- 0.0004 * pto_orvalho_max 
+	+ 0.0184 * pto_orvalho_min 
+	- 0.3143 * pressao 
+	+ 0.5327 * pressao_max 
+	+ 0.0002 * vento_vel 
+	- 0.0001 * vento_direcao 
+	+ 0.001 * vento_rajada 
+	+ 0.2659 * radiacao 
+	- 20.6987
+
+LM num: 3
+EToPM = 
+	-0.0033 * d15cm_fused 
+	- 0.0014 * d45cm_fused 
+	+ 0.0003 * d75cm_fused 
+	- 0 * wetness 
+	+ 0.0014 * soil_temperature 
+	+ 0.016 * temp_inst 
+	- 0.0043 * temp_max 
+	- 0.0047 * temp_min 
+	- 0.0028 * umid_inst 
+	- 0.0004 * umid_max 
+	- 0.0015 * umid_min 
+	- 0.0017 * pto_orvalho_inst 
+	- 0.0004 * pto_orvalho_max 
+	+ 0.0052 * pto_orvalho_min 
+	- 0.1212 * pressao 
+	+ 0.1545 * pressao_max 
+	+ 0.0002 * vento_vel 
+	- 0.0001 * vento_direcao 
+	+ 0.0025 * vento_rajada 
+	+ 0.2745 * radiacao 
+	- 3.2118
+
+Number of Rules : 3
+
+Time taken to build model: 0.03 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9967
+Mean absolute error                      0.0149
+Root mean squared error                  0.0267
+Relative absolute error                  5.4267 %
+Root relative squared error              8.1318 %
+Total Number of Instances              651     
+

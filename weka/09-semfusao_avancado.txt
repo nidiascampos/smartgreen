@@ -1,0 +1,131 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.M5P -M 4.0
+Relation:     coleta03_total_semfusao_avancado-weka.filters.unsupervised.attribute.Remove-R1
+Instances:    651
+Attributes:   32
+              d15cm_modulo1
+              d45cm_modulo1
+              d75cm_modulo1
+              d15cm_modulo2
+              d45cm_modulo2
+              d75cm_modulo2
+              d15cm_modulo3
+              d45cm_modulo3
+              d75cm_modulo3
+              d15cm_modulo4
+              d45cm_modulo4
+              d75cm_modulo4
+              wetness
+              soil_temperature
+              temp_inst
+              temp_max
+              temp_min
+              umid_inst
+              umid_max
+              umid_min
+              pto_orvalho_inst
+              pto_orvalho_max
+              pto_orvalho_min
+              pressao
+              pressao_max
+              pressao_min
+              vento_vel
+              vento_direcao
+              vento_rajada
+              radiacao
+              precipitacao
+              EToPM
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+radiacao <= 0.645 : LM1 (423/3.504%)
+radiacao >  0.645 : 
+|   radiacao <= 2.327 : LM2 (137/13.017%)
+|   radiacao >  2.327 : LM3 (91/1.636%)
+
+LM num: 1
+EToPM = 
+	0.0011 * d15cm_modulo2 
+	+ 0.0059 * d45cm_modulo2 
+	- 0.0008 * d15cm_modulo3 
+	- 0 * d45cm_modulo3 
+	+ 0 * d75cm_modulo3 
+	- 0.0001 * d15cm_modulo4 
+	- 0.0052 * soil_temperature 
+	+ 0.0003 * temp_inst 
+	- 0.0004 * temp_min 
+	- 0.0042 * umid_inst 
+	+ 0.0035 * umid_max 
+	+ 0 * umid_min 
+	+ 0.0064 * pto_orvalho_inst 
+	- 0.0192 * pto_orvalho_max 
+	+ 0.0044 * pto_orvalho_min 
+	- 0.0111 * pressao 
+	+ 0.014 * pressao_max 
+	+ 0.009 * vento_vel 
+	+ 0.0019 * vento_rajada 
+	+ 0.24 * radiacao 
+	+ 0.0503
+
+LM num: 2
+EToPM = 
+	-0.0168 * d15cm_modulo2 
+	- 0.0035 * d15cm_modulo3 
+	- 0.0001 * d45cm_modulo3 
+	+ 0.0018 * d75cm_modulo3 
+	- 0.0025 * d15cm_modulo4 
+	+ 0.0111 * temp_inst 
+	- 0.0196 * temp_min 
+	- 0.0036 * umid_inst 
+	- 0.0001 * umid_max 
+	+ 0.0001 * umid_min 
+	- 0.0015 * pto_orvalho_max 
+	+ 0.0174 * pto_orvalho_min 
+	- 0.3292 * pressao 
+	+ 0.6072 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0096 * vento_rajada 
+	+ 0.2455 * radiacao 
+	- 27.4431
+
+LM num: 3
+EToPM = 
+	-0.0021 * d15cm_modulo2 
+	+ 0.0029 * d45cm_modulo2 
+	- 0.0005 * d15cm_modulo3 
+	- 0.0001 * d45cm_modulo3 
+	+ 0.0003 * d75cm_modulo3 
+	- 0.0009 * d15cm_modulo4 
+	+ 0.0149 * temp_inst 
+	- 0.0034 * temp_min 
+	- 0.003 * umid_inst 
+	- 0.0001 * umid_max 
+	- 0.0005 * umid_min 
+	- 0.0015 * pto_orvalho_max 
+	+ 0.0017 * pto_orvalho_min 
+	- 0.1051 * pressao 
+	+ 0.1404 * pressao_max 
+	+ 0.0002 * vento_vel 
+	+ 0.0022 * vento_rajada 
+	+ 0.2743 * radiacao 
+	- 3.5587
+
+Number of Rules : 3
+
+Time taken to build model: 0.04 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9965
+Mean absolute error                      0.0154
+Root mean squared error                  0.0273
+Relative absolute error                  5.6007 %
+Root relative squared error              8.3178 %
+Total Number of Instances              651     
+
