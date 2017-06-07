@@ -27,6 +27,8 @@ sensor45cm = (3.213*(sensor45cm./1000)+4.093)./(1-0.009733*(sensor45cm./1000)-0.
 sensor75cm = (3.213*(sensor75cm./1000)+4.093)./(1-0.009733*(sensor75cm./1000)-0.01205*coleta03_total.soil_temperature);
 
 %% Media
+% dados de 75cm quase completamente ignorados
+
 sensor15cm_fused_mean = basicFusion(sensor15cm,'mean');
 sensor45cm_fused_mean = basicFusion(sensor45cm,'mean');
 sensor75cm_fused_mean = basicFusion(sensor75cm,'mean');
@@ -37,13 +39,12 @@ sensor45cm_fused_median = basicFusion(sensor45cm,'median');
 sensor75cm_fused_median = basicFusion(sensor75cm,'median');
 
 %% Peirce
-% resultado igual à media
 [sensor15cm_fused_peirce, sensor15cm_fused_peirce_outliers, sensor15cm_fused_peirce_outliersTotal] = peirceFusion(sensor15cm);
 [sensor45cm_fused_peirce, sensor45cm_fused_peirce_outliers, sensor45cm_fused_peirce_outliersTotal] = peirceFusion(sensor45cm);
 [sensor75cm_fused_peirce, sensor75cm_fused_peirce_outliers, sensor75cm_fused_peirce_outliersTotal] = peirceFusion(sensor75cm);
 
 %% Chauvenet
-% resultados estranhos
+% resultado igual à media
 [sensor15cm_fused_chauvenet, sensor15cm_fused_chauvenet_outliers, sensor15cm_fused_chauvenet_outliersTotal] = chauvenetFusion(sensor15cm);
 [sensor45cm_fused_chauvenet, sensor45cm_fused_chauvenet_outliers, sensor45cm_fused_chauvenet_outliersTotal] = chauvenetFusion(sensor45cm);
 [sensor75cm_fused_chauvenet, sensor75cm_fused_chauvenet_outliers, sensor75cm_fused_chauvenet_outliersTotal] = chauvenetFusion(sensor75cm);
@@ -55,6 +56,7 @@ sensor75cm_fused_median = basicFusion(sensor75cm,'median');
 [sensor75cm_fused_zscore, sensor75cm_fused_zscore_outliersIndex, sensor75cm_fused_zscore_outliersTotal, sensor75cm_zscores] = zScoreFusion(sensor75cm,dateRangeString,6.0);
 
 %% G-ESD
+% bem proximo da media, principalmente o trecho final
 [sensor15cm_fused_esd, sensor15cm_fused_esd_outliersIndex, sensor15cm_fused_esd_outliersTotal] = gesdFusion(sensor15cm,dateRangeString,3);
 [sensor45cm_fused_esd, sensor45cm_fused_esd_outliersIndex, sensor45cm_fused_esd_outliersTotal] = gesdFusion(sensor45cm,dateRangeString,3);
 [sensor75cm_fused_esd, sensor75cm_fused_esd_outliersIndex, sensor75cm_fused_esd_outliersTotal] = gesdFusion(sensor75cm,dateRangeString,3);
@@ -71,6 +73,8 @@ sensor75cm_fused_median = basicFusion(sensor75cm,'median');
 % [sensor75cm_fused_boxadj, sensor75cm_fused_boxadj_scores, sensor75cm_fused_boxadj_outliers, sensor75cm_fused_boxadj_outliersTotal] = adjboxplotFusion2(sensor75cm,3.5);
 
 %% Kalman
+% dados de 75cm foram ignorados pelo M5P
+
 % for our single-sensor example, we defined 'r' as the variance of the observation
 % noise signal 'vk'; that is, how much it varies around its mean (average) value.
 % For a system with more than two sensors, 'R' is a matrix containing the 
@@ -134,6 +138,10 @@ sensor15cm_fused_esd_KAF = kalman([sensor15cm_fused_esd_KAF(1,:)], A, C1, R1, Q)
 sensor45cm_fused_esd_KAF = kalman([sensor45cm_fused_esd_KAF(1,:)], A, C1, R1, Q);
 sensor75cm_fused_esd_KAF = kalman([sensor75cm_fused_esd_KAF(1,:)], A, C1, R1, Q);
 
+%% WRKF
+% dados de 15cm ignorados
+% dados de 75cm quase completamente ignorados
+
 %% WRKF: 15cm
 Yn = sensor15cm_fused_esd;
 x = 1; % initial state value
@@ -153,6 +161,7 @@ ss_wrKF.sum_ExTx = 0;
 ss_wrKF.sum_Exxold = 0;
 
 [sensor15cm_fused_esd_WRKF, ~, ~, ~, ~, ~, ~, ~, ~] = wrKF_learn_alt(x, Yn, P, A, C, Q, R, ss_wrKF);
+sensor15cm_fused_esd_WRKF(1) = Yn(1);
 
 %% WRKF: 45cm
 Yn = sensor45cm_fused_esd;
@@ -173,6 +182,7 @@ ss_wrKF.sum_ExTx = 0;
 ss_wrKF.sum_Exxold = 0;
 
 [sensor45cm_fused_esd_WRKF, ~, ~, ~, ~, ~, ~, ~, ~] = wrKF_learn_alt(x, Yn, P, A, C, Q, R, ss_wrKF);
+sensor45cm_fused_esd_WRKF(1) = Yn(1);
 
 %% WRKF: 75cm
 Yn = sensor75cm_fused_esd;
@@ -193,54 +203,58 @@ ss_wrKF.sum_ExTx = 0;
 ss_wrKF.sum_Exxold = 0;
 
 [sensor75cm_fused_esd_WRKF, ~, ~, ~, ~, ~, ~, ~, ~] = wrKF_learn_alt(x, Yn, P, A, C, Q, R, ss_wrKF);
+sensor75cm_fused_esd_WRKF(1) = Yn(1);
 
 %% Plotar: 15cm
-% figure;
-% plot(dateRange,sensor15cm_fused_mean,'DisplayName','media'); hold on
-% plot(dateRange,sensor15cm_fused_median,'DisplayName','mediana');
+figure;
+plot(dateRange,sensor15cm_fused_mean,'DisplayName','media'); hold on
+plot(dateRange,sensor15cm_fused_median,'DisplayName','mediana');
 % plot(dateRange,sensor15cm_fused_peirce,'DisplayName','peirce');
 % plot(dateRange,sensor15cm_fused_chauvenet,'DisplayName','chauvenet');
 % plot(dateRange,sensor15cm_fused_zscore,'DisplayName','zscore');
-% plot(dateRange,sensor15cm_fused_esd,'DisplayName','esd');
-% plot(dateRange,sensor15cm_fused_mzscore,'DisplayName','mzscore');
+plot(dateRange,sensor15cm_fused_esd,'DisplayName','esd');
+plot(dateRange,sensor15cm_fused_mzscore,'DisplayName','mzscore');
 % plot(dateRange,sensor15cm_fused_KAF1,'DisplayName','kalman (1)');
 % plot(dateRange,sensor15cm_fused_KAF4,'DisplayName','kalman (4)');
-% plot(dateRange,sensor15cm_fused_esd_KAF,'DisplayName','esd + kalman');
-% plot(dateRange,sensor15cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+plot(dateRange,sensor15cm_fused_esd_KAF,'DisplayName','esd + kalman');
+plot(dateRange,sensor15cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+title('15cm');
 % 
 % %% Plotar: 45cm
-% figure;
-% plot(dateRange,sensor45cm_fused_mean,'DisplayName','media'); hold on
-% plot(dateRange,sensor45cm_fused_median,'DisplayName','mediana');
+figure;
+plot(dateRange,sensor45cm_fused_mean,'DisplayName','media'); hold on
+plot(dateRange,sensor45cm_fused_median,'DisplayName','mediana');
 % plot(dateRange,sensor45cm_fused_peirce,'DisplayName','peirce');
 % plot(dateRange,sensor45cm_fused_chauvenet,'DisplayName','chauvenet');
 % plot(dateRange,sensor45cm_fused_zscore,'DisplayName','zscore');
-% plot(dateRange,sensor45cm_fused_esd,'DisplayName','esd');
-% plot(dateRange,sensor45cm_fused_mzscore,'DisplayName','mzscore');
+plot(dateRange,sensor45cm_fused_esd,'DisplayName','esd');
+plot(dateRange,sensor45cm_fused_mzscore,'DisplayName','mzscore');
 % plot(dateRange,sensor45cm_fused_KAF1,'DisplayName','kalman (1)');
 % plot(dateRange,sensor45cm_fused_KAF4,'DisplayName','kalman (4)');
-% plot(dateRange,sensor45cm_fused_esd_KAF,'DisplayName','esd + kalman');
-% plot(dateRange,sensor45cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+plot(dateRange,sensor45cm_fused_esd_KAF,'DisplayName','esd + kalman');
+plot(dateRange,sensor45cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+title('45cm');
 % 
 % %% Plotar: 75cm
-% figure;
-% plot(dateRange,sensor75cm_fused_mean,'DisplayName','media'); hold on
-% plot(dateRange,sensor75cm_fused_median,'DisplayName','mediana');
+figure;
+plot(dateRange,sensor75cm_fused_mean,'DisplayName','media'); hold on
+plot(dateRange,sensor75cm_fused_median,'DisplayName','mediana');
 % plot(dateRange,sensor75cm_fused_peirce,'DisplayName','peirce');
 % plot(dateRange,sensor75cm_fused_chauvenet,'DisplayName','chauvenet');
 % plot(dateRange,sensor75cm_fused_zscore,'DisplayName','zscore');
-% plot(dateRange,sensor75cm_fused_esd,'DisplayName','esd');
-% plot(dateRange,sensor75cm_fused_mzscore,'DisplayName','mzscore');
+plot(dateRange,sensor75cm_fused_esd,'DisplayName','esd');
+plot(dateRange,sensor75cm_fused_mzscore,'DisplayName','mzscore');
 % plot(dateRange,sensor75cm_fused_KAF1,'DisplayName','kalman (1)');
 % plot(dateRange,sensor75cm_fused_KAF4,'DisplayName','kalman (4)');
-% plot(dateRange,sensor75cm_fused_esd_KAF,'DisplayName','esd + kalman');
-% plot(dateRange,sensor75cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+plot(dateRange,sensor75cm_fused_esd_KAF,'DisplayName','esd + kalman');
+plot(dateRange,sensor75cm_fused_esd_WRKF,'DisplayName','esd + wrkf');
+title('75cm');
 
 %% reinserindo tempo nas tabelas dos dados
 % alterar a variavel pelo método a ser utilizado
-sensor15cm_timetable = timetable(dateRange,sensor15cm_fused_esd_KAF');
-sensor45cm_timetable = timetable(dateRange,sensor45cm_fused_esd_KAF');
-sensor75cm_timetable = timetable(dateRange,sensor75cm_fused_esd_KAF');
+sensor15cm_timetable = timetable(dateRange,sensor15cm_fused_esd_WRKF);
+sensor45cm_timetable = timetable(dateRange,sensor45cm_fused_esd_WRKF);
+sensor75cm_timetable = timetable(dateRange,sensor75cm_fused_esd_WRKF);
 
 %% gerar tabela completa dos dados
 total_fused_15_45 = outerjoin(sensor15cm_timetable,sensor45cm_timetable);

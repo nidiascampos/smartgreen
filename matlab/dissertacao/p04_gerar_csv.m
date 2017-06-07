@@ -90,4 +90,4 @@ coleta03_total_fusao(378:438,:) = [];
 coleta03_total_fusao = timetable2table(coleta03_total_fusao);
 % ajustar o final do nome do arquivo de acordo com o nome da fusao
 % escolhida no p03_fusao
-writetable(coleta03_total_fusao,'logs/csv/coleta03/ok/coleta03_total_fusao_avancado_esd_KAF.csv');
+writetable(coleta03_total_fusao,'logs/csv/coleta03/ok/coleta03_total_fusao_avancado_median_WRKF.csv');
