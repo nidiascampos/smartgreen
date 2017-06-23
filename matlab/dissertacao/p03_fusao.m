@@ -252,9 +252,9 @@ title('75cm');
 
 %% reinserindo tempo nas tabelas dos dados
 % alterar a variavel pelo método a ser utilizado
-sensor15cm_timetable = timetable(dateRange,sensor15cm_fused_esd_WRKF);
-sensor45cm_timetable = timetable(dateRange,sensor45cm_fused_esd_WRKF);
-sensor75cm_timetable = timetable(dateRange,sensor75cm_fused_esd_WRKF);
+sensor15cm_timetable = timetable(dateRange,sensor15cm_fused_esd);
+sensor45cm_timetable = timetable(dateRange,sensor45cm_fused_esd);
+sensor75cm_timetable = timetable(dateRange,sensor75cm_fused_esd);
 
 %% gerar tabela completa dos dados
 total_fused_15_45 = outerjoin(sensor15cm_timetable,sensor45cm_timetable);

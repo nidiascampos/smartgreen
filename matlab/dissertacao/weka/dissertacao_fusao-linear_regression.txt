@@ -1,0 +1,71 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.LinearRegression -S 0 -R 1.0E-8 -num-decimal-places 4
+Relation:     dissertacao_fusao-weka.filters.unsupervised.attribute.Remove-R1
+Instances:    340
+Attributes:   24
+              d15cm_fused
+              d45cm_fused
+              d75cm_fused
+              wetness
+              soil_temperature
+              temp_inst
+              temp_max
+              temp_min
+              umid_inst
+              umid_max
+              umid_min
+              pto_orvalho_inst
+              pto_orvalho_max
+              pto_orvalho_min
+              pressao
+              pressao_max
+              pressao_min
+              vento_vel
+              vento_direcao
+              vento_rajada
+              radiacao
+              precipitacao
+              temp_media
+              EToPM
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+
+Linear Regression Model
+
+EToPM =
+
+     -0.003  * d15cm_fused +
+     -0.0086 * soil_temperature +
+      0.0374 * temp_inst +
+     -0.0128 * temp_max +
+     -0.009  * temp_min +
+      0.006  * umid_inst +
+     -0.0008 * umid_max +
+     -0.0046 * umid_min +
+     -0.0377 * pto_orvalho_inst +
+      0.02   * pto_orvalho_min +
+     -0.2216 * pressao +
+      0.5346 * pressao_max +
+     -0.1998 * pressao_min +
+     -0.0002 * vento_direcao +
+      0.0054 * vento_rajada +
+      0.2826 * radiacao +
+     -0.022  * precipitacao +
+     -0.0119 * temp_media +
+    -10.7694
+
+Time taken to build model: 0 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9909
+Mean absolute error                      0.0281
+Root mean squared error                  0.0426
+Relative absolute error                 10.5359 %
+Root relative squared error             13.3709 %
+Total Number of Instances              340     
+
