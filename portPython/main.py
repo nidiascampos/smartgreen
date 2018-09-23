@@ -4,7 +4,7 @@ import pandas as pd
 from functions.converter import converterChuva, converterUmidadeSolo
 from functions.normalizar import normalizarDados, table2timetable, retime
 from functions.filtragem import filtragemForaEscopoTemperatura, filtragemForaEscopoUmidade
-from functions.fusao import basicFusion, peirceFusion, chauvenetFusion, zscoreFusion, gesdFusion, mzscoreFusion
+from functions.fusao import basicFusion, applyPierce, chauvenetFusion, zscoreFusion, gesdFusion, mzscoreFusion
 
 def main():
     # Recepção dos dados
@@ -220,9 +220,9 @@ def main():
     sensor75cmFusedMedian = basicFusion(sensor75cm, 'median')
     
     # Peirce
-#    sensor15cmFusedPeirce = peirceFusion(sensor15cm)
-#    sensor45cmFusedPeirce = peirceFusion(sensor45cm)
-#    sensor75cmFusedPeirce = peirceFusion(sensor75cm)
+    sensor15cmFusedPeirce = applyPierce(sensor15cm)
+    sensor45cmFusedPeirce = applyPierce(sensor45cm)
+    sensor75cmFusedPeirce = applyPierce(sensor75cm)
     
     # Chauvenet
     sensor15cmFusedChauvenet = chauvenetFusion(sensor15cm)
