@@ -244,8 +244,5 @@ def main():
     sensor45cmFusedMZScore = mzscoreFusion(sensor45cm)
     sensor75cmFusedMZScore = mzscoreFusion(sensor75cm)
     
-#    %% Kalman
-#    %% WRKF
-    
 if __name__ == '__main__':
     main()
