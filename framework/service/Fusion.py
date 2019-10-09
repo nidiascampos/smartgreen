@@ -142,9 +142,11 @@ class Fusion():
     def set_outlier_as_nan(self,data,filter):
         i=0
         for f in filter:
-            for d in range(0, len(f)):
-                if f[d]==False:
-                    data[i][d]=np.nan
+            if f == False:
+                data[i] = np.nan
+            # for d in range(0, len(f)):
+            #     if f[d]==False:
+            #         data[i][d]=np.nan
             i+=1
 
         return data
@@ -176,6 +178,7 @@ class Fusion():
     # http://www.statisticshowto.com/probability-and-statistics/z-score/
     ####################################################################
     def zscoreFusion(self,sensor):
+
         mean = np.mean(sensor, axis=0)  # Mean of incoming array y
         stdv = np.std(sensor, axis=0)  # Its standard deviation
 
@@ -183,10 +186,12 @@ class Fusion():
         prob = erfc(zscore)  # Area normal dist
         filter = prob >= zscore  # The 'accept' filter array with booleans
 
+
         sensor_filtered=self.set_outlier_as_nan(sensor,filter)
 
         #    return sensor[filter], sensor[~filter], filter  # Return the cleared version, the rejected version and the filter
-        return self.cooperative_fusion(sensor_filtered)
+
+        return np.nanmean(sensor_filtered)
 
     ######################################################################################
     # Fusão de dados dos sensores utilizando Generalized ESD
@@ -195,7 +200,6 @@ class Fusion():
     ######################################################################################
     def gesdFusion(self,sensor, maxOLs=6):
         data = pd.DataFrame(np.array(sensor))
-        print(data)
 
         for column in data.columns:
             gesd = pyasl.generalizedESD(data[column],maxOLs)
@@ -204,7 +208,7 @@ class Fusion():
                 data.ix[column][outlier]=np.NaN
 
 
-        return self.cooperative_fusion(np.array(data.values))
+        return np.nanmean(np.array(data.values))
 
     ##################################################################
     # Fusão de dados dos sensores utilizando Modified zScore
@@ -221,13 +225,25 @@ class Fusion():
 
 
         sensor_filtered = self.set_outlier_as_nan(sensor, filter)
-        print(sensor_filtered)
 
         #    return sensor[filter], sensor[~filter], filter  # Return the cleared version, the rejected version and the filter
-        return np.nanmean(sensor_filtered,axis=0)
+        return np.nanmean(sensor_filtered)
 
 
+    def apply_method(self,method,data):
+        res=[]
+        if method=="zscore":
+            res =self.zscoreFusion(data)
+        elif method=="gesd":
+            res =self.gesdFusion(data)
+        elif method=="mzscore":
+            res =self.mzscoreFusion(data)
+        elif method=="chauvenet":
+            res =self.chauvenetFusion(data)
+        else:
+            res=self.cooperative_fusion(data)
 
+        return res
 
 if __name__ == '__main__':
     database = stor.Storage('localhost', 'root', '12345678')

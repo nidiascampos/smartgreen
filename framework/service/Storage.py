@@ -261,12 +261,12 @@ class Storage():
         cursor.execute(query)
         return cursor.fetchone()
 
-    def insert_irrigation_management(self,farm_id, monitoring_point_id, management_type, water_needed, date):
+    def insert_irrigation_management(self,farm_id, field_id, monitoring_point_id, management_type, water_needed, date):
         cursor = self.con.cursor()
         query = "INSERT INTO smartgreen.Irrigation_Management" \
-                "(Farm_ID, monitoring_point_id, management_type_id, water_needed,date) " \
+                "(Farm_ID, Field_ID, Monitoring_Point_ID, management_type_id, water_needed,date) " \
                 "VALUES(%s,%s,%s,%s,%s)"
-        args = (farm_id,monitoring_point_id,management_type,water_needed,date)
+        args = (farm_id, field_id,monitoring_point_id,management_type,water_needed,date)
         cursor.execute(query, args)
         self.con.commit()
 
@@ -274,11 +274,12 @@ class Storage():
         cursor.execute(query)
         return cursor.fetchone()
 
-    def get_irrigation_water(self, farm_id, monitoring_point_id, management_typ, date):
+    def get_irrigation_water(self, farm_id, field_id, monitoring_point_id, management_type, date):
         cursor = self.con.cursor()
         query = "SELECT water_needed FROM smartgreen.Irrigation_Management " \
-                "WHERE farm_id=%s AND monitoring_point_id=%s AND management_type_id=%s AND date=%s"
-        args = (farm_id, monitoring_point_id, management_typ, date)
+                "WHERE Farm_ID=%s AND Field_ID=%s AND monitoring_point_id=%s " \
+                "AND management_type_id=%s AND date=%s"
+        args = (farm_id, field_id, monitoring_point_id, management_type, date)
         cursor.execute(query,args)
         r = cursor.fetchone()
 
@@ -317,24 +318,26 @@ class Storage():
         cursor.execute(query)
         result= cursor.fetchall()
         r = []
-        for x in result:
-            r.append(x[0])
+
+        if len(result)>0:
+            for x in result:
+                r.append(x[0])
 
         return r
 
 
-    def insert_soil_layer(self, depth, fc_moisture, monitoring_point_id,
-                          field_id,residual_soil_content, saturation_water_content,
-                          alpha_air_entry_suction,n_pore_size_distribution):
+    def insert_soil_depth_type(self,value,description, fusion_id,
+                               field_capacity,residual_soil_content,
+                               saturation_water_content, alpha_air_entry_suction,
+                               n_pore_size_distribution):
         cursor = self.con.cursor()
-        query = "INSERT INTO smartgreen.Soil_Layer " \
-                "(Depth,Field_Condition_Moisture, monitoring_point_id, field_id, " \
-                "residual_soil_content, saturation_water_content, " \
-                "alpha_air_entry_suction,n_pore_size_distribution) " \
-                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
-        args = (depth, fc_moisture, monitoring_point_id, field_id,
-                residual_soil_content, saturation_water_content,
-                          alpha_air_entry_suction,n_pore_size_distribution)
+        query = "INSERT INTO smartgreen.Depth_Type " \
+                "(value, description,fusion_id, field_capacity,"\
+                "residual_soil_content, saturation_water_content,"\
+                "alpha_air_entry_suction, n_pore_size_distribution) " \
+                "VALUES(%s,%s,%s,%s,%s,%s,%s.%s)"
+        args = (value, description,fusion_id,field_capacity,residual_soil_content,
+                saturation_water_content, alpha_air_entry_suction, n_pore_size_distribution,)
         cursor.execute(query, args)
         self.con.commit()
 
@@ -342,18 +345,21 @@ class Storage():
         cursor.execute(query)
         return cursor.fetchone()
 
-    def insert_soil_layer(self, depth, fc_moisture, monitoring_point_id,
-                          field_id, residual_soil_content, saturation_water_content,
-                          alpha_air_entry_suction, n_pore_size_distribution,moisture_sensor_type_id):
+    def get_soil_depth(self, id):
+        cursor = self.con.cursor()
+        query = "SELECT * from smartgreen.Depth_Type WHERE id=" + str(id)
+        cursor.execute(query)
+        result = cursor.fetchone()
+
+        return result
+
+
+    def insert_soil_layer(self, depth_type, moisture_sensor_type_id, field_id):
         cursor = self.con.cursor()
         query = "INSERT INTO smartgreen.Soil_Layer " \
-                "(Depth,Field_Condition_Moisture, monitoring_point_id, field_id, " \
-                "residual_soil_content, saturation_water_content, " \
-                "alpha_air_entry_suction,n_pore_size_distribution,moisture_sensor_type_id) " \
-                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
-        args = (depth, fc_moisture, monitoring_point_id, field_id,
-                residual_soil_content, saturation_water_content,
-                alpha_air_entry_suction, n_pore_size_distribution,moisture_sensor_type_id)
+                "(depth_type,moisture_sensor_type_id, field_id) " \
+                "VALUES(%s,%s,%s)"
+        args = (depth_type, moisture_sensor_type_id, field_id)
         cursor.execute(query, args)
         self.con.commit()
 
@@ -469,18 +475,43 @@ class Storage():
         cursor.execute(query, args)
         self.con.commit()
 
-    def get_moisture_remotion_criteria(self,sensor_id):
+    def get_moisture_remotion_criteria(self, sensor_id):
         cursor = self.con.cursor()
-        query = "SELECT value_less,value_greater FROM smartgreen.Moisture_Remotion_Criteria "\
-                "WHERE moisture_sensor_id="+str(sensor_id)
+        query = "SELECT value_less,value_greater FROM smartgreen.Moisture_Remotion_Criteria " \
+                "WHERE moisture_sensor_id=" + str(sensor_id)
+
+        cursor.execute(query)
+        r = cursor.fetchall()
+
+        x = {"min": None, "max": None}
+        if len(r) > 0:
+            result = r[0]
+            x = {"min": result[0], "max": result[1]}
+
+        return x
+
+    #fusion commands
+    def get_fusion_method(self,fusion_id):
+        cursor = self.con.cursor()
+        query = "SELECT * FROM smartgreen.Fusion_Type "\
+                "WHERE id="+str(fusion_id)
 
         cursor.execute(query)
         r=cursor.fetchall()
 
-        x = {"min":None,"max":None}
+        x = {"id":None,"name":None,"description":None}
         if len(r)>0:
             result=r[0]
-            x = {"min":result[0],"max":result[1]}
+            x = {"id":result[0],"name":result[1],"description":result[2]}
 
 
         return x
+
+    def insert_fusion_method(self,name,description):
+        cursor = self.con.cursor()
+        query = "INSERT INTO smartgreen.Fusion_Type " \
+                "(name, description) " \
+                "VALUES(%s,%s)"
+        args = (name,description)
+        cursor.execute(query, args)
+        self.con.commit()
