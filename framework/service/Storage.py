@@ -303,11 +303,11 @@ class Storage():
         cursor.execute(query)
         return cursor.fetchone()
 
-    def insert_monitoring_point(self, id, field_id):
+    def insert_monitoring_point(self, id, field_id,description):
         cursor = self.con.cursor()
         query = "INSERT INTO smartgreen.Monitoring_Point " \
-                "(id,field_id) " \
-                "VALUES(%s,%s)"
+                "(id,field_id,description) " \
+                "VALUES(%s,%s,%s)"
         args = (id, field_id)
         cursor.execute(query, args)
         self.con.commit()
