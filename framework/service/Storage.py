@@ -6,12 +6,15 @@ class Storage():
         self.con = MySQLdb.connect(host, user, password)
 
     # field_storage_commands
-    def insert_field(self, farm_id, crop_id, crop_init_stage, crop_current_stage, irrigation_system_id):
+    def insert_field(self,farm_id, crop_id, crop_init_stage, crop_current_stage,
+                     irrigation_system_id,description,register_date):
         cursor = self.con.cursor()
         query = "INSERT INTO smartgreen.Field " \
-                "(farm_id, crop_id, crop_init_stage,crop_current_stage, irrigation_system_id) " \
-                "VALUES(%s,%s,%s,%s,%s)"
-        args = (farm_id, crop_id, crop_init_stage, crop_current_stage, irrigation_system_id)
+                "(farm_id, crop_id, crop_init_stage,crop_current_stage, irrigation_system_id," \
+                "description,register_date)"\
+                "VALUES(%s,%s,%s,%s,%s,%s,%s)"
+        args = (farm_id, crop_id, crop_init_stage, crop_current_stage,
+                irrigation_system_id,description,register_date)
         cursor.execute(query, args)
         self.con.commit()
 
@@ -146,7 +149,7 @@ class Storage():
             data={"T_max":result[0], "T_min":result[1], "RH_max":result[2], "RH_min":result[3], "Rn":result[4], "U":result[5],
               "P":result[6],"Ri":result[7]}
         except TypeError:
-            data = {"T_max": 0, "T_min": 0, "RH_max": 0, "RH_min": 0, "Rn": 0, "U": 0, "P": 0, "Ri": 0}
+            data = None
 
         return data
 
