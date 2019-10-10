@@ -1,10 +1,13 @@
-from service import Storage as stor
-from service import Fusion as fus
-from application.pyeto import fao
-from application.pyeto import convert as conv
 from datetime import date
-from datetime import timedelta
 from datetime import datetime
+from datetime import timedelta
+
+from application.pyeto import convert as conv
+from service import Fusion as fus
+from service import Storage as stor
+
+from application.pyeto import fao
+
 
 class HydroBalance:
     def __init__(self,db_host,db_user,db_pass):
@@ -57,9 +60,6 @@ class HydroBalance:
         self.irrigation_system_id = field_info[4]
         self.monitoring_points_ids = self.database.get_monitoring_points(self.field_id)
 
-
-
-
     def set_crop_info(self):
         crop_info = self.database.get_crop_info(self.crop_id)
 
@@ -80,18 +80,17 @@ class HydroBalance:
     def get_farm_id(self):
         return self.farm_id
 
-    def compute_current_kc(self):
-        if self.crop_current_stage >= self.final_stage:
+    def compute_current_kc(self,stage):
+        if stage >= self.final_stage:
             self.kc = self.final_kc
-        elif self.crop_current_stage <= self.init_stage:
+        elif stage <= self.init_stage:
             self.kc = self.init_kc
         else:
             a = (self.inter_kc - self.init_kc)
             b = (self.inter_stage - self.init_stage)
             c = (self.inter_stage * self.init_kc - self.init_stage - self.inter_kc)
-            self.kc = (-a )* self.crop_current_stage - c
+            self.kc = (-a )* stage - c
             self.kc = abs(self.kc / b)
-
 
     # apply outlier remotion criteria on data
     def data_preprocessing(self,date):
@@ -108,9 +107,11 @@ class HydroBalance:
                 layer_depth_type = layer[1]
                 moisture_sensor_type_id = layer[4]
 
-                u = self.database.get_moisture_data(self.date, field_id, mp_id, soil_layer_id)
+                u = self.database.get_moisture_data(self.date, self.field_id, mp_id,
+                                                    soil_layer_id)
                 criterias = self.database.get_moisture_remotion_criteria(moisture_sensor_type_id)
-                self.fusion.set_soil_moisture_remotion_criteria(criterias["min"], criterias["max"])
+                self.fusion.set_soil_moisture_remotion_criteria(criterias["min"],
+                                                                criterias["max"])
                 u = self.fusion.check_soil_moisture_remotion_criteria(u)
 
                 data = []
@@ -162,12 +163,13 @@ class HydroBalance:
                                                  alpha_air_entry_suction,
                                                  n_pore_size_distribution,
                                                  fusioned_data)
-            print("layer_depth")
 
+            # a=current_humidity*layer_depth
+            # print("layer_depth {}".format(a))
             self.soil_moisture+=current_humidity*layer_depth
 
     #return water need in mm
-    def compute_RNI(self,start_date,stop_date,field_id,station_id):
+    def compute_RNI(self,start_date,stop_date,field_id,station_id,with_soil_data):
         self.set_field_info(field_id)
         self.set_crop_info()
         self.set_irrigation_system_info()
@@ -178,23 +180,25 @@ class HydroBalance:
         day2 = date(int(d2[0]), int(d2[1]), int(d2[2]))
         num_days = (day2 - day1).days
 
-        crop_stage = self.crop_current_stage - num_days
-        stage = crop_stage
+        #synchronizing days to start crop development stage
+        hoje = datetime.now()
+        now = date(hoje.year,hoje.month,hoje.day)
+        start_stage=self.crop_current_stage - (now-day2).days - num_days
+        stage = start_stage
 
-        for day in range(crop_stage, self.crop_current_stage):
-            if day > 1:
-                day1 = day1 + timedelta(days=1)
-                start_date = day1.strftime("%Y-%m-%d")
-                stage += 1
-
-            else:
-                day1 = datetime(int(d1[0]), int(d1[1]), int(d1[2]))
-
+        self.NHB=0
+        num_days+=1
+        for day in range(0, num_days):
             self.weather_data= self.database.get_meteorological_data(station_id, start_date)
-            self.crop_current_stage=stage
-            self.execute_hydro_balance()
+            nhb=self.execute_hydro_balance(stage)
+            self.NHB+=nhb
+            print("date {} stage {} nhb_day {} NHB {}".format(start_date, stage, nhb,self.NHB))
+            day1 = day1 + timedelta(days=1)
+            start_date = day1.strftime("%Y-%m-%d")
+            stage += 1
 
-        if len(self.monitoring_points_ids) > 0:
+
+        if with_soil_data==True and len(self.monitoring_points_ids) > 0:
             self.compute_soil_moisture(stop_date)
             self.NHB-=self.soil_moisture
 
@@ -232,34 +236,36 @@ class HydroBalance:
 
         return self.ETo
 
-    def execute_hydro_balance(self):
-        self.compute_ETo_FAO(self.weather_data["T_max"],
+    def execute_hydro_balance(self, stage):
+        nhb=0
+        if self.weather_data!=None:
+            self.compute_ETo_FAO(self.weather_data["T_max"],
                              self.weather_data["T_min"],
                              self.weather_data["RH_max"],
                              self.weather_data["RH_min"],
                              self.weather_data["Rn"],
                              self.weather_data["U"],
                              self.weather_data["P"])
-        self.compute_current_kc()
-        self.ETc = self.kc * self.ETo
-        self.NHB += self.ETc - self.weather_data["Ri"]
+            self.compute_current_kc(stage)
+            self.ETc = self.kc * self.ETo
+            nhb=self.ETc - self.weather_data["Ri"]
 
+        return nhb
 
     def compute_irrigation_time(self):
         self.t_irri=self.ITN/self.irrigation_pe
         return self.t_irri
-
-
 
 if __name__ == '__main__':
     irrigation_management=HydroBalance('localhost', 'root', '12345678')
     station_id = 1
     field_id = 1
     farm_id=1
-    start_date = "2016-02-01"
-    stop_date = "2016-03-01"
+    start_date = "2016-07-1"
+    stop_date = "2016-07-30"
 
-    water_needed=irrigation_management.compute_RNI(start_date,stop_date,field_id,station_id)
+    water_needed=irrigation_management.compute_RNI(start_date,stop_date,
+                                                   field_id,station_id,False)
 
     print("water_needed {}".format(water_needed))
     irrigation_management.compute_irrigation_time()
@@ -271,3 +277,4 @@ if __name__ == '__main__':
     #                                       management_type,water_needed,stop_date)
     # water_need = database.get_irrigation_water(farm_id,field_id,monitoring_point_id,
     #                                            management_type,stop_date)
+
