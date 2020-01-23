@@ -14,47 +14,37 @@ for some more information."""
 
 import asyncio
 import logging
+import json
+from datetime import datetime
 
-import communication.aiocoap.resource as resource
 from communication import aiocoap
 from service import Storage as stor
+import communication.aiocoap.resource as resource
 
 
-class MonitoringPoint(resource.Resource):
-    """Example resource which supports the GET and PUT methods. It sends large
-    responses, which trigger blockwise transfer."""
-
-    def __init__(self, database):
-        super(MonitoringPoint,self).__init__()
+class StoreMonitoringPointData(resource.Resource):
+   def __init__(self, database):
+        super(StoreMonitoringPointData,self).__init__()
         self.database = database
-        self.soil_layer_15=1
-        self.soil_layer_45 =2
-        self.soil_layer_75 =3
 
-        #con.select_db('banco de dados')
-
-    async def render_get(self, request):
-        return aiocoap.Message(payload=self.content)
-
-    async def render_put(self, request):
+   async def render_put(self, request):
+        date = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         print('PUT payload: %s' % request.payload)
         c = request.payload
         content = str(c, 'utf-8')
-        info = content.split(";")
-        values=[]
+        data = json.loads(content)
 
-        print("Updating field monitoring point")
-        for col in info:
-            d=col.split(":")
-            values.append(float(d[1]))
+        moisture_data = data['matric_potential']
 
 
-        data = dict(zip(['field_id', 'monitoring_point_id', 'L15', 'L45', 'L75', 'power_level'], values))
+        for soil_layer_id in moisture_data.keys():
+            #print("md-> field_id:{}, soil_layer_id:{}, mp_id:{}, value:{}".format(data['field_id'], int(soil_layer_id),
+             #data['mp_id'], moisture_data[soil_layer_id]))
+            self.database.insert_moisture_data( date, data['field_id'], int(soil_layer_id),
+             data['mp_id'], moisture_data[soil_layer_id])
 
-        self.database.insert_moisture_data(int(data['field_id']), self.soil_layer_15, int(data['monitoring_point_id']), data['L15'])
-        self.database.insert_moisture_data(int(data['field_id']), self.soil_layer_45, int(data['monitoring_point_id']), data['L45'])
-        self.database.insert_moisture_data(int(data['field_id']), self.soil_layer_75, int(data['monitoring_point_id']), data['L75'])
-        self.database.insert_monitoring_point_power_data(int(data['field_id']), int(data['monitoring_point_id']), data['power_level'])
+        #self.database.insert_monitoring_point_power_data(date,data['field_id'],data['mp_id'],data['power_level'])
+        print("pd-> field_id:{}, mp_id:{}, value:{}".format(data['field_id'],data['mp_id'],data['power_level']))
 
 
         payload = ("BD updated").encode('utf8')
@@ -68,9 +58,6 @@ logging.basicConfig(level=logging.INFO)
 logging.getLogger("coap-server").setLevel(logging.DEBUG)
 
 def main():
-
-
-
     # Resource tree creation
     root = resource.Site()
 
@@ -78,15 +65,8 @@ def main():
                       resource.WKCResource(root.get_resources_as_linkheader))
 
     database= stor.Storage('localhost', 'root', '12345678')
-        
-    root.add_resource(('field', '1', 'monitoring_point', '1'), MonitoringPoint(database))
 
-    root.add_resource(('field', '1', 'monitoring_point', '2'), MonitoringPoint(database))
-
-    root.add_resource(('field', '1', 'monitoring_point', '3'), MonitoringPoint(database))
-
-    root.add_resource(('field', '1', 'monitoring_point', '4'), MonitoringPoint(database))
-
+    root.add_resource(['store_monitoring_point_data'], StoreMonitoringPointData(database))
 
     asyncio.Task(aiocoap.Context.create_server_context(root))
 

@@ -1,0 +1,83 @@
+{
+    "farm_id": 1,
+    "field_id": 1,
+    "monitoring_point_number": 9,
+    "mp_info": [
+        {
+            "id": 1,
+            "soil_layer_ids": {
+                "150": 1,
+                "450": 2,
+                "750": 3
+            }
+        },
+        {
+            "id": 2,
+            "soil_layer_ids": {
+                "150": 4,
+                "450": 5,
+                "750": 6
+            }
+        },
+        {
+            "id": 3,
+            "soil_layer_ids": {
+                "150": 7,
+                "450": 8,
+                "750": 9
+            }
+        },
+        {
+            "id": 4,
+            "soil_layer_ids": {
+                "150": 10,
+                "450": 11,
+                "750": 12
+            }
+        },
+        {
+            "id": 5,
+            "soil_layer_ids": {
+                "150": 13,
+                "450": 14,
+                "750": 15
+            }
+        },
+        {
+            "id": 6,
+            "soil_layer_ids": {
+                "150": 16,
+                "450": 17,
+                "750": 18
+            }
+        },
+        {
+            "id": 7,
+            "soil_layer_ids": {
+                "150": 19,
+                "450": 20,
+                "750": 21
+            }
+        },
+        {
+            "id": 8,
+            "soil_layer_ids": {
+                "150": 22,
+                "450": 23,
+                "750": 24
+            }
+        },
+        {
+            "id": 9,
+            "soil_layer_ids": {
+                "150": 25,
+                "450": 26,
+                "750": 27
+            }
+        }
+    ],
+    "coap_server_address": "localhost",
+    "mqtt_server_address": "localhost",
+    "http_server_address": "localhost",
+    "mqtt_topic": "mp_data/soil_data_for_Smart&Green_at_localhost"
+}
